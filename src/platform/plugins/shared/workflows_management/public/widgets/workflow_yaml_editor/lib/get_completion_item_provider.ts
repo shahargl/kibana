@@ -765,9 +765,101 @@ function getConnectorTypeSuggestions(
   // Get all connectors
   const allConnectors = getCachedAllConnectors();
 
+  // Enhanced matching function that searches across multiple fields
+  const matchesSearch = (connector: any): boolean => {
+    const lowerPrefix = typePrefix.toLowerCase();
+    if (!lowerPrefix) return true; // Show all if no filter
+    
+    const searchableText = [
+      connector.type,                    // operationId
+      connector.title || '',             // title
+      connector.summary || '',           // summary
+      connector.description || '',       // description
+      ...(connector.patterns || []),     // URL patterns (e.g., ['/api/note', '/api/notes/{id}'])
+      connector.path || '',              // Fallback for single path
+      connector.url || '',               // Fallback for full URL
+      ...(connector.tags || []),         // tags
+    ].join(' ').toLowerCase();
+    
+    // Split prefix into words for better matching
+    // Also split on slashes to allow searching like "/persist" -> "persist"
+    const searchWords = lowerPrefix
+      .split(/[\s/]+/)  // Split on whitespace or slashes
+      .filter(w => w.length > 0);
+    
+    // All words must be found somewhere in the searchable text
+    return searchWords.every(word => searchableText.includes(word));
+  };
+
+  // Score matches for better ranking
+  const scoreMatch = (connector: any): number => {
+    const lowerPrefix = typePrefix.toLowerCase();
+    let score = 0;
+    const type = connector.type.toLowerCase();
+    const title = (connector.title || '').toLowerCase();
+    const summary = (connector.summary || '').toLowerCase();
+    const patterns = (connector.patterns || []).map((p: string) => p.toLowerCase());
+    const path = (connector.path || '').toLowerCase();
+    const url = (connector.url || '').toLowerCase();
+    
+    // For namespace searches (e.g., "kibana.note"), score the part after the dot
+    if (typePrefix.includes('.')) {
+      const dotIndex = typePrefix.indexOf('.');
+      const afterDot = typePrefix.substring(dotIndex + 1).toLowerCase();
+      
+      // Find where the actual dot is in the lowercase type
+      const typeDotIndex = type.indexOf('.');
+      const typeAfterNamespace = typeDotIndex !== -1 ? type.substring(typeDotIndex + 1) : type;
+      
+      if (afterDot) {
+        // Exact match on the part after namespace = very high priority
+        if (typeAfterNamespace === afterDot) score += 1000;
+        // Part after namespace starts with search = high priority
+        else if (typeAfterNamespace.startsWith(afterDot)) score += 200;
+        // Part after namespace contains search = good priority
+        else if (typeAfterNamespace.includes(afterDot)) score += 100;
+        
+        // Also score based on title/summary match for the part after dot
+        if (title.includes(afterDot)) score += 75;
+        if (summary.includes(afterDot)) score += 50;
+        if (patterns.some((pattern: string) => pattern.includes(afterDot))) score += 60;
+      }
+    } else {
+      // Regular scoring for non-namespace searches
+      // Check if search starts with "/" - treat it as a slash-separated search
+      const isSlashSearch = lowerPrefix.startsWith('/');
+      const searchTerm = isSlashSearch ? lowerPrefix.substring(1) : lowerPrefix;
+      
+      // Exact type match = highest priority
+      if (type === lowerPrefix) score += 1000;
+      // Type starts with prefix = high priority
+      else if (type.startsWith(lowerPrefix)) score += 100;
+      // Type contains prefix or searchTerm = medium priority
+      else if (type.includes(lowerPrefix)) score += 50;
+      else if (isSlashSearch && type.includes(searchTerm)) score += 40;
+      
+      // URL/Path pattern match = high priority (especially for REST APIs)
+      if (patterns.some((pattern: string) => pattern === lowerPrefix)) score += 800;
+      else if (patterns.some((pattern: string) => pattern.includes(lowerPrefix))) score += 60;
+      else if (path === lowerPrefix) score += 800;
+      else if (path.includes(lowerPrefix)) score += 60;
+      else if (url.includes(lowerPrefix)) score += 40;
+      
+      // Title match = good priority
+      if (title === lowerPrefix || title === searchTerm) score += 500;
+      else if (title.startsWith(lowerPrefix) || (isSlashSearch && title.startsWith(searchTerm))) score += 75;
+      else if (title.includes(lowerPrefix) || (isSlashSearch && title.includes(searchTerm))) score += 25;
+      
+      // Summary match = lower priority
+      if (summary.includes(lowerPrefix) || (isSlashSearch && summary.includes(searchTerm))) score += 10;
+    }
+    
+    return score;
+  };
+
   // Helper function to create a suggestion with snippet
-  const createSnippetSuggestion = (connectorType: string): monaco.languages.CompletionItem => {
-    const snippetText = generateConnectorSnippet(connectorType);
+  const createSnippetSuggestion = (connector: any): monaco.languages.CompletionItem => {
+    const snippetText = generateConnectorSnippet(connector.type);
 
     // For YAML, we insert the actual text without snippet placeholders
     const simpleText = snippetText;
@@ -780,37 +872,135 @@ function getConnectorTypeSuggestions(
       endColumn: Math.max(range.endColumn, 1000),
     };
 
+    // Enhanced documentation with title, summary, and URL patterns
+    let documentation: string;
+    const primaryPattern = connector.patterns?.[0] || connector.path || connector.url;
+    
+    if (connector.title || connector.summary || primaryPattern) {
+      const parts = [];
+      if (connector.title) parts.push(`**${connector.title}**`);
+      if (connector.summary) parts.push(connector.summary);
+      
+      // Show endpoint(s)
+      if (connector.patterns && connector.patterns.length > 0) {
+        if (connector.patterns.length === 1) {
+          parts.push(`**Endpoint:** \`${connector.patterns[0]}\``);
+        } else {
+          parts.push(`**Endpoints:**\n${connector.patterns.map((p: string) => `- \`${p}\``).join('\n')}`);
+        }
+      } else if (connector.path) {
+        parts.push(`**Endpoint:** \`${connector.path}\``);
+      } else if (connector.url) {
+        parts.push(`**URL:** \`${connector.url}\``);
+      }
+      
+      parts.push(`_Operation: \`${connector.type}\`_`);
+      documentation = parts.join('\n\n');
+    } else {
+      // Fallback documentation
+      const pathInfo = primaryPattern ? ` - ${primaryPattern}` : '';
+      documentation = connector.type.startsWith('elasticsearch.')
+        ? `Elasticsearch API - ${connector.type.replace('elasticsearch.', '')}${pathInfo}`
+        : connector.type.startsWith('kibana.')
+          ? `Kibana API - ${connector.type.replace('kibana.', '')}${pathInfo}`
+          : `Workflow connector - ${connector.type}${pathInfo}`;
+    }
+
+    const score = scoreMatch(connector);
+
+    // Detail line shows summary/title and primary pattern if available
+    // If no summary/title, derive a readable name from the operationId
+    let detail = connector.summary || connector.title;
+    
+    if (!detail && connector.type) {
+      // Derive a title from the operationId by converting camelCase to Title Case
+      // e.g., "kibana.CreateUpdateProtectionUpdatesNote" -> "Create Update Protection Updates Note"
+      const operationName = connector.type.split('.').pop() || '';
+      detail = operationName
+        // Insert space before uppercase letters
+        .replace(/([A-Z])/g, ' $1')
+        .trim()
+        // Capitalize first letter if needed
+        .replace(/^./, (str: string) => str.toUpperCase());
+    }
+    
+    if (!detail) {
+      detail = 'Insert connector with parameters';
+    }
+    
+    if (primaryPattern && !detail.includes(primaryPattern)) {
+      detail = `${detail} • ${primaryPattern}`;
+    }
+
     return {
-      label: connectorType,
-      kind: getConnectorCompletionKind(connectorType), // Use custom icon mapping
+      label: connector.type,
+      kind: getConnectorCompletionKind(connector.type), // Use custom icon mapping
       insertText: simpleText,
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       range: extendedRange,
-      documentation: connectorType.startsWith('elasticsearch.')
-        ? `Elasticsearch API - ${connectorType.replace('elasticsearch.', '')}`
-        : connectorType.startsWith('kibana.')
-        ? `Kibana API - ${connectorType.replace('kibana.', '')}`
-        : `Workflow connector - ${connectorType}`,
-      filterText: connectorType,
-      sortText: `!${connectorType}`, // Priority prefix to sort before default suggestions
-      detail: 'Insert connector with parameters',
-      preselect: false,
+      documentation,
+      // Enhanced filterText - Monaco uses this for fuzzy matching
+      filterText: [
+        connector.type,
+        connector.title,
+        connector.summary,
+        ...(connector.patterns || []),
+        connector.path,
+        connector.url,
+        ...(connector.tags || [])
+      ].filter(Boolean).join(' '),
+      sortText: `${String(10000 - score).padStart(5, '0')}_${connector.type}`,
+      detail,
+      preselect: score > 900, // Preselect exact matches
     };
   };
 
   // If user is typing a prefix like "elasticsearch.", show filtered suggestions
   if (typePrefix.includes('.')) {
-    const [namespace] = typePrefix.split('.');
+    const [namespace, ...rest] = typePrefix.split('.');
     const namespacePrefix = `${namespace}.`;
+    const afterDot = rest.join('.'); // Everything after the first dot
 
-    const apis = allConnectors
+    // Enhanced matching for namespace searches
+    const matchesNamespaceSearch = (connector: any): boolean => {
+      const lowerAfterDot = afterDot.toLowerCase();
+      if (!lowerAfterDot) return true; // Show all if only namespace is typed
+      
+      // Get the part after the namespace from the connector type
+      const connectorType = connector.type.toLowerCase();
+      const dotIndex = connectorType.indexOf('.');
+      const typeAfterNamespace = dotIndex !== -1 ? connectorType.substring(dotIndex + 1) : connectorType;
+      
+      const searchableText = [
+        connectorType,                     // Full operationId (lowercase)
+        typeAfterNamespace,                // Part after namespace (e.g., "persistnoteroute")
+        connector.title || '',             // title
+        connector.summary || '',           // summary
+        connector.description || '',       // description
+        ...(connector.patterns || []),     // URL patterns
+        ...(connector.tags || []),         // tags
+      ].join(' ').toLowerCase();
+      
+      // Split search term into words for better matching
+      const searchWords = lowerAfterDot.split(/\s+/).filter(w => w.length > 0);
+      
+      // All words must be found somewhere in the searchable text
+      return searchWords.every(word => searchableText.includes(word));
+    };
+
+    const matchingConnectors = allConnectors
       .filter((c: any) => c.type.startsWith(namespacePrefix))
-      .map((c: any) => c.type)
-      .filter((api: string) => api.toLowerCase().includes(typePrefix.toLowerCase()));
-    //      .slice(0, 50); // Limit for performance
+      .filter(matchesNamespaceSearch)
+      .map((connector: any) => ({
+        connector,
+        score: scoreMatch(connector)
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 100) // Limit for performance
+      .map(({ connector }) => connector);
 
-    apis.forEach((api) => {
-      suggestions.push(createSnippetSuggestion(api));
+    matchingConnectors.forEach((connector) => {
+      suggestions.push(createSnippetSuggestion(connector));
     });
   } else {
     // First, add built-in step types that match the prefix
@@ -841,28 +1031,19 @@ function getConnectorTypeSuggestions(
       });
     });
 
-    // Then add matching connectors
+    // Then add matching connectors with enhanced search and scoring
     const matchingConnectors = allConnectors
-      .map((c: any) => c.type)
-      .filter((connectorType: string) => {
-        const lowerType = connectorType.toLowerCase();
-        const lowerPrefix = typePrefix.toLowerCase();
+      .filter(matchesSearch)
+      .map((connector: any) => ({
+        connector,
+        score: scoreMatch(connector)
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 100) // Limit for performance
+      .map(({ connector }) => connector);
 
-        // Match if the full type contains the prefix
-        const fullMatch = lowerType.includes(lowerPrefix);
-
-        // For elasticsearch connectors, also match if the part after "elasticsearch." starts with the prefix
-        let elasticsearchMatch = false;
-        if (connectorType.startsWith('elasticsearch.')) {
-          const afterPrefix = connectorType.substring('elasticsearch.'.length);
-          elasticsearchMatch = afterPrefix.toLowerCase().startsWith(lowerPrefix);
-        }
-
-        return fullMatch || elasticsearchMatch;
-      });
-
-    matchingConnectors.forEach((connectorType) => {
-      suggestions.push(createSnippetSuggestion(connectorType));
+    matchingConnectors.forEach((connector) => {
+      suggestions.push(createSnippetSuggestion(connector));
     });
   }
 

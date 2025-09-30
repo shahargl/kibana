@@ -113,13 +113,27 @@ export class KibanaActionStepImpl extends BaseAtomicNodeImplementation<KibanaAct
   }
 
   private getKibanaUrl(): string {
-    // Get Kibana URL from CoreStart if available
     const coreStart = this.contextManager.getCoreStart();
+    
+    // First try to get the public base URL if configured
     if (coreStart?.http?.basePath?.publicBaseUrl) {
       return coreStart.http.basePath.publicBaseUrl;
     }
 
-    // Fallback to localhost for development
+    // If no public base URL, construct it from server info and base path
+    if (coreStart?.http) {
+      const serverInfo = coreStart.http.getServerInfo();
+      const basePath = coreStart.http.basePath.serverBasePath || '';
+      
+      // Construct the full URL with protocol, host, port, and base path
+      const protocol = serverInfo.protocol || 'http';
+      const hostname = serverInfo.hostname || 'localhost';
+      const port = serverInfo.port || 5601;
+      
+      return `${protocol}://${hostname}:${port}${basePath}`;
+    }
+
+    // Final fallback to localhost (this should rarely be used)
     return 'http://localhost:5601';
   }
 
@@ -195,8 +209,22 @@ export class KibanaActionStepImpl extends BaseAtomicNodeImplementation<KibanaAct
   ): Promise<any> {
     const { method, path, body, query, headers = {} } = requestConfig;
 
+    // Ensure the path is properly constructed with base path
+    const coreStart = this.contextManager.getCoreStart();
+    let finalPath = path;
+    
+    // If we have access to basePath service, use it to prepend the base path to API paths
+    if (coreStart?.http?.basePath && !path.startsWith('/api')) {
+      // Only prepend base path if it's not already included in kibanaUrl
+      // and if the path doesn't already start with the base path
+      const serverBasePath = coreStart.http.basePath.serverBasePath;
+      if (serverBasePath && !kibanaUrl.includes(serverBasePath) && !path.startsWith(serverBasePath)) {
+        finalPath = coreStart.http.basePath.prepend(path);
+      }
+    }
+
     // Build full URL with query parameters
-    let fullUrl = `${kibanaUrl}${path}`;
+    let fullUrl = `${kibanaUrl}${finalPath}`;
     if (query && Object.keys(query).length > 0) {
       const queryString = new URLSearchParams(query).toString();
       fullUrl = `${fullUrl}?${queryString}`;
