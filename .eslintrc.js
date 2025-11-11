@@ -1196,6 +1196,7 @@ module.exports = {
       files: [
         'x-pack/platform/plugins/shared/automatic_import/public/**/*.{js,mjs,ts,tsx}',
         'x-pack/platform/plugins/shared/automatic_import/common/**/*.{js,mjs,ts,tsx}',
+        'src/platform/packages/shared/kbn-connector-specs/**/*.{js,mjs,ts,tsx}',
       ],
       rules: {
         'import/no-nodejs-modules': 'error',
@@ -2660,6 +2661,27 @@ module.exports = {
       ],
       rules: {
         '@kbn/eslint/deployment_agnostic_test_context': 'error',
+      },
+    },
+
+    /**
+     * Stack Connectors Specs package
+     */
+    {
+      // shared package for ui and server code
+      files: ['src/platform/packages/shared/kbn-connector-specs/**/*.{js,mjs,ts,tsx}'],
+      rules: {
+        'import/no-nodejs-modules': 'error',
+        'no-duplicate-imports': 'off',
+        'import/no-duplicates': 'error',
+        'no-restricted-imports': [
+          'error',
+          {
+            // prevents UI code from importing server side code and then webpack including it when doing builds
+            patterns: ['**/*server*'],
+            paths: RESTRICTED_IMPORTS,
+          },
+        ],
       },
     },
   ],

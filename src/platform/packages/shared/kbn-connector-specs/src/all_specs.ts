@@ -1,0 +1,21 @@
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
+export * from './specs/abuseipdb';
+export * from './specs/alienvault_otx';
+export * from './specs/bedrock';
+export * from './specs/d3security';
+export * from './specs/greynoise';
+export * from './specs/jira';
+export * from './specs/openai';
+export * from './specs/shodan';
+export * from './specs/slack_api';
+export * from './specs/urlvoid';
+export * from './specs/virustotal';
+export * from './specs/webhook';

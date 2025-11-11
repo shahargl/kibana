@@ -22,14 +22,16 @@
 import { z } from '@kbn/zod';
 import type { SingleFileConnectorDefinition } from '../connector_spec';
 import { UISchemas } from '../connector_spec_ui';
+// import VirusTotalSVG from '../icons/virustotal.svg';
 
 export const VirusTotalConnector: SingleFileConnectorDefinition = {
   metadata: {
     id: '.virustotal',
     displayName: 'VirusTotal',
+    // icon: VirusTotalSVG,
     description: 'File scanning, URL analysis, and threat intelligence lookups',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

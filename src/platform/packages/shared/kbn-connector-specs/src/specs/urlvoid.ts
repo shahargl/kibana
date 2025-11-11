@@ -20,6 +20,7 @@
  */
 
 import { z } from '@kbn/zod';
+
 import type { SingleFileConnectorDefinition } from '../connector_spec';
 import { UISchemas } from '../connector_spec_ui';
 
@@ -29,7 +30,7 @@ export const URLVoidConnector: SingleFileConnectorDefinition = {
     displayName: 'URLVoid',
     description: 'Domain and URL reputation checking via multi-engine scanning',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

@@ -29,7 +29,7 @@ export const ShodanConnector: SingleFileConnectorDefinition = {
     displayName: 'Shodan',
     description: 'Internet-wide asset discovery and vulnerability scanning',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

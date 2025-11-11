@@ -29,7 +29,7 @@ export const AbuseIPDBConnector: SingleFileConnectorDefinition = {
     displayName: 'AbuseIPDB',
     description: 'IP reputation checking and abuse reporting',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

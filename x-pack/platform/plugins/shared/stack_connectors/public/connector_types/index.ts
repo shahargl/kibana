@@ -6,7 +6,13 @@
  */
 
 import type { ValidatedEmail, ValidateEmailAddressesOptions } from '@kbn/actions-plugin/common';
-import type { TriggersAndActionsUIPublicPluginSetup } from '@kbn/triggers-actions-ui-plugin/public';
+import type {
+  ActionTypeModel,
+  TriggersAndActionsUIPublicPluginSetup,
+} from '@kbn/triggers-actions-ui-plugin/public';
+import { connectorsSpecs } from '@kbn/connector-specs';
+import type { SingleFileConnectorDefinition } from '@kbn/connector-specs/src/connector_spec';
+import { lazy } from 'react';
 import { getMicrosoftDefenderEndpointConnectorType } from './microsoft_defender_endpoint';
 import { getCasesWebhookConnectorType } from './cases_webhook';
 import { getEmailConnectorType } from './email';
@@ -92,4 +98,26 @@ export function registerConnectorTypes({
   if (ExperimentalFeaturesService.get().microsoftDefenderEndpointOn) {
     connectorTypeRegistry.register(getMicrosoftDefenderEndpointConnectorType());
   }
+
+  // Register connector specs
+  for (const spec of Object.values(connectorsSpecs)) {
+    const connectorType = createConnectorTypeFromSpec(spec);
+    if (!connectorTypeRegistry.has(connectorType.id)) {
+      connectorTypeRegistry.register(connectorType);
+    }
+  }
 }
+
+const createConnectorTypeFromSpec = (
+  spec: SingleFileConnectorDefinition
+): ActionTypeModel<unknown, unknown, unknown> => {
+  return {
+    id: spec.metadata.id,
+    actionTypeTitle: spec.metadata.displayName,
+    selectMessage: spec.metadata.description,
+    iconClass: spec.metadata.icon ?? 'globe',
+    actionConnectorFields: null,
+    actionParamsFields: lazy(() => Promise.resolve({ default: () => null })),
+    validateParams: async () => ({ errors: {} }),
+  };
+};

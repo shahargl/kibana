@@ -29,7 +29,7 @@ export const GreyNoiseConnector: SingleFileConnectorDefinition = {
     displayName: 'GreyNoise',
     description: 'Internet scanning noise detection and classification',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

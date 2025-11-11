@@ -5,8 +5,14 @@
  * 2.0.
  */
 
-import type { PluginSetupContract as ActionsPluginSetupContract } from '@kbn/actions-plugin/server';
+import { type PluginSetupContract as ActionsPluginSetupContract } from '@kbn/actions-plugin/server';
 
+import { connectorsSpecs } from '@kbn/connector-specs';
+import type { SingleFileConnectorDefinition } from '@kbn/connector-specs/src/connector_spec';
+import type { SubActionConnectorType } from '@kbn/actions-plugin/server/sub_action_framework/types';
+import { z } from '@kbn/zod';
+import type { ActionTypeConfig, ActionTypeSecrets } from '@kbn/actions-plugin/server/types';
+import type { LicenseType } from '@kbn/licensing-types/src/types';
 import { getJiraServiceManagementConnectorType } from './jira-service-management';
 import { getMicrosoftDefenderEndpointConnectorType } from './microsoft_defender_endpoint';
 import { getConnectorType as getCasesWebhookConnectorType } from './cases_webhook';
@@ -139,4 +145,36 @@ export function registerConnectorTypes({
     actions.registerSubActionConnectorType(getInferenceConnectorType());
   }
   actions.registerSubActionConnectorType(getMicrosoftDefenderEndpointConnectorType());
+
+  // Register connector specs
+  for (const spec of Object.values(connectorsSpecs)) {
+    const connectorType = createConnectorTypeFromSpec(spec);
+
+    try {
+      actions.registerSubActionConnectorType(connectorType);
+    } catch (error) {
+      // Just ignore if the connector is already registered for now
+      if (!error.toString().includes('is already registered')) {
+        throw error;
+      }
+    }
+  }
 }
+
+const createConnectorTypeFromSpec = (
+  spec: SingleFileConnectorDefinition
+): SubActionConnectorType<ActionTypeConfig, ActionTypeSecrets> => {
+  return {
+    id: spec.metadata.id,
+    minimumLicenseRequired: spec.metadata.minimumLicense as LicenseType,
+    name: spec.metadata.displayName,
+    getService: (params) => {
+      throw new Error('Not implemented');
+    },
+    supportedFeatureIds: spec.metadata.supportedFeatureIds,
+    schema: {
+      config: z.object({}),
+      secrets: z.object({}),
+    },
+  };
+};

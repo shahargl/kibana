@@ -9,10 +9,10 @@
 
 /**
  * Stack Connectors 2.0 - Minimal TypeScript Specification
- * 
+ *
  * This is a simplified spec containing only features used by example connectors.
  * For the comprehensive specification, see connector_rfc.ts
- * 
+ *
  * Key principles:
  * - Single schema (config + secrets together)
  * - Secrets marked with meta.sensitive
@@ -236,21 +236,21 @@ export interface ConnectorTest {
 
 export interface SingleFileConnectorDefinition {
   metadata: ConnectorMetadata;
-  
+
   // Single unified schema for all connector fields (config + secrets)
   // Mark sensitive fields with withUIMeta({ sensitive: true })
   schema: z.ZodSchema;
-  
+
   validateUrls?: {
     fields?: string[];
   };
-  
+
   policies?: ConnectorPolicies;
-  
+
   actions: Record<string, ActionDefinition>;
-  
+
   test?: ConnectorTest;
-  
+
   transformations?: Transformations;
 }
 
@@ -276,4 +276,3 @@ export function isToolAction(
 ): boolean {
   return connector.actions[actionName]?.isTool ?? false;
 }
-

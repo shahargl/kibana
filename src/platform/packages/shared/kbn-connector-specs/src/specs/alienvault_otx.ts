@@ -29,7 +29,7 @@ export const AlienVaultOTXConnector: SingleFileConnectorDefinition = {
     displayName: 'AlienVault OTX',
     description: 'Community-driven threat intelligence from Open Threat Exchange',
     minimumLicense: 'gold',
-    supportedFeatureIds: ['alerting', 'security'],
+    supportedFeatureIds: ['alerting', 'siem'],
   },
 
   schema: z.discriminatedUnion('method', [

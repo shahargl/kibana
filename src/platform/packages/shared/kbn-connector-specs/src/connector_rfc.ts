@@ -31,7 +31,6 @@
  */
 
 import { z } from '@kbn/zod';
-import type { Logger } from '@kbn/core/server';
 import type { AxiosInstance } from 'axios';
 import { i18n } from '@kbn/i18n';
 import { withUIMeta, UISchemas } from './connector_spec_ui';
@@ -333,10 +332,10 @@ export type AuthConfig = z.infer<typeof AuthSchema>;
 
 /**
  * Common retry status code patterns
- * 
+ *
  * WHY: Provide reusable constants for common retry scenarios instead of
  * repeating status code arrays across connectors.
- * 
+ *
  * @example Using a constant
  * ```typescript
  * retry: {
@@ -344,7 +343,7 @@ export type AuthConfig = z.infer<typeof AuthSchema>;
  *   maxRetries: 3
  * }
  * ```
- * 
+ *
  * @example Combining constants
  * ```typescript
  * retry: {
@@ -433,21 +432,21 @@ export interface RateLimitPolicy {
 export interface PaginationPolicy {
   /**
    * Pagination strategy
-   * 
+   *
    * cursor: Cursor/token-based pagination (most modern APIs)
    *   USED BY: Slack (response_metadata.next_cursor), Crowdstrike, SentinelOne
    *   REFERENCE: Slack uses cursor pagination in API responses
    *   Example: { "response_metadata": { "next_cursor": "dGVhbTpDMDYxRkE1UEI=" } }
-   *   
+   *
    * offset: Offset/limit-based pagination (traditional REST)
    *   USED BY: Jira, ServiceNow, Resilient
    *   REFERENCE: x-pack/platform/plugins/shared/stack_connectors/server/connector_types/jira/service.ts:436-438
    *   Code: `jql=project="${projectKey}" and summary ~"${title}"` with startAt parameter
-   *   
+   *
    * link_header: RFC 5988 Link header pagination
    *   USED BY: GitHub API, some enterprise REST APIs
    *   Example: Link: <https://api.example.com/data?page=2>; rel="next"
-   *   
+   *
    * none: No pagination support
    *   USED BY: Most single-action connectors (Webhook, Email, Teams, PagerDuty)
    */
@@ -571,7 +570,7 @@ export interface PaginationPolicy {
    */
   cursorParam?: string;
   cursorPath?: string;
-  
+
   /**
    * For offset-based pagination
    * offsetParam: Parameter for page offset (e.g., "offset", "skip", "startAt")
@@ -580,20 +579,20 @@ export interface PaginationPolicy {
    */
   offsetParam?: string;
   limitParam?: string;
-  
+
   /**
    * For link header pagination
    * linkHeaderName: Header name (usually "Link")
    * EXAMPLE: Link: <https://api.example.com/data?page=2>; rel="next"
    */
   linkHeaderName?: string;
-  
+
   /**
    * Page size parameter name
    * EXAMPLE: "limit" (Slack), "maxResults" (Jira), "top" (Teams)
    */
   pageSizeParam?: string;
-  
+
   /**
    * Default/max page size
    * COMMON: 50-100 for most APIs
@@ -664,7 +663,7 @@ export interface RetryPolicy {
    * TIP: Use exported constants for common patterns:
    * ```typescript
    * import { RETRY_SERVER_ERRORS, RETRY_RATE_LIMIT } from './connector_spec';
-   * 
+   *
    * retry: {
    *   retryOnStatusCodes: RETRY_SERVER_ERRORS  // [500, 502, 503, 504]
    * }
@@ -894,10 +893,10 @@ export interface ActionDefinition<TInput = unknown, TOutput = unknown, TError = 
 
   /** Action handler function */
   handler: (ctx: ActionContext, input: TInput) => Promise<TOutput>;
-  
+
   /** Optional description for documentation/UI */
   description?: string;
-  
+
   /**
    * Optional action group/category for UI organization
    *
@@ -954,7 +953,7 @@ export interface ActionDefinition<TInput = unknown, TOutput = unknown, TError = 
    * group actions with the same `actionGroup` value together.
    */
   actionGroup?: string;
-  
+
   /** Whether this action supports streaming responses */
   supportsStreaming?: boolean;
 }
@@ -1415,7 +1414,7 @@ export interface Transformations {
  * }).superRefine((data, ctx) => {
  *   const hasCert = !!data.certificateData;
  *   const hasKey = !!data.privateKeyData;
- *   
+ *
  *   if (hasCert !== hasKey) {
  *     ctx.addIssue({
  *       code: z.ZodIssueCode.custom,
@@ -1655,10 +1654,10 @@ export interface ConnectorLayout {
 
 /**
  * Standard authentication schemas that connectors can import and use
- * 
+ *
  * WHY: Most connectors use standard auth patterns. Instead of each connector
  * defining auth fields, import and spread these standard schemas.
- * 
+ *
  * USAGE:
  * ```typescript
  * schema: z.object({
@@ -1700,7 +1699,7 @@ export const SSLAuthSchema = z.object({
 
 /**
  * Helper function to get standard auth schemas
- * 
+ *
  * @example Get basic and bearer schemas
  * ```typescript
  * schema: z.object({
@@ -1712,7 +1711,7 @@ export const SSLAuthSchema = z.object({
  */
 export function getAuthSchema(types: Array<'basic' | 'bearer' | 'oauth2' | 'ssl'>) {
   const schemas: z.ZodRawShape = {};
-  
+
   if (types.includes('basic')) {
     Object.assign(schemas, BasicAuthSchema.shape);
   }
@@ -1725,14 +1724,14 @@ export function getAuthSchema(types: Array<'basic' | 'bearer' | 'oauth2' | 'ssl'
   if (types.includes('ssl')) {
     Object.assign(schemas, SSLAuthSchema.shape);
   }
-  
+
   return schemas;
 }
 
 /**
  * Complete single-file connector definition
  * This is the interface that all connectors must satisfy
- * 
+ *
  * PHILOSOPHY (aligned with CR feedback):
  * - Single schema containing config AND secrets (not separate)
  * - Secrets marked with meta.sensitive (framework encrypts them)
@@ -1748,46 +1747,46 @@ export interface SingleFileConnectorDefinition {
    * WHY: Every connector needs identity and basic info
    */
   metadata: ConnectorMetadata;
-  
+
   // ---- Single Schema (Config + Secrets) ----
   /**
    * Single Zod schema containing ALL connector fields (config AND secrets)
-   * 
+   *
    * WHY (CR feedback from @cnasikas, @jcger, @adcoelho):
    * - Preserves field order for UI (config, then auth, then more config)
    * - No duplication between config/secrets schemas
    * - Secrets marked with meta.sensitive (framework encrypts these)
    * - Can import standard auth schemas: ...BasicAuthSchema, ...BearerAuthSchema
    * - Single source of truth for validation AND UI
-   * 
+   *
    * STRUCTURE:
    * ```typescript
    * schema: z.object({
    *   // Config fields
-   *   url: z.string().url().meta({ 
+   *   url: z.string().url().meta({
    *     label: 'API URL',
    *     section: 'Connection',
    *     order: 1
    *   }),
-   *   
+   *
    *   // Secret fields (marked with meta.sensitive)
-   *   apiKey: z.string().meta({ 
+   *   apiKey: z.string().meta({
    *     sensitive: true,  // ← Framework encrypts this field
    *     label: 'API Key',
    *     section: 'Authentication',
    *     order: 2
    *   }),
-   *   
+   *
    *   // Or import standard auth
    *   ...BasicAuthSchema,  // Adds username, password (password already marked sensitive)
-   *   
+   *
    *   // More config
    *   timeout: z.number().default(30000).meta({
    *     section: 'Advanced'
    *   })
    * })
    * ```
-   * 
+   *
    * FRAMEWORK BEHAVIOR:
    * - Fields with `meta.sensitive = true` are encrypted before storage
    * - Field order in schema = render order in UI (unless overridden by meta.order)
@@ -1795,23 +1794,23 @@ export interface SingleFileConnectorDefinition {
    * - Validation uses zod.parse() directly
    */
   schema: z.ZodSchema;
-  
+
   // ---- URL Validation (Framework Enforced) ----
   /**
    * Optional URL allowlist validation (framework enforced)
-   * 
+   *
    * WHY (Security): Prevents SSRF attacks by restricting which URLs connectors can call.
    * The framework enforces this separately as a security layer.
-   * 
+   *
    * Simply list field names that contain URLs to validate.
-   * 
+   *
    * @example
    * ```typescript
    * validateUrls: {
    *   fields: ["apiUrl", "webhookUrl", "tokenUrl"]
    * }
    * ```
-   * 
+   *
    * Framework will call `configurationUtilities.ensureUriAllowed()` for each field.
    */
   validateUrls?: {
