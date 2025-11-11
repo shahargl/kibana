@@ -7,6 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
+import type { IconType } from '@elastic/eui';
 import type { JsonValue } from '@kbn/utility-types';
 import { z } from '@kbn/zod';
 import type { WorkflowYaml } from '../spec/schema';
@@ -365,8 +366,11 @@ export interface ConnectorTypeInfo {
   minimumLicenseRequired: string;
   subActions: ConnectorSubAction[];
 }
-
-export type ConnectorTypeInfoMinimal = Pick<ConnectorTypeInfo, 'actionTypeId' | 'displayName'>;
+export interface ConnectorTypeInfoMinimal {
+  actionTypeId: string;
+  displayName: string;
+  icon?: IconType;
+}
 
 export interface ConnectorContract {
   type: string;
