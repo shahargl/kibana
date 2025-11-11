@@ -9,13 +9,7 @@
 
 export * from './specs/abuseipdb';
 export * from './specs/alienvault_otx';
-export * from './specs/bedrock';
-export * from './specs/d3security';
 export * from './specs/greynoise';
-export * from './specs/jira';
-export * from './specs/openai';
 export * from './specs/shodan';
-export * from './specs/slack_api';
 export * from './specs/urlvoid';
 export * from './specs/virustotal';
-export * from './specs/webhook';
