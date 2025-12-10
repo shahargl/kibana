@@ -1,0 +1,828 @@
+yarn run v1.22.22
+$ /Users/shaharglazner/git/kibana/node_modules/.bin/jest src/platform/plugins/shared/workflows_management/server/workflows_management/__benchmarks__/zod_vs_json_schema.test.ts
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/services.ts
+    * <rootDir>/src/platform/packages/shared/kbn-unified-tabs/__mocks__/services.ts
+
+jest-haste-map: duplicate manual mock found: data_view_with_timefield
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/data_view_with_timefield.ts
+    * <rootDir>/src/platform/packages/shared/kbn-unified-histogram/__mocks__/data_view_with_timefield.ts
+
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-tabs/__mocks__/services.ts
+    * <rootDir>/src/platform/packages/shared/kbn-unified-histogram/__mocks__/services.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/packages/expandable-flyout/__mocks__/index.tsx
+    * <rootDir>/src/platform/packages/shared/kbn-data-grid-in-table-search/src/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: data_view
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-histogram/__mocks__/data_view.ts
+    * <rootDir>/src/platform/packages/shared/kbn-discover-utils/src/__mocks__/data_view.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-data-grid-in-table-search/src/__mocks__/index.ts
+    * <rootDir>/src/platform/packages/shared/kbn-discover-utils/src/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-discover-utils/src/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/cps/public/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: config
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/config.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/config.ts
+
+jest-haste-map: duplicate manual mock found: data_view_with_timefield
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-histogram/__mocks__/data_view_with_timefield.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/data_view_with_timefield.ts
+
+jest-haste-map: duplicate manual mock found: data_views
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/data_views.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/data_views.ts
+
+jest-haste-map: duplicate manual mock found: local_storage_mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/local_storage_mock.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/local_storage_mock.ts
+
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-histogram/__mocks__/services.tsx
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/services.ts
+
+jest-haste-map: duplicate manual mock found: data_view_complex
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-data-table/__mocks__/data_view_complex.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/data_view_complex.ts
+
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/services.ts
+    * <rootDir>/src/platform/plugins/shared/unified_doc_viewer/public/__mocks__/services.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/cps/public/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/unified_doc_viewer/public/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/unified_doc_viewer/public/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: router.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/search/plugins/search_playground/__mocks__/router.mock.ts
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/router.mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/common/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: fetch_indices.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/fetch_indices.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/server/__mocks__/fetch_indices.mock.ts
+
+jest-haste-map: duplicate manual mock found: router.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/router.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/server/__mocks__/router.mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/common/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/server/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: routerDependencies.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/server/__mocks__/routerDependencies.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/server/__mocks__/routerDependencies.mock.ts
+
+jest-haste-map: duplicate manual mock found: request
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/automatic_import/server/__mocks__/request.ts
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/request.ts
+
+jest-haste-map: duplicate manual mock found: request_context
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/automatic_import/server/__mocks__/request_context.ts
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/request_context.ts
+
+jest-haste-map: duplicate manual mock found: response
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/automatic_import/server/__mocks__/response.ts
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/response.ts
+
+jest-haste-map: duplicate manual mock found: test_adapters
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/automatic_import/server/__mocks__/test_adapters.ts
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/test_adapters.ts
+
+jest-haste-map: duplicate manual mock found: request
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/request.ts
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/request.ts
+
+jest-haste-map: duplicate manual mock found: request_context
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/request_context.ts
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/request_context.ts
+
+jest-haste-map: duplicate manual mock found: response
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/response.ts
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/response.ts
+
+jest-haste-map: duplicate manual mock found: test_adapters
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/test_adapters.ts
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/test_adapters.ts
+
+jest-haste-map: duplicate manual mock found: server
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/ecs_data_quality_dashboard/server/__mocks__/server.ts
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/server.ts
+
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/unified_doc_viewer/public/__mocks__/services.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_legacy_metric/public/__mocks__/services.ts
+
+jest-haste-map: duplicate manual mock found: format_service
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_legacy_metric/public/__mocks__/format_service.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/format_service.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/server/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: ui_settings
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/ui_settings.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/ui_settings.ts
+
+jest-haste-map: duplicate manual mock found: format_service
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/format_service.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_tagcloud/public/__mocks__/format_service.ts
+
+jest-haste-map: duplicate manual mock found: palettes
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/palettes.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_tagcloud/public/__mocks__/palettes.ts
+
+jest-haste-map: duplicate manual mock found: theme
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/theme.ts
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_tagcloud/public/__mocks__/theme.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_partition_vis/public/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: request.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/private/reindex_service/server/src/__mocks__/request.mock.ts
+    * <rootDir>/x-pack/platform/plugins/private/upgrade_assistant/server/routes/__mocks__/request.mock.ts
+
+jest-haste-map: duplicate manual mock found: routes.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/private/reindex_service/server/src/__mocks__/routes.mock.ts
+    * <rootDir>/x-pack/platform/plugins/private/upgrade_assistant/server/routes/__mocks__/routes.mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/__mocks__/index.tsx
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/api/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/api/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/fleet/server/telemetry/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: request_context
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/request_context.ts
+    * <rootDir>/x-pack/platform/plugins/shared/rule_registry/server/routes/__mocks__/request_context.ts
+
+jest-haste-map: duplicate manual mock found: server
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/server.ts
+    * <rootDir>/x-pack/platform/plugins/shared/rule_registry/server/routes/__mocks__/server.ts
+
+jest-haste-map: duplicate manual mock found: @kbn/code-editor/index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/stack_connectors/__mocks__/@kbn/code-editor/index.tsx
+    * <rootDir>/x-pack/solutions/observability/plugins/synthetics/__mocks__/@kbn/code-editor/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/fleet/server/telemetry/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/observability/plugins/synthetics/server/telemetry/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: shallow_useeffect.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/shallow_useeffect.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/__mocks__/shallow_useeffect.mock.ts
+
+jest-haste-map: duplicate manual mock found: services.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-unified-field-list/__mocks__/services.mock.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_ess/public/common/__mocks__/services.mock.ts
+
+jest-haste-map: duplicate manual mock found: services
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/chart_expressions/expression_legacy_metric/public/__mocks__/services.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_ess/public/common/__mocks__/services.tsx
+
+jest-haste-map: duplicate manual mock found: request.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/private/upgrade_assistant/server/routes/__mocks__/request.mock.ts
+    * <rootDir>/src/platform/plugins/shared/console/server/routes/api/__mocks__/request.mock.ts
+
+jest-haste-map: duplicate manual mock found: routes.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/private/upgrade_assistant/server/routes/__mocks__/routes.mock.ts
+    * <rootDir>/src/platform/plugins/shared/console/server/routes/api/__mocks__/routes.mock.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/containers/__mocks__/api.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/containers/configure/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/containers/configure/__mocks__/api.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/containers/user_profiles/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: request_responses
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/rule_registry/server/routes/__mocks__/request_responses.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/server/routes/api/__mocks__/request_responses.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/observability/plugins/synthetics/server/telemetry/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/osquery/server/lib/telemetry/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/osquery/server/lib/telemetry/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/spaces/server/lib/utils/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: react_router/hooks.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/react_router/hooks.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/__mocks__/react_router/hooks.mock.ts
+
+jest-haste-map: duplicate manual mock found: react_router/index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/react_router/index.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/__mocks__/react_router/index.ts
+
+jest-haste-map: duplicate manual mock found: react_router/state.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/react_router/state.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/__mocks__/react_router/state.mock.ts
+
+jest-haste-map: duplicate manual mock found: view_index.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/__mocks__/view_index.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/enterprise_search_content/__mocks__/view_index.mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/spaces/server/lib/utils/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/cloud_security_posture/public/pages/rules/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/cloud_security_posture/public/pages/rules/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_serverless/public/common/services/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: services.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_ess/public/common/__mocks__/services.mock.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_serverless/public/common/services/__mocks__/services.mock.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution_serverless/public/common/services/__mocks__/index.tsx
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/common/siem_migrations/model/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/common/siem_migrations/model/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/dashboards/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/dashboards/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/tags/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/private/inspect_component/public/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/tags/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/telemetry/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: request_responses
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/server/routes/api/__mocks__/request_responses.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/timeline/__mocks__/request_responses.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/onboarding/components/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/telemetry/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/dashboards/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/dashboards/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/rules/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/rules/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/data/public/search/session/sessions_mgmt/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/data/public/search/session/sessions_mgmt/__mocks__/index.tsx
+    * <rootDir>/src/platform/plugins/shared/vis_types/timeseries/public/convert_to_lens/lib/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/vis_types/timeseries/public/convert_to_lens/lib/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/common/lib/kibana/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/containers/user_profiles/__mocks__/api.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/components/connectors/jira/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/components/connectors/jira/__mocks__/api.ts
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/components/connectors/servicenow/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/common/lib/kibana/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/lens/public/datasources/form_based/operations/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/lens/public/datasources/form_based/operations/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/components/saved_objects_warning/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: data_view
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/packages/shared/kbn-discover-utils/src/__mocks__/data_view.ts
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/contexts/ml/__mocks__/data_view.ts
+
+jest-haste-map: duplicate manual mock found: saved_search
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/__mocks__/saved_search.ts
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/contexts/ml/__mocks__/saved_search.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/components/saved_objects_warning/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/contexts/kibana/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/contexts/kibana/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/services/toast_notification_service/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/ml/public/application/services/toast_notification_service/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/timelines/server/search_strategy/timeline/eql/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/timelines/server/search_strategy/timeline/eql/__mocks__/index.ts
+    * <rootDir>/x-pack/platform/plugins/shared/triggers_actions_ui/public/common/lib/kibana/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: doc_links.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/content_connectors/public/components/shared/doc_links/__mocks__/doc_links.mock.ts
+    * <rootDir>/x-pack/solutions/search/plugins/enterprise_search/public/applications/shared/doc_links/__mocks__/doc_links.mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/triggers_actions_ui/public/common/lib/kibana/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: request
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/request.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/request.ts
+
+jest-haste-map: duplicate manual mock found: request_context
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/rule_registry/server/routes/__mocks__/request_context.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/request_context.ts
+
+jest-haste-map: duplicate manual mock found: request_responses
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/timeline/__mocks__/request_responses.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/request_responses.ts
+
+jest-haste-map: duplicate manual mock found: server
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/rule_registry/server/routes/__mocks__/server.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/server.ts
+
+jest-haste-map: duplicate manual mock found: test_adapters
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/test_adapters.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/test_adapters.ts
+
+jest-haste-map: duplicate manual mock found: rule
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/integration_tests/__mocks__/rule.json
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_types/__mocks__/rule.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/onboarding/components/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/telemetry/diagnostic/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/platform/plugins/shared/cases/public/components/connectors/servicenow/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/containers/dashboards/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/containers/dashboards/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/containers/tags/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/telemetry/diagnostic/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/empty_prompt/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/empty_prompt/__mocks__/index.tsx
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/link_to/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/containers/tags/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/user_profiles/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/link_to/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/user_privileges/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: utils
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/routes/__mocks__/utils.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/visualization_actions/__mocks__/utils.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/user_privileges/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/kibana/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: use_kibana
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/workflows_management/public/hooks/__mocks__/use_kibana.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/kibana/__mocks__/use_kibana.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/kibana/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/local_storage/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/local_storage/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/fleet_integrations/api/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/user_profiles/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_gaps/api/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_gaps/api/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management/api/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: api_client
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/fleet_integrations/api/__mocks__/api_client.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_monitoring/api/__mocks__/api_client.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/fleet_integrations/api/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_monitoring/api/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_monitoring/api/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detections/components/user_info/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detections/components/user_info/__mocks__/index.tsx
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/entity_analytics/components/entity_analytics_risk_score/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/entity_analytics/components/entity_analytics_risk_score/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/explore/components/kpi/__mocks__/index.tsx
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/explore/components/kpi/__mocks__/index.tsx
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/common/components/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/siem_migrations/common/components/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/timelines/components/open_timeline/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/timelines/components/open_timeline/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/log_document_profile/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/log_document_profile/__mocks__/index.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/logs_data_source_profile/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: application_mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/observability_document_profile/__mocks__/application_mock.ts
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/traces_document_profile/__mocks__/application_mock.ts
+
+jest-haste-map: duplicate manual mock found: ut_router_history.mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/observability/plugins/uptime/public/legacy_uptime/lib/__mocks__/ut_router_history.mock.ts
+    * <rootDir>/x-pack/solutions/observability/plugins/synthetics/public/apps/synthetics/utils/testing/__mocks__/ut_router_history.mock.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/data/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/data/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/task/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/task/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/data/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/platform/plugins/shared/discover/public/context_awareness/profile_providers/observability/logs_data_source_profile/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/index_migrators/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/data/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/task/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/task/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/task/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/task/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/data/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/index_migrators/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/last_first_seen/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/last_first_seen/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/host_isolation/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/host_isolation/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/responder/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/data/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/integrations/hooks/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_gaps/logic/__mocks__/mock.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management_ui/components/rules_table/__mocks__/mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/responder/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management/model/coverage_overview/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: api
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management/api/__mocks__/api.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detections/containers/detection_engine/alerts/__mocks__/api.ts
+
+jest-haste-map: duplicate manual mock found: mock
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management_ui/components/rules_table/__mocks__/mock.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/explore/network/components/embeddables/__mocks__/mock.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/detection_engine/rule_management/model/coverage_overview/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_monitoring/logic/detection_engine_health/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_monitoring/logic/detection_engine_health/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_monitoring/logic/rule_execution_log/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: alerts
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/elastic_assistant/server/__mocks__/alerts.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_types/utils/enrichments/__mocks__/alerts.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/lib/integrations/hooks/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/task/util/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/common/task/util/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/task/retrievers/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: mocks
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/rules/task/retrievers/__mocks__/mocks.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/siem_migrations/dashboards/task/retrievers/__mocks__/mocks.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/lib/detection_engine/rule_monitoring/logic/rule_execution_log/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/details/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/details/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/dns/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/dns/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/tls/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/tls/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/http/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/http/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/overview/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/overview/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/top_n_flow/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/top_n_flow/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/top_countries/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/top_countries/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/users/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/network/users/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/details/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/details/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/overview/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/overview/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/related_entities/related_users/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/related_entities/related_users/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/uncommon_processes/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/uncommon_processes/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/related_entities/related_hosts/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/related_entities/related_hosts/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/risk_score/kpi/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/risk_score/kpi/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/authentications/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/authentications/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/all/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/all/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/services/observed_details/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/services/observed_details/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/observed_details/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/users/observed_details/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/all/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/server/search_strategy/security_solution/factory/hosts/all/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/responder/from_alerts/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/responder/from_alerts/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/host_isolation/from_alerts/__mocks__/index.ts
+
+jest-haste-map: duplicate manual mock found: index
+  The following files share their name; please delete one of them:
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/common/components/endpoint/host_isolation/from_alerts/__mocks__/index.ts
+    * <rootDir>/x-pack/solutions/security/plugins/security_solution/public/timelines/components/timeline/tabs/esql/__mocks__/index.tsx
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

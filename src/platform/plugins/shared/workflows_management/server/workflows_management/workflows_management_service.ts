@@ -71,6 +71,9 @@ import { validateStepNameUniqueness } from '../../common/lib/validate_step_names
 import { parseWorkflowYamlToJSON, updateWorkflowYamlFields } from '../../common/lib/yaml';
 import { affectsYamlMetadata } from '../../common/lib/yaml/update_workflow_yaml_fields';
 import { getWorkflowZodSchema } from '../../common/schema';
+import { profileMemory, profileMemoryAsync } from './utils/memory_profiler';
+import { getWorkflowJsonSchema } from '@kbn/workflows';
+import Ajv from 'ajv';
 import { getAuthenticatedUser } from '../lib/get_user';
 import { hasScheduledTriggers } from '../lib/schedule_utils';
 import { createStorage } from '../storage/workflow_storage';
@@ -187,10 +190,60 @@ export class WorkflowsService {
       definition: undefined,
       valid: false,
     };
-    const parsedYaml = parseWorkflowYamlToJSON(
-      workflow.yaml,
-      await this.getWorkflowZodSchema({ loose: false }, spaceId, request)
-    );
+
+    // Memory profiling: enabled via WORKFLOW_MEMORY_PROFILE=1 environment variable
+    const enableProfiling = process.env.WORKFLOW_MEMORY_PROFILE === '1';
+
+    const zodSchema = enableProfiling
+      ? await profileMemoryAsync('getWorkflowZodSchema', () =>
+          this.getWorkflowZodSchema({ loose: false }, spaceId, request)
+        )
+      : await this.getWorkflowZodSchema({ loose: false }, spaceId, request);
+
+    // Compare Zod vs JSON Schema sizes when profiling
+    if (enableProfiling) {
+      const jsonSchema = profileMemory('zodToJsonSchema', () => getWorkflowJsonSchema(zodSchema));
+      if (jsonSchema) {
+        const jsonSchemaStr = JSON.stringify(jsonSchema);
+        const jsonSchemaSizeKB = jsonSchemaStr.length / 1024;
+        // eslint-disable-next-line no-console
+        console.log(`[Memory Profile] JSON Schema serialized size: ${jsonSchemaSizeKB.toFixed(2)} KB`);
+        // eslint-disable-next-line no-console
+        console.log(
+          `[Memory Profile] JSON Schema $defs count: ${jsonSchema.$defs ? Object.keys(jsonSchema.$defs).length : 0}`
+        );
+
+        // Test Ajv JSON Schema validation
+        try {
+          const ajv = profileMemory('ajv.new', () => new Ajv({ strict: false, allErrors: true }));
+          const validate = profileMemory('ajv.compile', () => ajv.compile(jsonSchema));
+
+          // Parse YAML to JSON first (without Zod validation)
+          const yaml = await import('js-yaml');
+          const workflowJson = yaml.load(workflow.yaml);
+
+          const ajvResult = profileMemory('ajv.validate', () => validate(workflowJson));
+          // eslint-disable-next-line no-console
+          console.log(`[Memory Profile] Ajv validation result: ${ajvResult ? 'VALID' : 'INVALID'}`);
+          if (!ajvResult && validate.errors) {
+            // eslint-disable-next-line no-console
+            console.log(
+              `[Memory Profile] Ajv errors (first 3): ${JSON.stringify(validate.errors.slice(0, 3))}`
+            );
+          }
+        } catch (ajvError) {
+          // eslint-disable-next-line no-console
+          console.log(`[Memory Profile] Ajv error: ${ajvError}`);
+        }
+      }
+    }
+
+    const parsedYaml = enableProfiling
+      ? profileMemory('parseWorkflowYamlToJSON', () =>
+          parseWorkflowYamlToJSON(workflow.yaml, zodSchema)
+        )
+      : parseWorkflowYamlToJSON(workflow.yaml, zodSchema);
+
     if (parsedYaml.success) {
       // The type of parsedYaml.data is validated by getWorkflowZodSchema (strict mode), so this assertion is safe.
       workflowToCreate = transformWorkflowYamlJsontoEsWorkflow(
@@ -307,10 +360,22 @@ export class WorkflowsService {
       if (workflow.yaml) {
         // we always update the yaml, even if it's not valid, to allow users to save draft
         updatedData.yaml = workflow.yaml;
-        const parsedYaml = parseWorkflowYamlToJSON(
-          workflow.yaml,
-          await this.getWorkflowZodSchema({ loose: false }, spaceId, request)
-        );
+
+        // Memory profiling: enabled via WORKFLOW_MEMORY_PROFILE=1 environment variable
+        const enableProfiling = process.env.WORKFLOW_MEMORY_PROFILE === '1';
+
+        const zodSchema = enableProfiling
+          ? await profileMemoryAsync('updateWorkflow.getWorkflowZodSchema', () =>
+              this.getWorkflowZodSchema({ loose: false }, spaceId, request)
+            )
+          : await this.getWorkflowZodSchema({ loose: false }, spaceId, request);
+
+        const parsedYaml = enableProfiling
+          ? profileMemory('updateWorkflow.parseWorkflowYamlToJSON', () =>
+              parseWorkflowYamlToJSON(workflow.yaml!, zodSchema)
+            )
+          : parseWorkflowYamlToJSON(workflow.yaml, zodSchema);
+
         if (!parsedYaml.success) {
           updatedData.definition = undefined;
           updatedData.enabled = false;
