@@ -46,6 +46,12 @@ export function discover({
   const log = coreContext.logger.get('plugins-discovery');
   log.debug('Discovering plugins...');
 
+  // MEMORY TRACKING - count plugins discovered via each method
+  let fsPluginCount = 0;
+  let pkgPluginCount = 0;
+  const repoPackagesCount = coreContext.env.repoPackages?.length ?? 0;
+  log.info(`[DISCOVER_DETAIL] repoPackages array has ${repoPackagesCount} entries`);
+
   if (config.additionalPluginPaths.length && coreContext.env.mode.dev) {
     log.warn(
       `Explicit plugin paths [${config.additionalPluginPaths}] should only be used in development. Relative imports may not work properly in production.`
@@ -57,6 +63,7 @@ export function discover({
     scanPluginSearchPaths(config.pluginSearchPaths, log)
   ).pipe(
     concatMap((pluginPathOrError) => {
+      fsPluginCount++;
       return typeof pluginPathOrError === 'string'
         ? createPlugin$(pluginPathOrError, log, coreContext, instanceInfo, nodeInfo)
         : [pluginPathOrError];
@@ -74,6 +81,7 @@ export function discover({
       })
     ),
     map((pkg) => {
+      pkgPluginCount++;
       log.debug(`Successfully discovered plugin package "${pkg.id}"`);
       const manifest = pluginManifestFromPluginPackage(
         coreContext.env.packageInfo.version,
@@ -99,13 +107,16 @@ export function discover({
   const discoveryResults$ = merge(fsDiscovery$, pluginPkgDiscovery$).pipe(
     toArray(),
     // ensure that everything is always provided in a consistent order
-    mergeMap((pkgs) =>
-      pkgs.sort((a, b) => {
+    mergeMap((pkgs) => {
+      log.info(`[DISCOVER_DETAIL] Total plugins discovered: ${pkgs.length} (fs: ${fsPluginCount}, pkg: ${pkgPluginCount})`);
+      const memNow = process.memoryUsage();
+      log.info(`[DISCOVER_DETAIL] Memory after toArray(): heap=${(memNow.heapUsed / 1024 / 1024).toFixed(1)}MB`);
+      return pkgs.sort((a, b) => {
         const aComp = typeof a !== 'string' ? a.path : a;
         const bComp = typeof b !== 'string' ? b.path : b;
         return aComp.localeCompare(bComp);
-      })
-    ),
+      });
+    }),
     shareReplay()
   );
 

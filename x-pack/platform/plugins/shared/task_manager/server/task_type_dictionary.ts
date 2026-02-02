@@ -108,12 +108,190 @@ export interface TaskRegisterDefinition {
  */
 export type TaskDefinitionRegistry = Record<string, TaskRegisterDefinition>;
 
+// LAZY LOADING: Type for the plugin loader function
+export type PluginLoaderFn = (pluginName: string) => Promise<unknown>;
+
+// LAZY LOADING: Static registry mapping task types to owner plugins
+// This is populated at startup from @kbn/task-definitions package
+let TASK_TO_PLUGIN_REGISTRY: Map<string, string> = new Map();
+
 export class TaskTypeDictionary {
   private definitions = new Map<string, TaskDefinition>();
   private logger: Logger;
 
+  // LAZY LOADING: Plugin loader function to load plugins on-demand
+  private pluginLoader?: PluginLoaderFn;
+
+  // LAZY LOADING: Track which plugins are currently being loaded to prevent race conditions
+  private loadingPlugins = new Set<string>();
+
   constructor(logger: Logger) {
     this.logger = logger;
+  }
+
+  /**
+   * LAZY LOADING: Set the plugin loader function for on-demand plugin loading
+   */
+  public setPluginLoader(loader: PluginLoaderFn) {
+    this.pluginLoader = loader;
+    this.logger.info(`[LAZY_POC] Plugin loader set for lazy task loading`);
+  }
+
+  /**
+   * LAZY LOADING: Initialize the task-to-plugin registry from @kbn/task-definitions
+   */
+  public initializeTaskRegistry() {
+    try {
+      // Dynamic import to avoid circular dependencies
+      const taskDefs = require('@kbn/task-definitions');
+      if (taskDefs.TASK_METADATA_REGISTRY) {
+        const registry = taskDefs.TASK_METADATA_REGISTRY;
+        for (const [taskType, metadata] of Object.entries(registry)) {
+          const ownerPlugin = (metadata as { ownerPlugin: string }).ownerPlugin;
+          TASK_TO_PLUGIN_REGISTRY.set(taskType, ownerPlugin);
+        }
+        this.logger.info(
+          `[LAZY_POC] Initialized task registry with ${TASK_TO_PLUGIN_REGISTRY.size} task types`
+        );
+      }
+    } catch (e) {
+      this.logger.warn(`[LAZY_POC] Could not load @kbn/task-definitions: ${e.message}`);
+    }
+  }
+
+  /**
+   * LAZY LOADING: Get the owner plugin for a task type from the static registry
+   */
+  public getOwnerPlugin(taskType: string): string | undefined {
+    return TASK_TO_PLUGIN_REGISTRY.get(taskType);
+  }
+
+  /**
+   * LAZY LOADING: Ensure the plugin that owns this task type is loaded
+   * Returns true if the task definition is now available, false otherwise
+   */
+  public async ensureTaskPluginLoaded(taskType: string): Promise<boolean> {
+    // Already have the definition?
+    if (this.definitions.has(taskType)) {
+      return true;
+    }
+
+    // No plugin loader? Can't do lazy loading
+    if (!this.pluginLoader) {
+      this.logger.warn(`[LAZY_POC] No plugin loader set, cannot lazy load for "${taskType}"`);
+      return false;
+    }
+
+    // Look up owner plugin from static registry
+    const ownerPlugin = TASK_TO_PLUGIN_REGISTRY.get(taskType);
+    if (!ownerPlugin) {
+      this.logger.warn(`[LAZY_POC] Unknown task type "${taskType}" - not in registry`);
+      return false;
+    }
+
+    // Prevent duplicate loading
+    if (this.loadingPlugins.has(ownerPlugin)) {
+      this.logger.debug(`[LAZY_POC] Plugin "${ownerPlugin}" already loading, waiting...`);
+      // Wait a bit and check again
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return this.definitions.has(taskType);
+    }
+
+    try {
+      this.loadingPlugins.add(ownerPlugin);
+      const startTime = Date.now();
+      this.logger.info(`[LAZY_POC] Loading plugin "${ownerPlugin}" for task "${taskType}"`);
+
+      await this.pluginLoader(ownerPlugin);
+
+      const duration = Date.now() - startTime;
+
+      // Check if the task was registered after loading
+      if (this.definitions.has(taskType)) {
+        this.logger.info(
+          `[LAZY_POC] Successfully loaded plugin "${ownerPlugin}" for task "${taskType}" in ${duration}ms`
+        );
+        return true;
+      } else {
+        this.logger.warn(
+          `[LAZY_POC] Plugin "${ownerPlugin}" loaded but task "${taskType}" still not registered`
+        );
+        return false;
+      }
+    } catch (error) {
+      this.logger.error(
+        `[LAZY_POC] Failed to load plugin "${ownerPlugin}" for task "${taskType}": ${error}`
+      );
+      return false;
+    } finally {
+      this.loadingPlugins.delete(ownerPlugin);
+    }
+  }
+
+  /**
+   * LAZY LOADING: Async version of get() that ensures the plugin is loaded first
+   */
+  public async getAsync(taskType: string): Promise<TaskDefinition | undefined> {
+    // Try to get the definition directly first
+    let definition = this.definitions.get(taskType);
+    if (definition) {
+      return definition;
+    }
+
+    // Try to lazy load the plugin
+    const loaded = await this.ensureTaskPluginLoaded(taskType);
+    if (loaded) {
+      return this.definitions.get(taskType);
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Extract the caller plugin name from the stack trace.
+   * We need to find the FIRST plugin in the call stack that is NOT task_manager.
+   */
+  private extractCallerPlugin(): string {
+    // Use Error.prepareStackTrace to get structured stack frames
+    const originalPrepare = Error.prepareStackTrace;
+    let callerPlugin = 'unknown';
+
+    Error.prepareStackTrace = (err, stack) => {
+      // Find the first plugin in the stack that is NOT task_manager
+      for (const frame of stack) {
+        const fileName = frame.getFileName() || '';
+
+        // Skip node internals and node_modules
+        if (fileName.includes('node:') || fileName.includes('node_modules') || !fileName) {
+          continue;
+        }
+
+        // Extract plugin name from path
+        // Pattern: /plugins/shared/PLUGIN_NAME/ or /plugins/private/PLUGIN_NAME/ or /solutions/*/plugins/PLUGIN_NAME/
+        const match = fileName.match(
+          /\/(?:plugins\/(?:shared|private)\/|solutions\/[^/]+\/plugins\/)([^/]+)\//
+        );
+
+        if (match) {
+          const pluginName = match[1];
+          // Return the FIRST plugin that is NOT task_manager
+          if (pluginName !== 'task_manager') {
+            callerPlugin = pluginName;
+            break;
+          }
+        }
+      }
+      return '';
+    };
+
+    // Trigger stack trace capture
+    const err = new Error();
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    err.stack;
+
+    Error.prepareStackTrace = originalPrepare;
+
+    return callerPlugin;
   }
 
   [Symbol.iterator]() {
@@ -154,6 +332,15 @@ export class TaskTypeDictionary {
    */
   public registerTaskDefinitions(taskDefinitions: TaskDefinitionRegistry) {
     const taskTypesToRegister = Object.keys(taskDefinitions);
+
+    // [TASK_REGISTRY_SCAN] Extract caller plugin from stack trace for lazy loading PoC
+    const callerPlugin = this.extractCallerPlugin();
+    for (const taskType of taskTypesToRegister) {
+      const definition = taskDefinitions[taskType];
+      this.logger.info(
+        `[TASK_REGISTRY_SCAN] taskType="${taskType}" ownerPlugin="${callerPlugin}" title="${definition.title || 'N/A'}"`
+      );
+    }
     const duplicate = taskTypesToRegister.find((type) => this.definitions.has(type));
     if (duplicate) {
       throw new Error(`Task ${duplicate} is already defined!`);

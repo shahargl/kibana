@@ -1,0 +1,34 @@
+# Simple test: Just increment a counter in a foreach loop
+version: "1"
+name: Test Variables Simple
+description: Minimal test for variables across foreach iterations
+enabled: true
+tags: ["test", "debug"]
+
+triggers:
+  - type: manual
+
+steps:
+  # Initialize counter to 0
+  - name: init
+    type: data.set
+    with:
+      counter: 0
+
+  # Loop 3 times
+  - name: loop
+    type: foreach
+    foreach: '[1,2,3]'
+    steps:
+      # Just increment - nothing else
+      - name: increment
+        type: data.set
+        with:
+          counter: '{{ variables.counter | plus: 1 }}'
+          iteration: '{{ foreach.item }}'
+
+  # Final result
+  - name: result
+    type: data.set
+    with:
+      finalCounter: '{{ variables.counter }}'

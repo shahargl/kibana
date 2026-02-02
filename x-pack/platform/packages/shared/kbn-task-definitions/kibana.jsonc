@@ -1,0 +1,6 @@
+{
+  "type": "shared-common",
+  "id": "@kbn/task-definitions",
+  "owner": "@elastic/kibana-core",
+  "description": "Static task metadata registry for lazy task loading PoC"
+}

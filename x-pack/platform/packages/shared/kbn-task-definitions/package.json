@@ -1,0 +1,7 @@
+{
+  "name": "@kbn/task-definitions",
+  "private": true,
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "license": "Elastic License 2.0"
+}

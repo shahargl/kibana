@@ -279,6 +279,24 @@ export class TaskManagerRunner implements TaskRunner {
   }
 
   /**
+   * LAZY LOADING: Ensure the task definition is available, loading the plugin if necessary.
+   * Call this before run() to ensure the plugin is loaded for lazy loading scenarios.
+   */
+  public async ensureDefinitionLoaded(): Promise<TaskDefinition | undefined> {
+    // Already have the definition? Return it directly
+    if (this.definition) {
+      return this.definition;
+    }
+
+    // Try async loading
+    if (typeof this.definitions.getAsync === 'function') {
+      return this.definitions.getAsync(this.taskType);
+    }
+
+    return this.definition;
+  }
+
+  /**
    * Gets the time at which this task will expire.
    */
   public get expiration() {
@@ -342,7 +360,9 @@ export class TaskManagerRunner implements TaskRunner {
    * @returns {Promise<Result<SuccessfulRunResult, FailedRunResult>>}
    */
   public async run(): Promise<Result<SuccessfulRunResult, FailedRunResult>> {
-    const definition = this.definition;
+    // LAZY LOADING: Ensure the definition is loaded before running
+    // This will trigger plugin loading if the definition isn't available yet
+    const definition = await this.ensureDefinitionLoaded();
     if (!definition) {
       throw new Error(`Running task ${this} failed because it has no definition`);
     }

@@ -1,0 +1,190 @@
+{
+  "timestamp": "2026-02-01T12:55:11.522Z",
+  "results": [
+    {
+      "plugin": "actions",
+      "reExport": "export { UnsecuredActionsClient } from './unsecured_actions_",
+      "fromPath": "./unsecured_actions_client/unsecured_actions_client",
+      "heavyDeps": [
+        "@kbn/task-manager-plugin",
+        "@kbn/security-plugin"
+      ]
+    },
+    {
+      "plugin": "actions",
+      "reExport": "export { SubActionConnector } from './sub_action_framework/s",
+      "fromPath": "./sub_action_framework/sub_action_connector",
+      "heavyDeps": [
+        "@kbn/task-manager-plugin",
+        "@kbn/security-plugin"
+      ]
+    },
+    {
+      "plugin": "actions",
+      "reExport": "export { CaseConnector } from './sub_action_framework/case'",
+      "fromPath": "./sub_action_framework/case",
+      "heavyDeps": [
+        "@kbn/task-manager-plugin",
+        "@kbn/security-plugin"
+      ]
+    },
+    {
+      "plugin": "alerting",
+      "reExport": "export { DEFAULT_AAD_CONFIG } from './types'",
+      "fromPath": "./types",
+      "heavyDeps": [
+        "@kbn/data-plugin",
+        "@kbn/actions-plugin",
+        "@kbn/task-manager-plugin",
+        "@kbn/security-plugin"
+      ]
+    },
+    {
+      "plugin": "alerting",
+      "reExport": "export { RULE_SAVED_OBJECT_TYPE, API_KEY_PENDING_INVALIDATIO",
+      "fromPath": "./saved_objects",
+      "heavyDeps": [
+        "@kbn/data-plugin",
+        "@kbn/actions-plugin",
+        "@kbn/task-manager-plugin",
+        "@kbn/security-plugin"
+      ]
+    },
+    {
+      "plugin": "fleet",
+      "reExport": "export { buildAgentStatusRuntimeField } from './services/age",
+      "fromPath": "./services/agents/build_status_runtime_field",
+      "heavyDeps": [
+        "@kbn/data-plugin",
+        "@kbn/security-plugin",
+        "@kbn/task-manager-plugin",
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "fleet",
+      "reExport": "export { getRegistryUrl } from './services'",
+      "fromPath": "./services",
+      "heavyDeps": [
+        "@kbn/data-plugin",
+        "@kbn/security-plugin",
+        "@kbn/task-manager-plugin",
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "fleet",
+      "reExport": "export { NamingCollisionError } from './services/epm/package",
+      "fromPath": "./services/epm/packages/custom_integrations/validation/check_naming_collision",
+      "heavyDeps": [
+        "@kbn/security-plugin",
+        "@kbn/data-plugin",
+        "@kbn/task-manager-plugin",
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "observability_ai_assistant",
+      "reExport": "export { createFunctionRequestMessage } from '../common/util",
+      "fromPath": "../common/utils/create_function_request_message",
+      "heavyDeps": [
+        "@kbn/security-plugin",
+        "@kbn/actions-plugin"
+      ]
+    },
+    {
+      "plugin": "observability_ai_assistant",
+      "reExport": "export { createFunctionResponseMessage } from '../common/uti",
+      "fromPath": "../common/utils/create_function_response_message",
+      "heavyDeps": [
+        "@kbn/security-plugin",
+        "@kbn/actions-plugin"
+      ]
+    },
+    {
+      "plugin": "rule_registry",
+      "reExport": "export { createPersistenceRuleTypeWrapper } from './utils/cr",
+      "fromPath": "./utils/create_persistence_rule_type_wrapper",
+      "heavyDeps": [
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "stack_alerts",
+      "reExport": "export { ID as INDEX_THRESHOLD_ID } from './rule_types/index",
+      "fromPath": "./rule_types/index_threshold/rule_type",
+      "heavyDeps": [
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "triggers_actions_ui",
+      "reExport": "export { DEFAULT_GROUPS, TIME_SERIES_BUCKET_SELECTOR_FIELD }",
+      "fromPath": "./data",
+      "heavyDeps": [
+        "@kbn/alerting-plugin"
+      ]
+    },
+    {
+      "plugin": "reporting",
+      "reExport": "export { ReportingCore } from './core'",
+      "fromPath": "./core",
+      "heavyDeps": [
+        "@kbn/actions-plugin",
+        "@kbn/data-plugin",
+        "@kbn/security-plugin",
+        "@kbn/task-manager-plugin"
+      ]
+    }
+  ],
+  "byHeavyDep": {
+    "@kbn/task-manager-plugin": [
+      "actions",
+      "actions",
+      "actions",
+      "alerting",
+      "alerting",
+      "fleet",
+      "fleet",
+      "fleet",
+      "reporting"
+    ],
+    "@kbn/security-plugin": [
+      "actions",
+      "actions",
+      "actions",
+      "alerting",
+      "alerting",
+      "fleet",
+      "fleet",
+      "fleet",
+      "observability_ai_assistant",
+      "observability_ai_assistant",
+      "reporting"
+    ],
+    "@kbn/data-plugin": [
+      "alerting",
+      "alerting",
+      "fleet",
+      "fleet",
+      "fleet",
+      "reporting"
+    ],
+    "@kbn/actions-plugin": [
+      "alerting",
+      "alerting",
+      "observability_ai_assistant",
+      "observability_ai_assistant",
+      "reporting"
+    ],
+    "@kbn/alerting-plugin": [
+      "fleet",
+      "fleet",
+      "fleet",
+      "rule_registry",
+      "stack_alerts",
+      "triggers_actions_ui"
+    ]
+  },
+  "estimatedSavings": 179
+}

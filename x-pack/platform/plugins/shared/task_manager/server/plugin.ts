@@ -73,6 +73,9 @@ import {
   scheduleInvalidateApiKeyTask,
 } from './invalidate_api_keys/invalidate_api_keys_task';
 
+// LAZY LOADING: Type for the plugin loader function
+export type PluginLoaderFn = (pluginName: string) => Promise<unknown>;
+
 export interface TaskManagerSetupContract {
   /**
    * @deprecated
@@ -85,6 +88,11 @@ export interface TaskManagerSetupContract {
    */
   registerTaskDefinitions: (taskDefinitions: TaskDefinitionRegistry) => void;
   registerCanEncryptedSavedObjects: (canEncrypt: boolean) => void;
+  /**
+   * LAZY LOADING: Set the plugin loader function for on-demand plugin loading
+   * This allows Task Manager to load plugins when their tasks need to execute
+   */
+  setPluginLoader: (loader: PluginLoaderFn) => void;
 }
 
 export type TaskManagerStartContract = Pick<
@@ -302,6 +310,9 @@ export class TaskManagerPlugin
       setupIntervalLogging(monitoredHealth$, this.logger, LogHealthForBackgroundTasksOnlyMinutes);
     }
 
+    // LAZY LOADING: Initialize the task registry if available
+    this.definitions.initializeTaskRegistry();
+
     return {
       index: TASK_MANAGER_INDEX,
       addMiddleware: (middleware: Middleware) => {
@@ -312,6 +323,10 @@ export class TaskManagerPlugin
       },
       registerCanEncryptedSavedObjects: (canEncrypt: boolean) => {
         this.canEncryptSavedObjects = canEncrypt;
+      },
+      setPluginLoader: (loader: PluginLoaderFn) => {
+        this.definitions.setPluginLoader(loader);
+        this.logger.info(`[LAZY_POC] Plugin loader registered with Task Manager`);
       },
     };
   }

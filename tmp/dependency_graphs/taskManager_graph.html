@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dependency Graph: taskManager</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    h1 { color: #333; }
+    #graph { width: 100%; height: 700px; border: 1px solid #ddd; background: white; }
+    .stats { margin: 10px 0; padding: 15px; background: white; border-radius: 5px; }
+    .legend { display: flex; gap: 20px; margin: 10px 0; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 20px; height: 20px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Dependency Graph: taskManager</h1>
+  
+  <div class="stats">
+    <strong>Stats:</strong> 28 plugins shown | Total memory: ~111.4MB
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#4488ff"></div> Root plugin</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff4444"></div> >50MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff8844"></div> >20MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffcc44"></div> >10MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#88cc44"></div> >5MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#44aa88"></div> <5MB</div>
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item">─── Required dependency</div>
+    <div class="legend-item">- - - Optional dependency</div>
+    <div class="legend-item" style="color:#4488ff">─── Depends on taskManager</div>
+  </div>
+  
+  <div id="graph"></div>
+  
+  <script>
+    const nodes = new vis.DataSet([{"id":"taskManager","label":"taskManager\n1.5MB","color":"#4488ff","font":{"color":"white"},"borderWidth":3,"size":16.5},{"id":"licensing","label":"licensing\n0.8MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15.8},{"id":"workflowsExecutionEngine","label":"workflowsExecutionEngine","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"workflowsManagement","label":"workflowsManagement","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"actions","label":"actions\n1.8MB","color":"#44aa88","font":{"color":"black"},"size":16.8},{"id":"productDocBase","label":"productDocBase\n8.9MB","color":"#88cc44","font":{"color":"black"},"size":23.869999999999997},{"id":"alerting","label":"alerting\n2.1MB","color":"#44aa88","font":{"color":"black"},"size":17.1},{"id":"automaticImportVTwo","label":"automaticImportVTwo","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"contentConnectors","label":"contentConnectors\n53.6MB","color":"#ff4444","font":{"color":"white"},"size":50},{"id":"fleet","label":"fleet","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"maintenanceWindows","label":"maintenanceWindows","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"ml","label":"ml","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"observabilityAIAssistant","label":"observabilityAIAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"osquery","label":"osquery","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"sampleDataIngest","label":"sampleDataIngest","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"security","label":"security\n1.5MB","color":"#44aa88","font":{"color":"black"},"size":16.5},{"id":"streams","label":"streams\n25.1MB","color":"#ff8844","font":{"color":"black"},"size":40.08},{"id":"indicesMetadata","label":"indicesMetadata\n5.5MB","color":"#88cc44","font":{"color":"black"},"size":20.46},{"id":"reporting","label":"reporting\n4.0MB","color":"#44aa88","font":{"color":"black"},"size":18.990000000000002},{"id":"taskManagerDependencies","label":"taskManagerDependencies","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"slo","label":"slo","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"synthetics","label":"synthetics","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"uptime","label":"uptime","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"cloudSecurityPosture","label":"cloudSecurityPosture","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"elasticAssistant","label":"elasticAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"entityStore","label":"entityStore","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"securitySolution","label":"securitySolution\n6.6MB","color":"#88cc44","font":{"color":"black"},"size":21.57},{"id":"securitySolutionServerless","label":"securitySolutionServerless","color":"#44aa88","font":{"color":"black"},"size":15}]);
+    const edges = new vis.DataSet([{"from":"taskManager","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"taskManager","to":"cloud","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"taskManager","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"workflowsExecutionEngine","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"workflowsManagement","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"actions","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"productDocBase","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"alerting","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"automaticImportVTwo","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"contentConnectors","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"fleet","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"maintenanceWindows","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"ml","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observabilityAIAssistant","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"osquery","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"sampleDataIngest","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"security","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"streams","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"indicesMetadata","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"reporting","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"taskManagerDependencies","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"slo","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"synthetics","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"uptime","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"cloudSecurityPosture","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"elasticAssistant","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"entityStore","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"securitySolution","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"securitySolutionServerless","to":"taskManager","arrows":"to","color":{"color":"#4488ff"},"width":2}]);
+    
+    const container = document.getElementById('graph');
+    const data = { nodes, edges };
+    const options = {
+      layout: {
+        hierarchical: {
+          direction: 'UD',
+          sortMethod: 'directed',
+          levelSeparation: 100,
+          nodeSpacing: 150,
+        }
+      },
+      physics: false,
+      nodes: {
+        shape: 'box',
+        margin: 10,
+        font: { size: 12 },
+      },
+      edges: {
+        smooth: { type: 'cubicBezier' },
+      },
+      interaction: {
+        hover: true,
+        tooltipDelay: 100,
+      },
+    };
+    
+    const network = new vis.Network(container, data, options);
+    
+    // Add click handler
+    network.on('click', function(params) {
+      if (params.nodes.length > 0) {
+        const nodeId = params.nodes[0];
+        console.log('Clicked:', nodeId);
+      }
+    });
+  </script>
+</body>
+</html>

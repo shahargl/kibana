@@ -1,0 +1,839 @@
+{
+  "timestamp": "2026-02-01T12:58:22.233Z",
+  "essential": [
+    {
+      "id": "features",
+      "memory": 5.36
+    },
+    {
+      "id": "actions",
+      "memory": 0
+    },
+    {
+      "id": "alerting",
+      "memory": 0
+    },
+    {
+      "id": "encryptedSavedObjects",
+      "memory": 0
+    },
+    {
+      "id": "eventLog",
+      "memory": 0
+    },
+    {
+      "id": "licensing",
+      "memory": 0
+    },
+    {
+      "id": "security",
+      "memory": 0
+    },
+    {
+      "id": "spaces",
+      "memory": 0
+    },
+    {
+      "id": "taskManager",
+      "memory": 0
+    }
+  ],
+  "notNeeded": [
+    {
+      "id": "console",
+      "memory": 0
+    },
+    {
+      "id": "dashboard",
+      "memory": 0
+    },
+    {
+      "id": "devTools",
+      "memory": 0
+    },
+    {
+      "id": "discover",
+      "memory": 0
+    },
+    {
+      "id": "home",
+      "memory": 13.44
+    },
+    {
+      "id": "management",
+      "memory": 0
+    },
+    {
+      "id": "visualizations",
+      "memory": 0
+    },
+    {
+      "id": "agentBuilder",
+      "memory": 38.21
+    },
+    {
+      "id": "agentBuilderPlatform",
+      "memory": 40.73
+    },
+    {
+      "id": "contentConnectors",
+      "memory": 53.58
+    },
+    {
+      "id": "dashboardAgent",
+      "memory": 5.33
+    },
+    {
+      "id": "fleet",
+      "memory": 0
+    },
+    {
+      "id": "indexManagement",
+      "memory": 0
+    },
+    {
+      "id": "lens",
+      "memory": 0
+    },
+    {
+      "id": "maps",
+      "memory": 0
+    },
+    {
+      "id": "ml",
+      "memory": 0
+    },
+    {
+      "id": "streams",
+      "memory": 25.08
+    },
+    {
+      "id": "canvas",
+      "memory": 0
+    },
+    {
+      "id": "graph",
+      "memory": 0
+    },
+    {
+      "id": "reporting",
+      "memory": 3.99
+    },
+    {
+      "id": "rollup",
+      "memory": 0
+    },
+    {
+      "id": "transform",
+      "memory": 162.31
+    },
+    {
+      "id": "apm",
+      "memory": 29.54
+    },
+    {
+      "id": "infra",
+      "memory": 0
+    },
+    {
+      "id": "observability",
+      "memory": 0
+    },
+    {
+      "id": "profiling",
+      "memory": 0
+    },
+    {
+      "id": "slo",
+      "memory": 0
+    },
+    {
+      "id": "synthetics",
+      "memory": 0
+    },
+    {
+      "id": "uptime",
+      "memory": 0
+    },
+    {
+      "id": "securitySolution",
+      "memory": 6.57
+    },
+    {
+      "id": "workplaceAIApp",
+      "memory": 2.42
+    }
+  ],
+  "unknown": [
+    {
+      "id": "aiAssistantManagementSelection",
+      "memory": 0
+    },
+    {
+      "id": "expressionGauge",
+      "memory": 0
+    },
+    {
+      "id": "expressionHeatmap",
+      "memory": 0
+    },
+    {
+      "id": "expressionLegacyMetricVis",
+      "memory": 0
+    },
+    {
+      "id": "expressionMetricVis",
+      "memory": 0
+    },
+    {
+      "id": "expressionPartitionVis",
+      "memory": 0
+    },
+    {
+      "id": "expressionTagcloud",
+      "memory": 0
+    },
+    {
+      "id": "expressionXY",
+      "memory": 0
+    },
+    {
+      "id": "charts",
+      "memory": 0
+    },
+    {
+      "id": "contentManagement",
+      "memory": 0
+    },
+    {
+      "id": "controls",
+      "memory": 0
+    },
+    {
+      "id": "cps",
+      "memory": 0
+    },
+    {
+      "id": "customIntegrations",
+      "memory": 0
+    },
+    {
+      "id": "dashboardMarkdown",
+      "memory": 0
+    },
+    {
+      "id": "data",
+      "memory": 73.86
+    },
+    {
+      "id": "dataViewFieldEditor",
+      "memory": 0
+    },
+    {
+      "id": "dataViewManagement",
+      "memory": 0
+    },
+    {
+      "id": "dataViews",
+      "memory": 0
+    },
+    {
+      "id": "developerToolbar",
+      "memory": 0
+    },
+    {
+      "id": "embeddable",
+      "memory": 0
+    },
+    {
+      "id": "esUiShared",
+      "memory": 0
+    },
+    {
+      "id": "esql",
+      "memory": 0
+    },
+    {
+      "id": "expressions",
+      "memory": 0
+    },
+    {
+      "id": "fieldFormats",
+      "memory": 0
+    },
+    {
+      "id": "files",
+      "memory": 4.58
+    },
+    {
+      "id": "kql",
+      "memory": 0
+    },
+    {
+      "id": "navigation",
+      "memory": 0
+    },
+    {
+      "id": "newsfeed",
+      "memory": 0
+    },
+    {
+      "id": "noDataPage",
+      "memory": 0
+    },
+    {
+      "id": "presentationUtil",
+      "memory": 0
+    },
+    {
+      "id": "savedObjectsFinder",
+      "memory": 0
+    },
+    {
+      "id": "savedObjectsManagement",
+      "memory": 0
+    },
+    {
+      "id": "savedSearch",
+      "memory": 0
+    },
+    {
+      "id": "screenshotMode",
+      "memory": 0
+    },
+    {
+      "id": "share",
+      "memory": 0
+    },
+    {
+      "id": "telemetry",
+      "memory": 0
+    },
+    {
+      "id": "telemetryCollectionManager",
+      "memory": 0
+    },
+    {
+      "id": "usageCollection",
+      "memory": 2.65
+    },
+    {
+      "id": "visTypeTimeseries",
+      "memory": 0
+    },
+    {
+      "id": "workflowsExecutionEngine",
+      "memory": 0
+    },
+    {
+      "id": "workflowsExtensions",
+      "memory": 0
+    },
+    {
+      "id": "workflowsManagement",
+      "memory": 0
+    },
+    {
+      "id": "advancedSettings",
+      "memory": 0
+    },
+    {
+      "id": "eventAnnotation",
+      "memory": 0
+    },
+    {
+      "id": "ftrApis",
+      "memory": 0
+    },
+    {
+      "id": "imageEmbeddable",
+      "memory": 0
+    },
+    {
+      "id": "inputControlVis",
+      "memory": 0
+    },
+    {
+      "id": "inspectComponent",
+      "memory": 0
+    },
+    {
+      "id": "interactiveSetup",
+      "memory": 0
+    },
+    {
+      "id": "kibanaUsageCollection",
+      "memory": 0
+    },
+    {
+      "id": "links",
+      "memory": 0
+    },
+    {
+      "id": "mapsEms",
+      "memory": 0
+    },
+    {
+      "id": "visTypeMarkdown",
+      "memory": 0
+    },
+    {
+      "id": "visTypeGauge",
+      "memory": 0
+    },
+    {
+      "id": "visTypeHeatmap",
+      "memory": 0
+    },
+    {
+      "id": "visTypeMetric",
+      "memory": 0
+    },
+    {
+      "id": "visTypePie",
+      "memory": 0
+    },
+    {
+      "id": "visTypeTable",
+      "memory": 0
+    },
+    {
+      "id": "visTypeTagcloud",
+      "memory": 0
+    },
+    {
+      "id": "visTypeTimelion",
+      "memory": 0
+    },
+    {
+      "id": "visTypeVega",
+      "memory": 0
+    },
+    {
+      "id": "visTypeVislib",
+      "memory": 0
+    },
+    {
+      "id": "visTypeXy",
+      "memory": 0
+    },
+    {
+      "id": "llmTasks",
+      "memory": 0
+    },
+    {
+      "id": "productDocBase",
+      "memory": 8.87
+    },
+    {
+      "id": "aiops",
+      "memory": 0
+    },
+    {
+      "id": "apmSourcesAccess",
+      "memory": 0
+    },
+    {
+      "id": "automaticImport",
+      "memory": 0
+    },
+    {
+      "id": "automaticImportVTwo",
+      "memory": 0
+    },
+    {
+      "id": "cases",
+      "memory": 19.34
+    },
+    {
+      "id": "cloud",
+      "memory": 0
+    },
+    {
+      "id": "cloudConnect",
+      "memory": 0
+    },
+    {
+      "id": "dataCatalog",
+      "memory": 0
+    },
+    {
+      "id": "dataQuality",
+      "memory": 0
+    },
+    {
+      "id": "dataSources",
+      "memory": 0
+    },
+    {
+      "id": "datasetQuality",
+      "memory": 0
+    },
+    {
+      "id": "entityManager",
+      "memory": 0
+    },
+    {
+      "id": "fieldsMetadata",
+      "memory": 0
+    },
+    {
+      "id": "globalSearch",
+      "memory": 0
+    },
+    {
+      "id": "inference",
+      "memory": 0
+    },
+    {
+      "id": "inferenceEndpoint",
+      "memory": 0
+    },
+    {
+      "id": "ingestPipelines",
+      "memory": 0
+    },
+    {
+      "id": "licenseManagement",
+      "memory": 0
+    },
+    {
+      "id": "logsDataAccess",
+      "memory": 0
+    },
+    {
+      "id": "logsShared",
+      "memory": 0
+    },
+    {
+      "id": "maintenanceWindows",
+      "memory": 0
+    },
+    {
+      "id": "notifications",
+      "memory": 0
+    },
+    {
+      "id": "observabilityAIAssistant",
+      "memory": 0
+    },
+    {
+      "id": "osquery",
+      "memory": 0
+    },
+    {
+      "id": "ruleRegistry",
+      "memory": 11.02
+    },
+    {
+      "id": "sampleDataIngest",
+      "memory": 0
+    },
+    {
+      "id": "savedObjectsTagging",
+      "memory": 0
+    },
+    {
+      "id": "screenshotting",
+      "memory": 0
+    },
+    {
+      "id": "searchprofiler",
+      "memory": 0
+    },
+    {
+      "id": "serverless",
+      "memory": 0
+    },
+    {
+      "id": "sloShared",
+      "memory": 0
+    },
+    {
+      "id": "stackAlerts",
+      "memory": 0
+    },
+    {
+      "id": "stackConnectors",
+      "memory": 0
+    },
+    {
+      "id": "streamsApp",
+      "memory": 0
+    },
+    {
+      "id": "triggersActionsUi",
+      "memory": 0
+    },
+    {
+      "id": "banners",
+      "memory": 0
+    },
+    {
+      "id": "cloudChat",
+      "memory": 0
+    },
+    {
+      "id": "cloudDataMigration",
+      "memory": 0
+    },
+    {
+      "id": "cloudExperiments",
+      "memory": 0
+    },
+    {
+      "id": "cloudFullStory",
+      "memory": 0
+    },
+    {
+      "id": "crossClusterReplication",
+      "memory": 0
+    },
+    {
+      "id": "customBranding",
+      "memory": 0
+    },
+    {
+      "id": "dataUsage",
+      "memory": 4.17
+    },
+    {
+      "id": "dataVisualizer",
+      "memory": 0
+    },
+    {
+      "id": "discoverEnhanced",
+      "memory": 0
+    },
+    {
+      "id": "fileUpload",
+      "memory": 0
+    },
+    {
+      "id": "genAiSettings",
+      "memory": 0
+    },
+    {
+      "id": "globalSearchBar",
+      "memory": 0
+    },
+    {
+      "id": "globalSearchProviders",
+      "memory": 0
+    },
+    {
+      "id": "grokdebugger",
+      "memory": 0
+    },
+    {
+      "id": "indexLifecycleManagement",
+      "memory": 0
+    },
+    {
+      "id": "indicesMetadata",
+      "memory": 5.46
+    },
+    {
+      "id": "intercepts",
+      "memory": 0
+    },
+    {
+      "id": "licenseApiGuard",
+      "memory": 0
+    },
+    {
+      "id": "logstash",
+      "memory": 0
+    },
+    {
+      "id": "monitoring",
+      "memory": 3.14
+    },
+    {
+      "id": "monitoringCollection",
+      "memory": 0
+    },
+    {
+      "id": "observabilityAiAssistantManagement",
+      "memory": 0
+    },
+    {
+      "id": "painlessLab",
+      "memory": 0
+    },
+    {
+      "id": "productIntercept",
+      "memory": 0
+    },
+    {
+      "id": "reindexService",
+      "memory": 5.35
+    },
+    {
+      "id": "remoteClusters",
+      "memory": 0
+    },
+    {
+      "id": "snapshotRestore",
+      "memory": 0
+    },
+    {
+      "id": "taskManagerDependencies",
+      "memory": 0
+    },
+    {
+      "id": "telemetryCollectionXpack",
+      "memory": 0
+    },
+    {
+      "id": "translations",
+      "memory": 0
+    },
+    {
+      "id": "upgradeAssistant",
+      "memory": 0
+    },
+    {
+      "id": "watcher",
+      "memory": 0
+    },
+    {
+      "id": "apmDataAccess",
+      "memory": 0
+    },
+    {
+      "id": "exploratoryView",
+      "memory": 0
+    },
+    {
+      "id": "metricsDataAccess",
+      "memory": 2.72
+    },
+    {
+      "id": "observabilityAgentBuilder",
+      "memory": 0
+    },
+    {
+      "id": "observabilityAIAssistantApp",
+      "memory": 0
+    },
+    {
+      "id": "observabilityLogsExplorer",
+      "memory": 0
+    },
+    {
+      "id": "observabilityOnboarding",
+      "memory": 0
+    },
+    {
+      "id": "profilingDataAccess",
+      "memory": 0
+    },
+    {
+      "id": "serverlessObservability",
+      "memory": 0
+    },
+    {
+      "id": "ux",
+      "memory": 0
+    },
+    {
+      "id": "enterpriseSearch",
+      "memory": 0
+    },
+    {
+      "id": "searchAssistant",
+      "memory": 0
+    },
+    {
+      "id": "searchGettingStarted",
+      "memory": 0
+    },
+    {
+      "id": "searchHomepage",
+      "memory": 0
+    },
+    {
+      "id": "searchIndices",
+      "memory": 0
+    },
+    {
+      "id": "searchInferenceEndpoints",
+      "memory": 0
+    },
+    {
+      "id": "searchNotebooks",
+      "memory": 0
+    },
+    {
+      "id": "searchPlayground",
+      "memory": 0
+    },
+    {
+      "id": "searchQueryRules",
+      "memory": 0
+    },
+    {
+      "id": "searchSynonyms",
+      "memory": 0
+    },
+    {
+      "id": "serverlessSearch",
+      "memory": 0
+    },
+    {
+      "id": "cloudDefend",
+      "memory": 0
+    },
+    {
+      "id": "cloudSecurityPosture",
+      "memory": 0
+    },
+    {
+      "id": "ecsDataQualityDashboard",
+      "memory": 0
+    },
+    {
+      "id": "elasticAssistant",
+      "memory": 0
+    },
+    {
+      "id": "entityStore",
+      "memory": 0
+    },
+    {
+      "id": "kubernetesSecurity",
+      "memory": 0
+    },
+    {
+      "id": "lists",
+      "memory": 8.41
+    },
+    {
+      "id": "securitySolutionEss",
+      "memory": 0
+    },
+    {
+      "id": "securitySolutionServerless",
+      "memory": 0
+    },
+    {
+      "id": "sessionView",
+      "memory": 0
+    },
+    {
+      "id": "timelines",
+      "memory": 0
+    },
+    {
+      "id": "serverlessWorkplaceAI",
+      "memory": 0
+    }
+  ],
+  "summary": {
+    "essentialMemory": 5.36,
+    "notNeededMemory": 381.20000000000005,
+    "unknownMemory": 149.57,
+    "potentialSavings": 381.20000000000005
+  }
+}

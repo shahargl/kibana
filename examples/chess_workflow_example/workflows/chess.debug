@@ -1,0 +1,114 @@
+t_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=14, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=14, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=14, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/3P4/4P3/"},{"stepId":"store_human_move","idx":13,"board":""}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=1, dataSetSteps=0, steps=[]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=1, dataSetSteps=0, steps=[]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=2, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=2, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=3, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=3, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=3, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=3, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=4, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=4, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=5, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=5, dataSetSteps=1, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=6, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=6, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=6, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=6, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=8, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=8, dataSetSteps=2, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"}]
+log.ts:66
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=9, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+workflow_context_manager.ts:270
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=9, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=10, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=10, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=11, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=11, dataSetSteps=3, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=12, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=12, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"}]
+workflow_context_manager.ts:270
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=12, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=14, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=14, dataSetSteps=4, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=15, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=16, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+log.ts:66
+[CHESS_DEBUG] getVariables: totalStepExecutions=17, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+workflow_context_manager.ts:270
+[CHESS_DEBUG] getVariables: totalStepExecutions=17, dataSetSteps=5, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"}]
+log.ts:66
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=18, dataSetSteps=6, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"},{"stepId":"store_ai_move","idx":16,"board":"rnbqkb1r/pppp1ppp/5n2/4P3/8/8/"}]
+workflow_context_manager.ts:270
+2
+[CHESS_DEBUG] getVariables: totalStepExecutions=18, dataSetSteps=6, steps=[{"stepId":"init_game","idx":0,"board":"rnbqkbnr/pppppppp/8/8/8/8/PPPP"},{"stepId":"store_ai_move","idx":4,"board":"rnbqkbnr/pppppppp/8/8/4P3/8/PP"},{"stepId":"store_human_move","idx":7,"board":"rnbqkb1r/pppppppp/5n2/8/4P3/8/"},{"stepId":"store_ai_move","idx":10,"board":"rnbqkb1r/pppppppp/5n2/8/3PP3/8"},{"stepId":"store_human_move","idx":13,"board":"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3"},{"stepId":"store_ai_move","idx":16,"board":"rnbqkb1r/pppp1ppp/5n2/4P3/8/8/"}]
+log.ts:66

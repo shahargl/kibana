@@ -1,0 +1,75 @@
+# ============================================================
+# Kibana UI-Only Mode (for testing lazy loading PoC)
+# ============================================================
+#
+# PROBLEM: Running a Docker Kibana against the same ES as your dev instance
+# has issues because:
+# 1. Kibana 9.4.0 (dev) doesn't have a Docker image yet
+# 2. Version mismatch causes saved object migration conflicts
+#
+# SOLUTION: Run TWO local Kibana instances from the same codebase
+#
+# ============================================================
+# HOW TO TEST THE LAZY LOADING POC
+# ============================================================
+#
+# TERMINAL 1: Background Tasks Node (with lazy loading)
+# ------------------------------------------------------------
+# pkill -f "node scripts/kibana" || true
+# LAZY_TASK_MANAGER_POC=true node scripts/kibana --dev 2>&1 | tee kibana_lazy.log
+#
+# This runs on port 5601 and handles all background tasks
+#
+# TERMINAL 2: UI-Only Node (for creating rules/alerts)  
+# ------------------------------------------------------------
+# SERVER_PORT=5602 \
+# NODE_ROLES='["ui"]' \
+# XPACK_TASK_MANAGER_UNSAFE_EXCLUDE_TASK_TYPES='["*"]' \
+# node scripts/kibana --dev --no-watch 2>&1 | tee kibana_ui.log
+#
+# This runs on port 5602 and provides the UI
+# Access it at: http://localhost:5602
+#
+# ============================================================
+# TESTING STEPS
+# ============================================================
+#
+# 1. Start both Kibana instances (see above)
+# 2. Open http://localhost:5602 (UI node)
+# 3. Go to Stack Management > Rules
+# 4. Create a simple rule (e.g., Index Threshold)
+# 5. Watch Terminal 1 logs for:
+#    [LAZY_POC] Loading plugin "alerting" for task "alerting:..."
+#    [LAZY_POC] Successfully loaded plugin "alerting" in Xms
+#
+# 6. Check memory after plugin loads:
+#    curl -s http://localhost:5601/api/status | jq '.metrics.process.memory'
+#
+# ============================================================
+
+# If you really want Docker (using 8.x image, may have compatibility issues):
+version: '3.8'
+
+services:
+  kibana-ui:
+    image: docker.elastic.co/kibana/kibana:8.17.0
+    container_name: kibana-ui
+    ports:
+      - "5602:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: '["https://host.docker.internal:9200"]'
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: "HsCwifdN6TwvmJ35Sft4z9Xt9kwg9hGj"
+      NODE_ROLES: '["ui"]'
+      XPACK_TASK_MANAGER_UNSAFE_EXCLUDE_TASK_TYPES: '["*"]'
+      ELASTICSEARCH_SSL_VERIFICATIONMODE: "none"
+      STATUS_ALLOWANONYMOUS: "true"
+      MONITORING_UI_ENABLED: "false"
+      MONITORING_KIBANA_COLLECTION_ENABLED: "false"
+      LOGGING_ROOT_LEVEL: "info"
+    volumes:
+      - /Users/shaharglazner/shaharbackup/certs/ca/ca.crt:/usr/share/kibana/config/ca.crt:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
+# NOTE: Docker approach may have version mismatch issues.
+# Recommended: Use the two-terminal local approach described above.

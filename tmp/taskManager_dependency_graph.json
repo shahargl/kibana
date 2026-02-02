@@ -1,0 +1,256 @@
+{
+  "root": "taskManager",
+  "tree": {
+    "id": "taskManager",
+    "path": "x-pack/platform/plugins/shared/task_manager",
+    "hasServer": true,
+    "memory": 1.5,
+    "requiredCount": 1,
+    "optionalCount": 2,
+    "children": [
+      {
+        "id": "licensing",
+        "path": "x-pack/platform/plugins/shared/licensing",
+        "hasServer": true,
+        "memory": 0.8,
+        "requiredCount": 0,
+        "optionalCount": 0,
+        "children": [],
+        "depth": 1,
+        "isOptional": false
+      },
+      {
+        "id": "cloud",
+        "path": "x-pack/platform/plugins/shared/cloud",
+        "hasServer": true,
+        "memory": 0,
+        "requiredCount": 0,
+        "optionalCount": 1,
+        "children": [
+          {
+            "id": "usageCollection",
+            "path": "src/platform/plugins/shared/usage_collection",
+            "hasServer": true,
+            "memory": 2.65,
+            "requiredCount": 1,
+            "optionalCount": 0,
+            "children": [
+              {
+                "id": "screenshotMode",
+                "path": "src/platform/plugins/shared/screenshot_mode",
+                "hasServer": true,
+                "memory": 0,
+                "requiredCount": 0,
+                "optionalCount": 0,
+                "children": [],
+                "depth": 3,
+                "isOptional": false
+              }
+            ],
+            "depth": 2,
+            "isOptional": true
+          }
+        ],
+        "depth": 1,
+        "isOptional": true
+      },
+      {
+        "id": "usageCollection",
+        "path": "src/platform/plugins/shared/usage_collection",
+        "hasServer": true,
+        "memory": 2.65,
+        "requiredCount": 1,
+        "optionalCount": 0,
+        "children": [
+          {
+            "id": "screenshotMode",
+            "path": "src/platform/plugins/shared/screenshot_mode",
+            "hasServer": true,
+            "memory": 0,
+            "requiredCount": 0,
+            "optionalCount": 0,
+            "children": [],
+            "depth": 2,
+            "isOptional": false
+          }
+        ],
+        "depth": 1,
+        "isOptional": true
+      }
+    ],
+    "depth": 0,
+    "isOptional": false
+  },
+  "reverseDependencies": [
+    {
+      "id": "dashboard",
+      "type": "optional"
+    },
+    {
+      "id": "share",
+      "type": "optional"
+    },
+    {
+      "id": "workflowsExecutionEngine",
+      "type": "required"
+    },
+    {
+      "id": "workflowsManagement",
+      "type": "required"
+    },
+    {
+      "id": "actions",
+      "type": "required"
+    },
+    {
+      "id": "productDocBase",
+      "type": "required"
+    },
+    {
+      "id": "alerting",
+      "type": "required"
+    },
+    {
+      "id": "automaticImportVTwo",
+      "type": "required"
+    },
+    {
+      "id": "cases",
+      "type": "optional"
+    },
+    {
+      "id": "contentConnectors",
+      "type": "required"
+    },
+    {
+      "id": "fleet",
+      "type": "required"
+    },
+    {
+      "id": "lens",
+      "type": "optional"
+    },
+    {
+      "id": "maintenanceWindows",
+      "type": "required"
+    },
+    {
+      "id": "ml",
+      "type": "required"
+    },
+    {
+      "id": "observabilityAIAssistant",
+      "type": "required"
+    },
+    {
+      "id": "osquery",
+      "type": "required"
+    },
+    {
+      "id": "sampleDataIngest",
+      "type": "required"
+    },
+    {
+      "id": "security",
+      "type": "required"
+    },
+    {
+      "id": "streams",
+      "type": "required"
+    },
+    {
+      "id": "indicesMetadata",
+      "type": "required"
+    },
+    {
+      "id": "reporting",
+      "type": "required"
+    },
+    {
+      "id": "taskManagerDependencies",
+      "type": "required"
+    },
+    {
+      "id": "apm",
+      "type": "optional"
+    },
+    {
+      "id": "slo",
+      "type": "required"
+    },
+    {
+      "id": "synthetics",
+      "type": "required"
+    },
+    {
+      "id": "uptime",
+      "type": "required"
+    },
+    {
+      "id": "ux",
+      "type": "optional"
+    },
+    {
+      "id": "cloudSecurityPosture",
+      "type": "required"
+    },
+    {
+      "id": "elasticAssistant",
+      "type": "required"
+    },
+    {
+      "id": "entityStore",
+      "type": "required"
+    },
+    {
+      "id": "securitySolution",
+      "type": "required"
+    },
+    {
+      "id": "securitySolutionServerless",
+      "type": "required"
+    }
+  ],
+  "summary": {
+    "selfMemory": 1.5,
+    "requiredDeps": [
+      "licensing",
+      "screenshotMode"
+    ],
+    "requiredMemory": 0.8,
+    "optionalDeps": [
+      "cloud",
+      "usageCollection"
+    ],
+    "optionalMemory": 2.65,
+    "requiredBy": [
+      "workflowsExecutionEngine",
+      "workflowsManagement",
+      "actions",
+      "productDocBase",
+      "alerting",
+      "automaticImportVTwo",
+      "contentConnectors",
+      "fleet",
+      "maintenanceWindows",
+      "ml",
+      "observabilityAIAssistant",
+      "osquery",
+      "sampleDataIngest",
+      "security",
+      "streams",
+      "indicesMetadata",
+      "reporting",
+      "taskManagerDependencies",
+      "slo",
+      "synthetics",
+      "uptime",
+      "cloudSecurityPosture",
+      "elasticAssistant",
+      "entityStore",
+      "securitySolution",
+      "securitySolutionServerless"
+    ],
+    "requiredByMemory": 108.94999999999999
+  }
+}

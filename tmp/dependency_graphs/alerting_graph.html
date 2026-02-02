@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dependency Graph: alerting</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    h1 { color: #333; }
+    #graph { width: 100%; height: 700px; border: 1px solid #ddd; background: white; }
+    .stats { margin: 10px 0; padding: 15px; background: white; border-radius: 5px; }
+    .legend { display: flex; gap: 20px; margin: 10px 0; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 20px; height: 20px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Dependency Graph: alerting</h1>
+  
+  <div class="stats">
+    <strong>Stats:</strong> 38 plugins shown | Total memory: ~149.6MB
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#4488ff"></div> Root plugin</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff4444"></div> >50MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff8844"></div> >20MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffcc44"></div> >10MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#88cc44"></div> >5MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#44aa88"></div> <5MB</div>
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item">─── Required dependency</div>
+    <div class="legend-item">- - - Optional dependency</div>
+    <div class="legend-item" style="color:#4488ff">─── Depends on alerting</div>
+  </div>
+  
+  <div id="graph"></div>
+  
+  <script>
+    const nodes = new vis.DataSet([{"id":"alerting","label":"alerting\n2.1MB","color":"#4488ff","font":{"color":"white"},"borderWidth":3,"size":17.1},{"id":"actions","label":"actions\n1.8MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":16.8},{"id":"licensing","label":"licensing\n0.8MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15.8},{"id":"taskManager","label":"taskManager\n1.5MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":16.5},{"id":"encryptedSavedObjects","label":"encryptedSavedObjects\n1.2MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":16.2},{"id":"eventLog","label":"eventLog\n0.9MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15.9},{"id":"features","label":"features\n5.4MB","color":"#88cc44","font":{"color":"black"},"borderWidth":1,"size":20.36},{"id":"data","label":"data\n73.9MB","color":"#ff4444","font":{"color":"white"},"borderWidth":1,"size":50},{"id":"expressions","label":"expressions","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"uiActions","label":"uiActions","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"share","label":"share","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"inspector","label":"inspector","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"fieldFormats","label":"fieldFormats","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"dataViews","label":"dataViews","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"contentManagement","label":"contentManagement","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"screenshotMode","label":"screenshotMode","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"management","label":"management","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"kibanaUtils","label":"kibanaUtils","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"kql","label":"kql","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"embeddable","label":"embeddable","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"savedObjectsFinder","label":"savedObjectsFinder","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"savedObjectsManagement","label":"savedObjectsManagement","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15},{"id":"cases","label":"cases\n19.3MB","color":"#ffcc44","font":{"color":"black"},"size":34.34},{"id":"ruleRegistry","label":"ruleRegistry\n11.0MB","color":"#ffcc44","font":{"color":"black"},"size":26.02},{"id":"stackAlerts","label":"stackAlerts","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"streams","label":"streams\n25.1MB","color":"#ff8844","font":{"color":"black"},"size":40.08},{"id":"triggersActionsUi","label":"triggersActionsUi","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"exploratoryView","label":"exploratoryView","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"infra","label":"infra","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"observability","label":"observability","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"observabilityAIAssistantApp","label":"observabilityAIAssistantApp","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"slo","label":"slo","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"synthetics","label":"synthetics","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"uptime","label":"uptime","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"cloudSecurityPosture","label":"cloudSecurityPosture","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"elasticAssistant","label":"elasticAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"securitySolution","label":"securitySolution\n6.6MB","color":"#88cc44","font":{"color":"black"},"size":21.57},{"id":"timelines","label":"timelines","color":"#44aa88","font":{"color":"black"},"size":15}]);
+    const edges = new vis.DataSet([{"from":"alerting","to":"actions","arrows":"to","color":{"color":"#666"}},{"from":"actions","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"actions","to":"taskManager","arrows":"to","color":{"color":"#666"}},{"from":"taskManager","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"taskManager","to":"cloud","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"taskManager","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"encryptedSavedObjects","arrows":"to","color":{"color":"#666"}},{"from":"encryptedSavedObjects","to":"security","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"eventLog","arrows":"to","color":{"color":"#666"}},{"from":"eventLog","to":"spaces","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"eventLog","to":"serverless","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"features","arrows":"to","color":{"color":"#666"}},{"from":"features","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"actions","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"spaces","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"security","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"data","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"expressions","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"uiActions","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"share","arrows":"to","color":{"color":"#666"}},{"from":"share","to":"licensing","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"share","to":"taskManager","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"data","to":"inspector","arrows":"to","color":{"color":"#666"}},{"from":"inspector","to":"share","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"fieldFormats","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"dataViews","arrows":"to","color":{"color":"#666"}},{"from":"dataViews","to":"fieldFormats","arrows":"to","color":{"color":"#666"}},{"from":"dataViews","to":"expressions","arrows":"to","color":{"color":"#666"}},{"from":"dataViews","to":"contentManagement","arrows":"to","color":{"color":"#666"}},{"from":"contentManagement","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"dataViews","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"data","to":"screenshotMode","arrows":"to","color":{"color":"#666"}},{"from":"data","to":"management","arrows":"to","color":{"color":"#666"}},{"from":"management","to":"share","arrows":"to","color":{"color":"#666"}},{"from":"management","to":"home","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"management","to":"serverless","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"management","to":"cloud","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"data","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"data","to":"cps","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"dataViews","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"share","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"encryptedSavedObjects","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"eventLog","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"features","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"kibanaUtils","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"taskManager","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"management","arrows":"to","color":{"color":"#666"}},{"from":"alerting","to":"kql","arrows":"to","color":{"color":"#666"}},{"from":"kql","to":"data","arrows":"to","color":{"color":"#666"}},{"from":"kql","to":"dataViews","arrows":"to","color":{"color":"#666"}},{"from":"kql","to":"uiActions","arrows":"to","color":{"color":"#666"}},{"from":"kql","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"embeddable","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"data","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"inspector","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"uiActions","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"savedObjectsFinder","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"savedObjectsManagement","arrows":"to","color":{"color":"#666"}},{"from":"savedObjectsManagement","to":"management","arrows":"to","color":{"color":"#666"}},{"from":"savedObjectsManagement","to":"data","arrows":"to","color":{"color":"#666"}},{"from":"savedObjectsManagement","to":"dataViews","arrows":"to","color":{"color":"#666"}},{"from":"savedObjectsManagement","to":"home","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"savedObjectsManagement","to":"savedObjectsTaggingOss","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"savedObjectsManagement","to":"spaces","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"embeddable","to":"contentManagement","arrows":"to","color":{"color":"#666"}},{"from":"embeddable","to":"savedObjectsTaggingOss","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"embeddable","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"security","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"alerting","to":"monitoringCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"cases","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"ruleRegistry","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"stackAlerts","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"streams","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"triggersActionsUi","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"exploratoryView","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"infra","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observability","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observabilityAIAssistantApp","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"slo","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"synthetics","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"uptime","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"cloudSecurityPosture","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"elasticAssistant","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"securitySolution","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"timelines","to":"alerting","arrows":"to","color":{"color":"#4488ff"},"width":2}]);
+    
+    const container = document.getElementById('graph');
+    const data = { nodes, edges };
+    const options = {
+      layout: {
+        hierarchical: {
+          direction: 'UD',
+          sortMethod: 'directed',
+          levelSeparation: 100,
+          nodeSpacing: 150,
+        }
+      },
+      physics: false,
+      nodes: {
+        shape: 'box',
+        margin: 10,
+        font: { size: 12 },
+      },
+      edges: {
+        smooth: { type: 'cubicBezier' },
+      },
+      interaction: {
+        hover: true,
+        tooltipDelay: 100,
+      },
+    };
+    
+    const network = new vis.Network(container, data, options);
+    
+    // Add click handler
+    network.on('click', function(params) {
+      if (params.nodes.length > 0) {
+        const nodeId = params.nodes[0];
+        console.log('Clicked:', nodeId);
+      }
+    });
+  </script>
+</body>
+</html>

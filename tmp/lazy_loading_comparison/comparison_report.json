@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-02-01T12:17:29.640Z",
+  "waitTime": 90,
+  "eager": {
+    "finalRss": 472.5625,
+    "finalHeap": 0,
+    "phases": []
+  },
+  "lazy": {
+    "finalRss": 653.5625,
+    "finalHeap": 0,
+    "phases": [],
+    "lazyLoadEvents": [
+      {
+        "plugin": "server-internal",
+        "memory": 0.07,
+        "time": 6188
+      },
+      {
+        "plugin": "src",
+        "memory": 0.78,
+        "time": 6188
+      },
+      {
+        "plugin": "plugins",
+        "memory": 0.05,
+        "time": 7448
+      },
+      {
+        "plugin": "plugins",
+        "memory": 0.24,
+        "time": 7448
+      },
+      {
+        "plugin": "plugins",
+        "memory": 0.45,
+        "time": 7448
+      }
+    ]
+  },
+  "savings": {
+    "rss": -181,
+    "percent": -38.3
+  }
+}

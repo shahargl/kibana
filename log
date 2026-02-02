@@ -1,0 +1,440 @@
+    at /Users/shaharglazner/git/kibana/node_modules/rxjs/src/internal/observable/innerFrom.ts:91:24
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2026-02-01T11:39:11.634+02:00][WARN ][plugins.securitySolution.health-diagnostic] Error sending EBT Error: Failed to validate payload coming from "Event Type 'telemetry_health_diagnostic_query_stats_event'":
+        - [failure.reason]: {"expected":"{ circuitBreaker: string, valid: boolean, message?: string }","actual":"undefined","value":"undefined"}
+    at /Users/shaharglazner/git/kibana/node_modules/@elastic/ebt/client/src/schema/validation/validate_schema.js:25:15
+    at /Users/shaharglazner/git/kibana/node_modules/fp-ts/lib/Either.js:624:56
+    at pipe (/Users/shaharglazner/git/kibana/node_modules/fp-ts/lib/function.js:301:20)
+    at Object._mapLeft [as mapLeft] (/Users/shaharglazner/git/kibana/node_modules/fp-ts/lib/Either.js:83:62)
+    at validateSchema (/Users/shaharglazner/git/kibana/node_modules/@elastic/ebt/client/src/schema/validation/validate_schema.js:21:21)
+    at Object.reportEvent (/Users/shaharglazner/git/kibana/node_modules/@elastic/ebt/client/src/analytics_client/analytics_client.js:67:49)
+    at HealthDiagnosticServiceImpl.reportEBT (health_diagnostic_service.ts:304:22)
+    at HealthDiagnosticServiceImpl.runHealthDiagnosticQueries (health_diagnostic_service.ts:201:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.run (health_diagnostic_service.ts:242:29)
+    at TaskManagerRunner.run (task_runner.ts:429:22)
+[2026-02-01T11:39:11.762+02:00][INFO ][plugins.securitySolution.telemetry_events.sender.task] Running ingest stats task
+[2026-02-01T11:39:11.766+02:00][INFO ][plugins.securitySolution.telemetry_events.sender.task] Got ingest stats, about to publish EBT events
+[2026-02-01T11:39:12.107+02:00][INFO ][plugins.securitySolution.telemetry_events.sender.task.indices-metadata] Ingest stats task completed
+[2026-02-01T11:39:12.183+02:00][INFO ][plugins.fleet] Running Fleet Usage telemetry send task
+[2026-02-01T11:39:12.210+02:00][INFO ][plugins.securitySolution.endpoint:metadata-check-transforms-task:0.0.1] no endpoint installation found
+[2026-02-01T11:39:12.240+02:00][INFO ][plugins.ml] Task ML:saved-objects-sync-task: No ML saved objects in need of synchronization
+[2026-02-01T11:39:12.708+02:00][INFO ][plugins.fleet] Found 0 package policies that need agent policy revision bump
+[2026-02-01T11:39:12.804+02:00][INFO ][plugins.securitySolution.telemetry_events.sender.task.configuration] Updating sender channels configuration
+[2026-02-01T11:39:17.666+02:00][INFO ][plugins.taskManager] Background task node "9afef043-4ce4-4832-8b04-9c8e4260fc62" now claiming with assigned partitions
+[2026-02-01T11:39:42.943+02:00][INFO ][plugins.security.authentication] Performing login attempt with "basic" provider.
+[2026-02-01T11:39:43.364+02:00][INFO ][plugins.security.authentication] Login attempt with "basic" provider succeeded (requires redirect: true).
+[2026-02-01T11:39:46.453+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Rules payload was sent successfully
+[2026-02-01T11:39:46.454+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Resources payload was sent successfully
+[2026-02-01T11:39:46.454+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Cloud Accounts payload was sent successfully
+[2026-02-01T11:39:46.456+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Accounts payload was sent successfully
+[2026-02-01T11:39:46.458+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Muted Rules payload was sent successfully
+[2026-02-01T11:39:46.492+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Alerts payload was sent successfully
+[2026-02-01T11:39:46.493+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: CSPM Cloud Connector Usage payload was sent successfully
+[2026-02-01T11:39:46.500+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Installation payload was sent successfully
+[2026-02-01T11:39:46.530+02:00][INFO ][plugins.securitySolution] Fetch risk engine metrics
+[2026-02-01T11:39:46.540+02:00][ERROR][plugins.securitySolution] Error fetching value lists overview metrics: Cannot read properties of undefined (reading 'by_type')
+[2026-02-01T11:39:46.563+02:00][ERROR][plugins.securitySolution] Error fetching value list items metrics: Cannot read properties of undefined (reading 'max_items_per_list')
+[2026-02-01T11:39:46.622+02:00][INFO ][plugins.cloudSecurityPosture] Cloud Security telemetry: Indices payload was sent successfully
+[2026-02-01T11:39:47.381+02:00][WARN ][http.server.Kibana] Event loop utilization for /wxz/internal/telemetry/clusters/_stats exceeded threshold of 250ms (274ms out of 1080ms) and 15% (25%). Run `node scripts/profile.js` to find out why.
+[2026-02-01T11:49:12.857+02:00][INFO ][plugins.fleet.fleet:auto-install-content-packages-task:1.0.3] [AutoInstallContentPackagesTask] Found datasets with data: apm.error, test, apm.app.kibana, apm.internal, apm.service_destination.1m, apm.service_summary.1m, apm.service_transaction.1m, apm.transaction.1m, apm
+Debugger attached.
+Debugger ending on ws://127.0.0.1:9229/9eefe0ba-9d47-4e80-a284-43cb9f5cc593
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+[2026-02-01T11:54:09.996+02:00][INFO ][plugins.fleet] Fleet Usage: {"agents_enabled":true,"agents":{"total_enrolled":0,"healthy":0,"unhealthy":0,"offline":0,"inactive":0,"unenrolled":0,"total_all_statuses":0,"updating":0},"fleet_server":{"total_all_statuses":0,"total_enrolled":0,"healthy":0,"unhealthy":0,"offline":0,"updating":0,"inactive":0,"unenrolled":0,"num_host_urls":0},"license_issued_to":"elastic-local-dev"}
+^C[2026-02-01T11:56:16.086+02:00][INFO ][root] SIGINT received - initiating shutdown
+[2026-02-01T11:56:16.086+02:00][INFO ][root] Kibana is shutting down
+[2026-02-01T11:56:16.088+02:00][INFO ][plugins-system.standard] Stopping all plugins.
+[2026-02-01T11:56:16.090+02:00][INFO ][plugins.monitoring.monitoring.kibana-monitoring] Monitoring stats collection is stopped
+[2026-02-01T11:56:16.091+02:00][INFO ][plugins.entityStore] Stopping plugin
+[2026-02-01T11:56:16.092+02:00][INFO ][plugins.securitySolution.endpoint:complete-external-response-actions] Un-registering task definition [endpoint:complete-external-response-actions] (if it exists)
+[2026-02-01T11:56:16.094+02:00][INFO ][plugins.taskManager] Stopping the task poller
+[2026-02-01T11:56:16.776+02:00][INFO ][root] SIGINT received - initiating shutdown
+[2026-02-01T11:56:16.801+02:00][INFO ][plugins.taskManager] Removed this node from the Kibana Discovery Service
+[2026-02-01T11:56:16.802+02:00][INFO ][plugins-system.standard] All plugins stopped.
+Waiting for the debugger to disconnect...
+^C
+shaharglazner@Shahar-Elastic-MBP kibana % node --inspect scripts/kibana --dev
+Debugger listening on ws://127.0.0.1:9229/f34718e4-6122-42f8-852a-639d3f404112
+For help, see: https://nodejs.org/en/docs/inspector
+Node.js's experimental support for native ES modules is enabled.  This will not be enabled in production while the feature is experimental.  It is recommended to add `--no-experimental-require-module` to NODE_OPTIONS.
+Debugger attached.
+Marking config path as handled: dev
+Marking config path as handled: plugins
+Marking config path as handled: server
+ watching server files for changes 
+basepath proxy server running at http://localhost:5601/vbj
+Debugger listening on ws://127.0.0.1:9230/bb0a116d-1c1e-4ba8-9d4a-0608a6ccd2f3
+For help, see: https://nodejs.org/en/docs/inspector
+Node.js's experimental support for native ES modules is enabled.  This will not be enabled in production while the feature is experimental.  It is recommended to add `--no-experimental-require-module` to NODE_OPTIONS.
+[2026-02-01T11:58:31.127+02:00][INFO ][root] Kibana is starting
+[2026-02-01T11:58:31.136+02:00][INFO ][node] Kibana process configured with roles: [background_tasks, ui]
+[2026-02-01T11:58:38.194+02:00][INFO ][plugins-service] The following plugins are disabled: "mockIdpPlugin,inspectComponent,developerToolbar,cloudChat,cloudExperiments,cloudFullStory,dataUsage,automaticImportVTwo,serverless,profiling,profilingDataAccess,serverlessObservability,serverlessSearch,securitySolutionServerless,serverlessWorkplaceAI,workplaceAIApp".
+[2026-02-01T11:58:38.229+02:00][INFO ][http.server.Preboot] http server running at http://localhost:5601/vbj
+[2026-02-01T11:58:38.257+02:00][INFO ][plugins-system.preboot] Setting up [1] plugins: [interactiveSetup]
+[2026-02-01T11:58:38.270+02:00][INFO ][plugins-system.preboot] [MEMORY] interactiveSetup: heap=0.05MB, rss=0.00MB
+[2026-02-01T11:58:38.285+02:00][WARN ][config.deprecation] TLS is not enabled, or the HTTP protocol is set to HTTP/1. Enabling TLS and using HTTP/2 improves security and performance.
+[2026-02-01T11:58:38.342+02:00][INFO ][plugins-system.standard] Setting up [190] plugins: [sloShared,licensing,globalSearch,globalSearchProviders,features,reindexService,mapsEms,fieldsMetadata,dataCatalog,translations,monitoringCollection,licenseApiGuard,customBranding,screenshotMode,banners,usageCollection,cloud,taskManager,sampleDataIngest,productDocBase,indicesMetadata,share,intercepts,productIntercept,telemetryCollectionManager,telemetryCollectionXpack,contentManagement,kibanaUsageCollection,newsfeed,savedObjectsFinder,noDataPage,fieldFormats,expressions,screenshotting,dataViews,esUiShared,customIntegrations,cps,home,management,spaces,security,lists,encryptedSavedObjects,entityStore,entityManager,cloudConnect,taskManagerDependencies,snapshotRestore,telemetry,licenseManagement,files,eventLog,actions,notifications,inference,llmTasks,genAiSettings,workflowsExtensions,workflowsExecutionEngine,aiAssistantManagementSelection,advancedSettings,cloudDataMigration,data,ecsDataQualityDashboard,logsDataAccess,apmSourcesAccess,apmDataAccess,fileUpload,savedObjectsTagging,globalSearchBar,savedObjectsManagement,embeddable,metricsDataAccess,imageEmbeddable,savedSearch,presentationUtil,kql,maintenanceWindows,alerting,navigation,inferenceEndpoint,graph,esql,controls,dataViewFieldEditor,dataViewManagement,charts,watcher,visualizations,expressionTagcloud,expressionPartitionVis,visTypePie,expressionMetricVis,expressionLegacyMetricVis,expressionHeatmap,expressionGauge,visTypeGauge,visTypeXy,visTypeVislib,visTypeVega,visTypeTimelion,visTypeTagcloud,visTypeTable,visTypeMetric,visTypeHeatmap,visTypeMarkdown,inputControlVis,eventAnnotation,expressionXY,lens,triggersActionsUi,stackConnectors,automaticImport,workflowsManagement,agentBuilder,observabilityAIAssistant,dashboard,dashboardAgent,dashboardMarkdown,links,dataSources,stackAlerts,ruleRegistry,cases,timelines,sessionView,kubernetesSecurity,aiops,agentBuilderPlatform,transform,maps,dataVisualizer,discover,exploratoryView,ml,elasticAssistant,searchAssistant,observabilityAgentBuilder,logsShared,upgradeAssistant,observabilityAiAssistantManagement,reporting,canvas,discoverEnhanced,visTypeTimeseries,devTools,searchprofiler,painlessLab,grokdebugger,console,searchSynonyms,searchQueryRules,searchPlayground,searchNotebooks,searchInferenceEndpoints,searchHomepage,searchGettingStarted,streams,observability,slo,observabilityAIAssistantApp,ingestPipelines,fleet,cloudSecurityPosture,cloudDefend,uptime,synthetics,observabilityOnboarding,apm,ux,osquery,securitySolution,securitySolutionEss,infra,indexManagement,searchIndices,contentConnectors,enterpriseSearch,rollup,remoteClusters,crossClusterReplication,indexLifecycleManagement,datasetQuality,streamsApp,dataQuality,observabilityLogsExplorer,monitoring,logstash,ftrApis]
+[2026-02-01T11:58:38.345+02:00][INFO ][plugins-system.standard] [MEMORY] sloShared: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:38.355+02:00][INFO ][plugins-system.standard] [MEMORY] licensing: heap=0.31MB, rss=0.02MB
+[2026-02-01T11:58:38.364+02:00][INFO ][plugins-system.standard] [MEMORY] globalSearch: heap=0.28MB, rss=0.00MB
+[2026-02-01T11:58:38.368+02:00][INFO ][plugins-system.standard] [MEMORY] globalSearchProviders: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.375+02:00][INFO ][plugins-system.standard] [MEMORY] features: heap=0.07MB, rss=0.00MB
+[2026-02-01T11:58:38.376+02:00][INFO ][plugins-system.standard] [MEMORY] reindexService: heap=0.22MB, rss=0.00MB
+[2026-02-01T11:58:38.377+02:00][INFO ][plugins-system.standard] [MEMORY] mapsEms: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:38.397+02:00][INFO ][plugins-system.standard] [MEMORY] fieldsMetadata: heap=0.04MB, rss=0.00MB
+[2026-02-01T11:58:38.403+02:00][INFO ][plugins-system.standard] [MEMORY] dataCatalog: heap=0.08MB, rss=0.00MB
+[2026-02-01T11:58:38.403+02:00][INFO ][plugins-system.standard] [MEMORY] translations: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.413+02:00][INFO ][plugins-system.standard] [MEMORY] monitoringCollection: heap=0.06MB, rss=0.00MB
+[2026-02-01T11:58:38.414+02:00][INFO ][plugins-system.standard] [MEMORY] licenseApiGuard: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.418+02:00][INFO ][custom-branding-service] CustomBrandingService registering plugin: customBranding
+[2026-02-01T11:58:38.418+02:00][INFO ][plugins-system.standard] [MEMORY] customBranding: heap=0.27MB, rss=0.02MB
+[2026-02-01T11:58:38.419+02:00][INFO ][plugins-system.standard] [MEMORY] screenshotMode: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:38.422+02:00][INFO ][plugins-system.standard] [MEMORY] banners: heap=0.24MB, rss=0.00MB
+[2026-02-01T11:58:38.433+02:00][INFO ][plugins-system.standard] [MEMORY] usageCollection: heap=0.33MB, rss=0.00MB
+[2026-02-01T11:58:38.446+02:00][INFO ][plugins-system.standard] [MEMORY] cloud: heap=0.68MB, rss=0.00MB
+[2026-02-01T11:58:38.526+02:00][INFO ][plugins.taskManager] TaskManager is identified by the Kibana UUID: 9afef043-4ce4-4832-8b04-9c8e4260fc62
+[2026-02-01T11:58:38.527+02:00][INFO ][plugins-system.standard] [MEMORY] taskManager: heap=3.49MB, rss=0.02MB
+[2026-02-01T11:58:38.549+02:00][INFO ][plugins-system.standard] [MEMORY] sampleDataIngest: heap=0.07MB, rss=0.00MB
+[2026-02-01T11:58:38.551+02:00][INFO ][plugins-system.standard] [MEMORY] productDocBase: heap=0.70MB, rss=0.03MB
+[2026-02-01T11:58:38.552+02:00][INFO ][plugins-system.standard] [MEMORY] indicesMetadata: heap=0.25MB, rss=0.00MB
+[2026-02-01T11:58:38.568+02:00][INFO ][plugins-system.standard] [MEMORY] share: heap=0.58MB, rss=0.02MB
+[2026-02-01T11:58:38.576+02:00][INFO ][plugins-system.standard] [MEMORY] intercepts: heap=0.47MB, rss=0.00MB
+[2026-02-01T11:58:38.578+02:00][INFO ][plugins-system.standard] [MEMORY] productIntercept: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.644+02:00][INFO ][plugins-system.standard] [MEMORY] telemetryCollectionManager: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.648+02:00][INFO ][plugins-system.standard] [MEMORY] telemetryCollectionXpack: heap=0.00MB, rss=0.00MB
+ np bld    log   [11:58:38.672] [info][@kbn/optimizer] initialized, 211 bundles cached
+ np bld    log   [11:58:38.673] [success][@kbn/optimizer] all bundles cached, success after 10.6 sec
+[2026-02-01T11:58:38.682+02:00][INFO ][plugins-system.standard] [MEMORY] contentManagement: heap=1.02MB, rss=0.02MB
+[2026-02-01T11:58:38.726+02:00][INFO ][plugins-system.standard] [MEMORY] kibanaUsageCollection: heap=0.31MB, rss=0.05MB
+[2026-02-01T11:58:38.727+02:00][INFO ][plugins-system.standard] [MEMORY] newsfeed: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.729+02:00][INFO ][plugins-system.standard] [MEMORY] savedObjectsFinder: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.729+02:00][INFO ][plugins-system.standard] [MEMORY] noDataPage: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:38.732+02:00][INFO ][plugins-system.standard] [MEMORY] fieldFormats: heap=0.86MB, rss=0.00MB
+[2026-02-01T11:58:38.736+02:00][INFO ][plugins-system.standard] [MEMORY] expressions: heap=0.23MB, rss=0.05MB
+[2026-02-01T11:58:38.962+02:00][INFO ][plugins-system.standard] [MEMORY] screenshotting: heap=0.05MB, rss=0.00MB
+[2026-02-01T11:58:38.996+02:00][INFO ][plugins.screenshotting.config] Chromium sandbox provides an additional layer of protection, and is supported for Darwin OS. Automatically enabling Chromium sandbox.
+[2026-02-01T11:58:39.004+02:00][INFO ][plugins-system.standard] [MEMORY] dataViews: heap=5.08MB, rss=0.08MB
+[2026-02-01T11:58:39.004+02:00][INFO ][plugins-system.standard] [MEMORY] esUiShared: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.010+02:00][INFO ][plugins-system.standard] [MEMORY] customIntegrations: heap=0.11MB, rss=0.02MB
+[2026-02-01T11:58:39.012+02:00][INFO ][elasticsearch-service] CPS feature flag set to undefined
+[2026-02-01T11:58:39.012+02:00][INFO ][plugins-system.standard] [MEMORY] cps: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:39.018+02:00][INFO ][plugins-system.standard] [MEMORY] home: heap=1.96MB, rss=0.03MB
+[2026-02-01T11:58:39.023+02:00][INFO ][plugins-system.standard] [MEMORY] management: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.056+02:00][INFO ][plugins-system.standard] [MEMORY] spaces: heap=2.72MB, rss=0.02MB
+[2026-02-01T11:58:39.143+02:00][INFO ][plugins.security.config] Hashed 'xpack.security.encryptionKey' for this instance: Lu5CspnLRLs9XdCgIhDOKd68IRC3xGRP84xTCElAviE=
+[2026-02-01T11:58:39.143+02:00][WARN ][plugins.security.config] Session cookies will be transmitted over insecure connections. This is not recommended.
+[2026-02-01T11:58:39.156+02:00][INFO ][plugins.security.config] Hashed 'xpack.security.encryptionKey' for this instance: Lu5CspnLRLs9XdCgIhDOKd68IRC3xGRP84xTCElAviE=
+[2026-02-01T11:58:39.156+02:00][WARN ][plugins.security.config] Session cookies will be transmitted over insecure connections. This is not recommended.
+[2026-02-01T11:58:39.156+02:00][INFO ][plugins-system.standard] [MEMORY] security: heap=-3.24MB, rss=-0.23MB
+[2026-02-01T11:58:39.247+02:00][INFO ][plugins-system.standard] [MEMORY] lists: heap=1.48MB, rss=0.03MB
+[2026-02-01T11:58:39.252+02:00][INFO ][plugins.encryptedSavedObjects] Hashed 'xpack.encryptedSavedObjects.encryptionKey' for this instance: u3QkjR006nelJa5gbafWoIG5kfN4sJAtY70U9LWPxO4=
+[2026-02-01T11:58:39.253+02:00][INFO ][plugins-system.standard] [MEMORY] encryptedSavedObjects: heap=0.14MB, rss=0.00MB
+[2026-02-01T11:58:39.286+02:00][INFO ][plugins-system.standard] [MEMORY] entityStore: heap=1.62MB, rss=0.02MB
+[2026-02-01T11:58:39.287+02:00][INFO ][plugins-system.standard] [MEMORY] entityManager: heap=0.20MB, rss=0.00MB
+[2026-02-01T11:58:39.289+02:00][INFO ][plugins-system.standard] [MEMORY] cloudConnect: heap=0.53MB, rss=0.02MB
+[2026-02-01T11:58:39.290+02:00][INFO ][plugins-system.standard] [MEMORY] taskManagerDependencies: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.307+02:00][INFO ][plugins-system.standard] [MEMORY] snapshotRestore: heap=0.80MB, rss=0.03MB
+[2026-02-01T11:58:39.333+02:00][INFO ][plugins-system.standard] [MEMORY] telemetry: heap=0.76MB, rss=0.03MB
+[2026-02-01T11:58:39.339+02:00][INFO ][plugins-system.standard] [MEMORY] licenseManagement: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:39.341+02:00][INFO ][plugins-system.standard] [MEMORY] files: heap=0.43MB, rss=0.00MB
+[2026-02-01T11:58:39.352+02:00][INFO ][plugins-system.standard] [MEMORY] eventLog: heap=0.04MB, rss=0.00MB
+[2026-02-01T11:58:39.450+02:00][INFO ][plugins-system.standard] [MEMORY] actions: heap=3.17MB, rss=0.05MB
+[2026-02-01T11:58:39.455+02:00][INFO ][plugins.notifications] Email Service Error: Email connector not specified.
+[2026-02-01T11:58:39.455+02:00][INFO ][plugins-system.standard] [MEMORY] notifications: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:39.456+02:00][INFO ][plugins-system.standard] [MEMORY] inference: heap=0.11MB, rss=0.00MB
+[2026-02-01T11:58:39.456+02:00][INFO ][plugins-system.standard] [MEMORY] llmTasks: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.456+02:00][INFO ][plugins-system.standard] [MEMORY] genAiSettings: heap=0.05MB, rss=0.00MB
+[2026-02-01T11:58:39.472+02:00][INFO ][plugins-system.standard] [MEMORY] workflowsExtensions: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:39.473+02:00][DEBUG][plugins.workflowsExecutionEngine] Initializing plugin
+[2026-02-01T11:58:39.532+02:00][DEBUG][plugins.workflowsExecutionEngine] workflows-execution-engine: Setup
+[2026-02-01T11:58:39.533+02:00][INFO ][plugins-system.standard] [MEMORY] workflowsExecutionEngine: heap=0.06MB, rss=0.00MB
+[2026-02-01T11:58:39.537+02:00][INFO ][plugins-system.standard] [MEMORY] aiAssistantManagementSelection: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.539+02:00][INFO ][plugins-system.standard] [MEMORY] advancedSettings: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.540+02:00][INFO ][plugins-system.standard] [MEMORY] cloudDataMigration: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:39.587+02:00][INFO ][plugins-system.standard] [MEMORY] data: heap=4.87MB, rss=0.09MB
+[2026-02-01T11:58:39.629+02:00][INFO ][plugins-system.standard] [MEMORY] ecsDataQualityDashboard: heap=0.22MB, rss=0.00MB
+[2026-02-01T11:58:39.636+02:00][INFO ][plugins-system.standard] [MEMORY] logsDataAccess: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.639+02:00][INFO ][plugins-system.standard] [MEMORY] apmSourcesAccess: heap=0.31MB, rss=0.00MB
+[2026-02-01T11:58:39.644+02:00][INFO ][plugins-system.standard] [MEMORY] apmDataAccess: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.662+02:00][INFO ][plugins-system.standard] [MEMORY] fileUpload: heap=1.03MB, rss=0.02MB
+[2026-02-01T11:58:39.682+02:00][INFO ][plugins-system.standard] [MEMORY] savedObjectsTagging: heap=0.96MB, rss=0.02MB
+[2026-02-01T11:58:39.683+02:00][INFO ][plugins-system.standard] [MEMORY] globalSearchBar: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.691+02:00][INFO ][plugins-system.standard] [MEMORY] savedObjectsManagement: heap=0.89MB, rss=0.02MB
+[2026-02-01T11:58:39.698+02:00][INFO ][plugins-system.standard] [MEMORY] embeddable: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:39.707+02:00][INFO ][plugins-system.standard] [MEMORY] metricsDataAccess: heap=0.05MB, rss=0.00MB
+[2026-02-01T11:58:39.722+02:00][INFO ][plugins-system.standard] [MEMORY] imageEmbeddable: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.817+02:00][INFO ][plugins-system.standard] [MEMORY] savedSearch: heap=-2.00MB, rss=0.00MB
+[2026-02-01T11:58:39.818+02:00][INFO ][plugins-system.standard] [MEMORY] presentationUtil: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:39.823+02:00][INFO ][plugins-system.standard] [MEMORY] kql: heap=0.26MB, rss=0.02MB
+[2026-02-01T11:58:39.952+02:00][INFO ][plugins-system.standard] [MEMORY] maintenanceWindows: heap=2.85MB, rss=0.03MB
+[2026-02-01T11:58:39.954+02:00][INFO ][plugins.alerting] using indexes and aliases for persisting alerts
+[2026-02-01T11:58:40.341+02:00][INFO ][plugins-system.standard] [MEMORY] alerting: heap=2.40MB, rss=0.09MB
+[2026-02-01T11:58:40.342+02:00][INFO ][plugins-system.standard] [MEMORY] navigation: heap=0.04MB, rss=0.00MB
+[2026-02-01T11:58:40.346+02:00][INFO ][plugins-system.standard] [MEMORY] inferenceEndpoint: heap=0.12MB, rss=0.00MB
+[2026-02-01T11:58:40.360+02:00][INFO ][plugins-system.standard] [MEMORY] graph: heap=0.53MB, rss=0.02MB
+[2026-02-01T11:58:40.370+02:00][INFO ][plugins-system.standard] [MEMORY] esql: heap=0.89MB, rss=0.00MB
+[2026-02-01T11:58:40.379+02:00][INFO ][plugins-system.standard] [MEMORY] controls: heap=0.45MB, rss=0.00MB
+[2026-02-01T11:58:40.382+02:00][INFO ][plugins-system.standard] [MEMORY] dataViewFieldEditor: heap=0.04MB, rss=0.00MB
+[2026-02-01T11:58:40.384+02:00][INFO ][plugins-system.standard] [MEMORY] dataViewManagement: heap=0.32MB, rss=0.00MB
+[2026-02-01T11:58:40.385+02:00][INFO ][plugins-system.standard] [MEMORY] charts: heap=0.38MB, rss=0.00MB
+[2026-02-01T11:58:40.435+02:00][INFO ][plugins-system.standard] [MEMORY] watcher: heap=0.45MB, rss=0.00MB
+[2026-02-01T11:58:40.453+02:00][INFO ][plugins-system.standard] [MEMORY] visualizations: heap=0.37MB, rss=0.00MB
+[2026-02-01T11:58:40.456+02:00][INFO ][plugins-system.standard] [MEMORY] expressionTagcloud: heap=0.17MB, rss=0.00MB
+[2026-02-01T11:58:40.462+02:00][INFO ][plugins-system.standard] [MEMORY] expressionPartitionVis: heap=1.37MB, rss=0.02MB
+[2026-02-01T11:58:40.463+02:00][INFO ][plugins-system.standard] [MEMORY] visTypePie: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.466+02:00][INFO ][plugins-system.standard] [MEMORY] expressionMetricVis: heap=0.52MB, rss=0.00MB
+[2026-02-01T11:58:40.469+02:00][INFO ][plugins-system.standard] [MEMORY] expressionLegacyMetricVis: heap=0.29MB, rss=0.00MB
+[2026-02-01T11:58:40.472+02:00][INFO ][plugins-system.standard] [MEMORY] expressionHeatmap: heap=0.55MB, rss=0.00MB
+[2026-02-01T11:58:40.477+02:00][INFO ][plugins-system.standard] [MEMORY] expressionGauge: heap=0.40MB, rss=0.00MB
+[2026-02-01T11:58:40.478+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeGauge: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:40.478+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeXy: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.480+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeVislib: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:40.480+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeVega: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:40.552+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeTimelion: heap=8.09MB, rss=7.73MB
+[2026-02-01T11:58:40.552+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeTagcloud: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.552+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeTable: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.552+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeMetric: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.553+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeHeatmap: heap=0.05MB, rss=0.00MB
+[2026-02-01T11:58:40.553+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeMarkdown: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:40.553+02:00][INFO ][plugins-system.standard] [MEMORY] inputControlVis: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:40.562+02:00][INFO ][plugins-system.standard] [MEMORY] eventAnnotation: heap=0.84MB, rss=0.02MB
+[2026-02-01T11:58:40.579+02:00][INFO ][plugins-system.standard] [MEMORY] expressionXY: heap=-4.80MB, rss=3.34MB
+[2026-02-01T11:58:40.604+02:00][INFO ][plugins-system.standard] [MEMORY] lens: heap=2.95MB, rss=0.00MB
+[2026-02-01T11:58:40.607+02:00][INFO ][plugins-system.standard] [MEMORY] triggersActionsUi: heap=0.11MB, rss=0.00MB
+[2026-02-01T11:58:41.014+02:00][INFO ][plugins-system.standard] [MEMORY] stackConnectors: heap=5.54MB, rss=0.88MB
+[2026-02-01T11:58:41.110+02:00][INFO ][plugins-system.standard] [MEMORY] automaticImport: heap=0.31MB, rss=0.02MB
+[2026-02-01T11:58:41.190+02:00][INFO ][plugins-system.standard] [MEMORY] workflowsManagement: heap=2.26MB, rss=0.02MB
+[2026-02-01T11:58:41.190+02:00][INFO ][plugins.agentBuilder.telemetry] Registered telemetry collector for agent_builder
+[2026-02-01T11:58:41.190+02:00][INFO ][plugins.agentBuilder] AgentBuilder telemetry initialized
+[2026-02-01T11:58:41.201+02:00][INFO ][plugins-system.standard] [MEMORY] agentBuilder: heap=-0.67MB, rss=5.72MB
+[2026-02-01T11:58:41.240+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityAIAssistant: heap=1.05MB, rss=0.08MB
+[2026-02-01T11:58:41.312+02:00][INFO ][plugins-system.standard] [MEMORY] dashboard: heap=5.24MB, rss=0.06MB
+[2026-02-01T11:58:41.313+02:00][INFO ][plugins-system.standard] [MEMORY] dashboardAgent: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:41.315+02:00][INFO ][plugins-system.standard] [MEMORY] dashboardMarkdown: heap=0.00MB, rss=0.02MB
+[2026-02-01T11:58:41.330+02:00][INFO ][plugins-system.standard] [MEMORY] links: heap=0.01MB, rss=0.02MB
+[2026-02-01T11:58:41.343+02:00][INFO ][plugins-system.standard] [MEMORY] dataSources: heap=0.95MB, rss=0.02MB
+[2026-02-01T11:58:41.351+02:00][INFO ][plugins-system.standard] [MEMORY] stackAlerts: heap=1.43MB, rss=0.14MB
+[2026-02-01T11:58:41.377+02:00][INFO ][plugins-system.standard] [MEMORY] ruleRegistry: heap=0.42MB, rss=0.03MB
+[2026-02-01T11:58:41.538+02:00][INFO ][plugins.cases.incremental_id_task] Registering Case Incremental ID Task Manager
+[2026-02-01T11:58:41.542+02:00][INFO ][plugins-system.standard] [MEMORY] cases: heap=-3.65MB, rss=4.22MB
+[2026-02-01T11:58:41.587+02:00][INFO ][plugins-system.standard] [MEMORY] timelines: heap=8.56MB, rss=4.53MB
+[2026-02-01T11:58:41.597+02:00][INFO ][plugins-system.standard] [MEMORY] sessionView: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:41.602+02:00][INFO ][plugins-system.standard] [MEMORY] kubernetesSecurity: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:41.653+02:00][INFO ][plugins-system.standard] [MEMORY] aiops: heap=0.01MB, rss=0.00MB
+[2026-02-01T11:58:41.655+02:00][INFO ][plugins-system.standard] [MEMORY] agentBuilderPlatform: heap=0.06MB, rss=0.05MB
+[2026-02-01T11:58:41.697+02:00][INFO ][plugins-system.standard] [MEMORY] transform: heap=0.55MB, rss=0.03MB
+[2026-02-01T11:58:41.743+02:00][INFO ][plugins-system.standard] [MEMORY] maps: heap=1.85MB, rss=0.14MB
+[2026-02-01T11:58:41.752+02:00][INFO ][plugins-system.standard] [MEMORY] dataVisualizer: heap=0.24MB, rss=0.02MB
+[2026-02-01T11:58:41.803+02:00][INFO ][plugins-system.standard] [MEMORY] discover: heap=0.49MB, rss=0.06MB
+[2026-02-01T11:58:41.804+02:00][INFO ][plugins-system.standard] [MEMORY] exploratoryView: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:42.025+02:00][INFO ][plugins-system.standard] [MEMORY] ml: heap=7.34MB, rss=0.31MB
+[2026-02-01T11:58:42.539+02:00][INFO ][plugins-system.standard] [MEMORY] elasticAssistant: heap=2.86MB, rss=0.25MB
+[2026-02-01T11:58:42.539+02:00][INFO ][plugins-system.standard] [MEMORY] searchAssistant: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:42.541+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityAgentBuilder: heap=0.18MB, rss=0.09MB
+[2026-02-01T11:58:42.584+02:00][INFO ][plugins-system.standard] [MEMORY] logsShared: heap=0.11MB, rss=0.02MB
+[2026-02-01T11:58:42.611+02:00][INFO ][plugins-system.standard] [MEMORY] upgradeAssistant: heap=-9.45MB, rss=2.13MB
+[2026-02-01T11:58:42.613+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityAiAssistantManagement: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:42.678+02:00][INFO ][plugins.reporting.config] Hashed 'xpack.reporting.encryptionKey' for this instance: Lu5CspnLRLs9XdCgIhDOKd68IRC3xGRP84xTCElAviE=
+[2026-02-01T11:58:42.730+02:00][INFO ][plugins-system.standard] [MEMORY] reporting: heap=-6.29MB, rss=5.47MB
+[2026-02-01T11:58:42.823+02:00][INFO ][plugins-system.standard] [MEMORY] canvas: heap=3.67MB, rss=0.16MB
+[2026-02-01T11:58:42.825+02:00][INFO ][plugins-system.standard] [MEMORY] discoverEnhanced: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:42.891+02:00][INFO ][plugins-system.standard] [MEMORY] visTypeTimeseries: heap=0.15MB, rss=0.03MB
+[2026-02-01T11:58:42.893+02:00][INFO ][plugins-system.standard] [MEMORY] devTools: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:42.896+02:00][INFO ][plugins-system.standard] [MEMORY] searchprofiler: heap=0.12MB, rss=0.00MB
+[2026-02-01T11:58:42.900+02:00][INFO ][plugins-system.standard] [MEMORY] painlessLab: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:42.901+02:00][INFO ][plugins-system.standard] [MEMORY] grokdebugger: heap=0.03MB, rss=0.00MB
+[2026-02-01T11:58:43.005+02:00][INFO ][plugins-system.standard] [MEMORY] console: heap=0.72MB, rss=0.03MB
+[2026-02-01T11:58:43.014+02:00][INFO ][plugins-system.standard] [MEMORY] searchSynonyms: heap=0.76MB, rss=0.03MB
+[2026-02-01T11:58:43.022+02:00][INFO ][plugins-system.standard] [MEMORY] searchQueryRules: heap=1.17MB, rss=0.03MB
+[2026-02-01T11:58:43.068+02:00][INFO ][plugins-system.standard] [MEMORY] searchPlayground: heap=2.69MB, rss=0.05MB
+[2026-02-01T11:58:43.077+02:00][INFO ][plugins-system.standard] [MEMORY] searchNotebooks: heap=0.11MB, rss=0.00MB
+[2026-02-01T11:58:43.082+02:00][INFO ][plugins-system.standard] [MEMORY] searchInferenceEndpoints: heap=0.24MB, rss=0.02MB
+[2026-02-01T11:58:43.086+02:00][INFO ][plugins-system.standard] [MEMORY] searchHomepage: heap=0.11MB, rss=0.00MB
+[2026-02-01T11:58:43.087+02:00][INFO ][plugins-system.standard] [MEMORY] searchGettingStarted: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:43.097+02:00][INFO ][plugins-system.standard] [MEMORY] streams: heap=3.48MB, rss=0.22MB
+[2026-02-01T11:58:43.150+02:00][INFO ][plugins-system.standard] [MEMORY] observability: heap=2.10MB, rss=0.13MB
+[2026-02-01T11:58:43.257+02:00][INFO ][plugins-system.standard] [MEMORY] slo: heap=1.42MB, rss=0.06MB
+[2026-02-01T11:58:43.281+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityAIAssistantApp: heap=0.06MB, rss=0.00MB
+[2026-02-01T11:58:43.310+02:00][INFO ][plugins-system.standard] [MEMORY] ingestPipelines: heap=0.34MB, rss=0.02MB
+[2026-02-01T11:58:43.510+02:00][INFO ][plugins-system.standard] [MEMORY] fleet: heap=-2.50MB, rss=5.92MB
+[2026-02-01T11:58:43.587+02:00][INFO ][plugins.cloudSecurityPosture] Registered task successfully [Task: cloud_security_posture-stats_task]
+[2026-02-01T11:58:43.587+02:00][INFO ][plugins-system.standard] [MEMORY] cloudSecurityPosture: heap=2.43MB, rss=0.03MB
+[2026-02-01T11:58:43.599+02:00][INFO ][plugins-system.standard] [MEMORY] cloudDefend: heap=0.06MB, rss=0.02MB
+[2026-02-01T11:58:43.675+02:00][INFO ][plugins-system.standard] [MEMORY] uptime: heap=2.37MB, rss=0.09MB
+[2026-02-01T11:58:43.883+02:00][INFO ][plugins-system.standard] [MEMORY] synthetics: heap=5.36MB, rss=0.17MB
+[2026-02-01T11:58:43.929+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityOnboarding: heap=4.31MB, rss=0.00MB
+[2026-02-01T11:58:43.942+02:00][INFO ][plugins-system.standard] [MEMORY] apm: heap=5.68MB, rss=0.23MB
+[2026-02-01T11:58:43.944+02:00][INFO ][plugins-system.standard] [MEMORY] ux: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:44.031+02:00][INFO ][plugins-system.standard] [MEMORY] osquery: heap=-10.57MB, rss=1.52MB
+[2026-02-01T11:58:45.506+02:00][WARN ][plugins.securitySolution.siemDashboardMigrations] {"message":"Creating dashboard index pattern adapter","name":".kibana-siem-dashboard-migrations-migrations","fieldMap":{"name":{"type":"keyword","required":true},"created_at":{"type":"date","required":true},"created_by":{"type":"keyword","required":true}}}
+[2026-02-01T11:58:45.506+02:00][WARN ][plugins.securitySolution.siemDashboardMigrations] {"message":"Creating dashboard index pattern adapter","name":".kibana-siem-dashboard-migrations-dashboards","fieldMap":{"@timestamp":{"type":"date","required":false},"migration_id":{"type":"keyword","required":true},"created_by":{"type":"keyword","required":true},"status":{"type":"keyword","required":true},"translation_result":{"type":"keyword","required":true},"updated_at":{"type":"date","required":true},"updated_by":{"type":"keyword","required":true},"original_dashboard":{"type":"object","required":true},"original_dashboard.id":{"type":"keyword","required":true},"original_dashboard.title":{"type":"text","required":true,"fields":{"keyword":{"type":"keyword"}}},"original_dashboard.data":{"type":"text","required":true},"original_dashboard.description":{"type":"text","required":false},"original_dashboard.format":{"type":"keyword","required":true},"original_dashboard.vendor":{"type":"keyword","required":true},"original_dashboard.last_updated":{"type":"date","required":true},"original_dashboard.splunk_properties":{"type":"object","required":true},"original_dashboard.splunk_properties.app":{"type":"keyword","required":true},"original_dashboard.splunk_properties.sharing":{"type":"keyword","required":true},"original_dashboard.splunk_properties.owner":{"type":"keyword","required":true},"elastic_dashboard":{"type":"object","required":false},"elastic_dashboard.id":{"type":"keyword","required":false},"elastic_dashboard.title":{"type":"text","required":true,"fields":{"keyword":{"type":"keyword"}}},"elastic_dashboard.description":{"type":"text","required":false},"elastic_dashboard.data":{"type":"text","required":false},"comments":{"type":"object","array":true,"required":false},"comments.message":{"type":"keyword","required":true},"comments.created_at":{"type":"date","required":true},"comments.created_by":{"type":"keyword","required":true}}}
+[2026-02-01T11:58:45.507+02:00][WARN ][plugins.securitySolution.siemDashboardMigrations] {"message":"Creating dashboard index pattern adapter","name":".kibana-siem-dashboard-migrations-resources","fieldMap":{"migration_id":{"type":"keyword","required":true},"type":{"type":"keyword","required":true},"name":{"type":"keyword","required":true},"content":{"type":"text","required":false},"metadata":{"type":"object","required":false},"updated_at":{"type":"date","required":false},"updated_by":{"type":"keyword","required":false}}}
+[2026-02-01T11:58:45.541+02:00][INFO ][plugins.securitySolution.endpoint:user-artifact-packager:1.0.0] Registering endpoint:user-artifact-packager task with timeout of [20m], interval of [60s] and policy update batch size of [25]
+[2026-02-01T11:58:45.542+02:00][INFO ][plugins.securitySolution.endpoint:complete-external-response-actions] Registering task [endpoint:complete-external-response-actions] with timeout of [5m] and run interval of [60s]
+[2026-02-01T11:58:45.543+02:00][INFO ][plugins.securitySolution.trial-companion-milestone-service] Setting up TrialCompanionMilestoneService: false
+[2026-02-01T11:58:45.544+02:00][INFO ][plugins-system.standard] [MEMORY] securitySolution: heap=3.70MB, rss=4.36MB
+[2026-02-01T11:58:45.573+02:00][INFO ][plugins-system.standard] [MEMORY] securitySolutionEss: heap=5.79MB, rss=4.39MB
+[2026-02-01T11:58:45.808+02:00][INFO ][plugins-system.standard] [MEMORY] infra: heap=1.20MB, rss=0.05MB
+[2026-02-01T11:58:45.858+02:00][INFO ][plugins-system.standard] [MEMORY] indexManagement: heap=-9.38MB, rss=2.84MB
+[2026-02-01T11:58:45.867+02:00][INFO ][plugins-system.standard] [MEMORY] searchIndices: heap=0.43MB, rss=0.03MB
+[2026-02-01T11:58:45.871+02:00][INFO ][plugins-system.standard] [MEMORY] contentConnectors: heap=3.09MB, rss=0.08MB
+[2026-02-01T11:58:45.943+02:00][INFO ][plugins-system.standard] [MEMORY] enterpriseSearch: heap=-5.17MB, rss=1.73MB
+[2026-02-01T11:58:45.955+02:00][INFO ][plugins-system.standard] [MEMORY] rollup: heap=0.66MB, rss=0.02MB
+[2026-02-01T11:58:45.965+02:00][INFO ][plugins-system.standard] [MEMORY] remoteClusters: heap=0.11MB, rss=0.00MB
+[2026-02-01T11:58:45.983+02:00][INFO ][plugins-system.standard] [MEMORY] crossClusterReplication: heap=1.42MB, rss=0.03MB
+[2026-02-01T11:58:45.999+02:00][INFO ][plugins-system.standard] [MEMORY] indexLifecycleManagement: heap=0.31MB, rss=0.02MB
+[2026-02-01T11:58:46.038+02:00][INFO ][plugins-system.standard] [MEMORY] datasetQuality: heap=0.56MB, rss=0.00MB
+[2026-02-01T11:58:46.038+02:00][INFO ][plugins-system.standard] [MEMORY] streamsApp: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:46.052+02:00][INFO ][plugins-system.standard] [MEMORY] dataQuality: heap=0.40MB, rss=0.02MB
+[2026-02-01T11:58:46.052+02:00][INFO ][plugins-system.standard] [MEMORY] observabilityLogsExplorer: heap=0.00MB, rss=0.00MB
+[2026-02-01T11:58:46.315+02:00][INFO ][plugins-system.standard] [MEMORY] monitoring: heap=-7.54MB, rss=3.05MB
+[2026-02-01T11:58:46.329+02:00][INFO ][plugins-system.standard] [MEMORY] logstash: heap=0.40MB, rss=0.03MB
+[2026-02-01T11:58:46.336+02:00][INFO ][plugins-system.standard] [MEMORY] ftrApis: heap=1.03MB, rss=0.02MB
+[2026-02-01T11:58:46.495+02:00][INFO ][elasticsearch-service] Successfully connected to Elasticsearch after waiting for 17 milliseconds
+[2026-02-01T11:58:46.528+02:00][INFO ][savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
+[2026-02-01T11:58:46.528+02:00][INFO ][savedobjects-service] Starting saved objects migrations
+[2026-02-01T11:58:46.592+02:00][INFO ][savedobjects-service] Completed all migrations in 64ms
+[2026-02-01T11:58:46.595+02:00][INFO ][status.core.elasticsearch] elasticsearch service is now available: Elasticsearch is available
+[2026-02-01T11:58:46.595+02:00][INFO ][status.core.savedObjects] savedObjects service is now available: SavedObjects service has completed migrations and is available
+[2026-02-01T11:58:46.596+02:00][INFO ][plugins-system.preboot] Stopping all plugins.
+[2026-02-01T11:58:46.596+02:00][INFO ][plugins-system.preboot] All plugins stopped.
+[2026-02-01T11:58:46.597+02:00][INFO ][plugins-system.standard] Starting [190] plugins: [sloShared,licensing,globalSearch,globalSearchProviders,features,reindexService,mapsEms,fieldsMetadata,dataCatalog,translations,monitoringCollection,licenseApiGuard,customBranding,screenshotMode,banners,usageCollection,cloud,taskManager,sampleDataIngest,productDocBase,indicesMetadata,share,intercepts,productIntercept,telemetryCollectionManager,telemetryCollectionXpack,contentManagement,kibanaUsageCollection,newsfeed,savedObjectsFinder,noDataPage,fieldFormats,expressions,screenshotting,dataViews,esUiShared,customIntegrations,cps,home,management,spaces,security,lists,encryptedSavedObjects,entityStore,entityManager,cloudConnect,taskManagerDependencies,snapshotRestore,telemetry,licenseManagement,files,eventLog,actions,notifications,inference,llmTasks,genAiSettings,workflowsExtensions,workflowsExecutionEngine,aiAssistantManagementSelection,advancedSettings,cloudDataMigration,data,ecsDataQualityDashboard,logsDataAccess,apmSourcesAccess,apmDataAccess,fileUpload,savedObjectsTagging,globalSearchBar,savedObjectsManagement,embeddable,metricsDataAccess,imageEmbeddable,savedSearch,presentationUtil,kql,maintenanceWindows,alerting,navigation,inferenceEndpoint,graph,esql,controls,dataViewFieldEditor,dataViewManagement,charts,watcher,visualizations,expressionTagcloud,expressionPartitionVis,visTypePie,expressionMetricVis,expressionLegacyMetricVis,expressionHeatmap,expressionGauge,visTypeGauge,visTypeXy,visTypeVislib,visTypeVega,visTypeTimelion,visTypeTagcloud,visTypeTable,visTypeMetric,visTypeHeatmap,visTypeMarkdown,inputControlVis,eventAnnotation,expressionXY,lens,triggersActionsUi,stackConnectors,automaticImport,workflowsManagement,agentBuilder,observabilityAIAssistant,dashboard,dashboardAgent,dashboardMarkdown,links,dataSources,stackAlerts,ruleRegistry,cases,timelines,sessionView,kubernetesSecurity,aiops,agentBuilderPlatform,transform,maps,dataVisualizer,discover,exploratoryView,ml,elasticAssistant,searchAssistant,observabilityAgentBuilder,logsShared,upgradeAssistant,observabilityAiAssistantManagement,reporting,canvas,discoverEnhanced,visTypeTimeseries,devTools,searchprofiler,painlessLab,grokdebugger,console,searchSynonyms,searchQueryRules,searchPlayground,searchNotebooks,searchInferenceEndpoints,searchHomepage,searchGettingStarted,streams,observability,slo,observabilityAIAssistantApp,ingestPipelines,fleet,cloudSecurityPosture,cloudDefend,uptime,synthetics,observabilityOnboarding,apm,ux,osquery,securitySolution,securitySolutionEss,infra,indexManagement,searchIndices,contentConnectors,enterpriseSearch,rollup,remoteClusters,crossClusterReplication,indexLifecycleManagement,datasetQuality,streamsApp,dataQuality,observabilityLogsExplorer,monitoring,logstash,ftrApis]
+[2026-02-01T11:58:46.631+02:00][INFO ][plugins.taskManager] Task manager isCloud=false isServerless=false claimStrategy=mget isBackgroundTaskNodeOnly=false heapSizeLimit=4345298944 defaultCapacity=10 autoCalculateDefaultEchCapacity=false
+[2026-02-01T11:58:46.635+02:00][INFO ][plugins.taskManager] using task claiming strategy: mget
+[2026-02-01T11:58:46.639+02:00][INFO ][plugins.indicesMetadata] Updating indices metadata configuration
+[2026-02-01T11:58:46.730+02:00][INFO ][plugins.entityStore] Initializing plugin
+[2026-02-01T11:58:46.736+02:00][DEBUG][plugins.workflowsExecutionEngine] workflows-execution-engine: Start
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet] Task Fleet-Usage-Sender-1.1.7 scheduled with interval 1h
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet.fleet:check-deleted-files-task:1.0.1] Started with interval of [1d] and timeout of [2m]
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet.fleet:unenroll-inactive-agents-task:1.0.2] [UnenrollInactiveAgentsTask] Started with interval of [10m]
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet.fleet:delete-unenrolled-agents-task:1.0.1] [DeleteUnenrolledAgentsTask] Started with interval of [1h]
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet.fleet:upgrade-agentless-deployments-task:1.0.0] [UpgradeAgentlessDeploymentsTask] Started with interval of [1d]
+[2026-02-01T11:58:46.855+02:00][INFO ][plugins.fleet.fleet:automatic-agent-upgrade-task:1.0.3] [AutomaticAgentUpgradeTask] Started with interval of [30m]
+[2026-02-01T11:58:46.856+02:00][INFO ][plugins.fleet] Task Fleet-Metrics-Task:1.1.1 scheduled with interval 1m
+[2026-02-01T11:58:46.856+02:00][INFO ][plugins.fleet.fleet:sync-integrations-task:1.0.6] [SyncIntegrationsTask] Started with interval of [5m]
+[2026-02-01T11:58:46.856+02:00][INFO ][plugins.fleet.fleet:auto-install-content-packages-task:1.0.3] [AutoInstallContentPackagesTask] Started with interval of [10m]
+[2026-02-01T11:58:46.856+02:00][INFO ][plugins.fleet.fleet:agent-status-change-task:1.0.2] [AgentStatusChangeTask] Started with interval of [1m]
+[2026-02-01T11:58:46.856+02:00][INFO ][plugins.fleet.fleet:policy-revisions-cleanup-task:1.0.0] [FleetPolicyRevisionsCleanupTask] Started with interval of [1h], max_revisions: 10, max_policies_per_run: 100
+[2026-02-01T11:58:46.863+02:00][INFO ][plugins.securitySolution] Starting artifact service with default CDN config
+[2026-02-01T11:58:46.867+02:00][INFO ][plugins.securitySolution.health-diagnostic] About to schedule task
+[2026-02-01T11:58:46.869+02:00][INFO ][plugins.securitySolution.trial-companion-milestone-service] TrialCompanionMilestoneService is disabled, skipping start
+[2026-02-01T11:58:46.873+02:00][INFO ][plugins.infra] Skipping initialization of Profiling endpoints because 'profilingDataAccess' plugin is not available
+[2026-02-01T11:58:46.873+02:00][INFO ][plugins.contentConnectors] Agentless is not supported, skipping scheduling initial agentless connectors infrastructure watcher task
+[2026-02-01T11:58:46.874+02:00][INFO ][plugins.monitoring.monitoring] config sourced from: production cluster
+[2026-02-01T11:58:46.936+02:00][INFO ][plugins.ecsDataQualityDashboard] Installing component template .kibana-data-quality-dashboard-ecs-mappings
+[2026-02-01T11:58:46.937+02:00][INFO ][plugins.ecsDataQualityDashboard] Installing component template .kibana-data-quality-dashboard-results-mappings
+[2026-02-01T11:58:46.950+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing component template .kibana-siem-rule-migrations-rules
+[2026-02-01T11:58:46.951+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing component template .kibana-siem-rule-migrations-resources
+[2026-02-01T11:58:46.952+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing component template .kibana-siem-rule-migrations-migrations
+[2026-02-01T11:58:46.952+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing component template .kibana-siem-dashboard-migrations-dashboards
+[2026-02-01T11:58:46.952+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing component template .kibana-siem-dashboard-migrations-migrations
+[2026-02-01T11:58:46.953+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing component template .kibana-siem-dashboard-migrations-resources
+[2026-02-01T11:58:46.955+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-conversations
+[2026-02-01T11:58:46.956+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing component template .kibana-siem-rule-migrations-integrations
+[2026-02-01T11:58:46.956+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing component template .kibana-siem-rule-migrations-prebuiltrules
+[2026-02-01T11:58:47.793+02:00][INFO ][http.server.Kibana] http server running at http://localhost:5601/vbj
+[2026-02-01T11:58:47.796+02:00][INFO ][plugins.productDocBase.doc-manager] Updating product documentation to latest version for Inference IDs:
+[2026-02-01T11:58:47.832+02:00][INFO ][plugins.taskManager] Kibana Discovery Service has been started
+[2026-02-01T11:58:47.851+02:00][INFO ][plugins.cases.incremental_id_task] cases:cases_incremental_id_assignment is already scheduled (time: Sun Feb 01 2026 11:59:09 GMT+0200 (Israel Standard Time)). No need to schedule it again.
+[2026-02-01T11:58:47.854+02:00][INFO ][plugins.fleet] Task Fleet-Usage-Logger-Task scheduled with interval 15m
+[2026-02-01T11:58:47.857+02:00][INFO ][plugins.telemetry] Telemetry collection is enabled. For more information on telemetry settings, refer to https://www.elastic.co/docs/reference/kibana/configuration-reference/telemetry-settings.
+[2026-02-01T11:58:47.862+02:00][INFO ][plugins.securitySolution] Installing component template .edr-workflow-insights-component-template
+[2026-02-01T11:58:47.938+02:00][INFO ][plugins.monitoring.monitoring.kibana-monitoring] Starting monitoring stats collection
+[2026-02-01T11:58:47.945+02:00][INFO ][plugins.taskManager] Starting the task poller
+[2026-02-01T11:58:47.948+02:00][INFO ][plugins.ecsDataQualityDashboard] Installing index template .kibana-data-quality-dashboard-results-index-template
+[2026-02-01T11:58:47.958+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing index template .kibana-siem-rule-migrations-rules
+[2026-02-01T11:58:47.958+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing index template .kibana-siem-rule-migrations-resources
+[2026-02-01T11:58:47.959+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing index template .kibana-siem-rule-migrations-migrations
+[2026-02-01T11:58:47.960+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing index template .kibana-siem-dashboard-migrations-dashboards
+[2026-02-01T11:58:47.961+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing index template .kibana-siem-dashboard-migrations-migrations
+[2026-02-01T11:58:47.962+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Installing index template .kibana-siem-dashboard-migrations-resources
+[2026-02-01T11:58:47.965+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-conversations
+[2026-02-01T11:58:47.981+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing index template .kibana-siem-rule-migrations-integrations
+[2026-02-01T11:58:47.983+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Installing index template .kibana-siem-rule-migrations-prebuiltrules
+[2026-02-01T11:58:48.359+02:00][INFO ][plugins.reporting.store] Linking ILM policy to reporting data stream: .kibana-reporting, component template: kibana-reporting@custom
+[2026-02-01T11:58:48.380+02:00][INFO ][plugins.fleet.endpoint.agentPolicyLicenseWatch] Checking agent policies for compliance with the current license.
+[2026-02-01T11:58:48.395+02:00][INFO ][plugins.securitySolution] Installing index template .edr-workflow-insights-index-template
+[2026-02-01T11:58:48.397+02:00][WARN ][plugins.taskManager] Background task node "9afef043-4ce4-4832-8b04-9c8e4260fc62" has no assigned partitions, claiming against all partitions
+[2026-02-01T11:58:48.402+02:00][INFO ][plugins.slo.lock-manager] Component template .kibana_locks-component created or updated successfully.
+[2026-02-01T11:58:48.477+02:00][INFO ][plugins.ml] Task ML:saved-objects-sync-task: scheduled with interval 1h
+[2026-02-01T11:58:48.491+02:00][INFO ][plugins.ecsDataQualityDashboard] Updating data streams - .kibana-data-quality-dashboard-results-*
+[2026-02-01T11:58:48.494+02:00][INFO ][plugins.slo.lock-manager] Index template .kibana_locks-index-template created or updated successfully.
+[2026-02-01T11:58:48.495+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Updating indices - .kibana-siem-rule-migrations-rules-*
+[2026-02-01T11:58:48.495+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Updating indices - .kibana-siem-rule-migrations-resources-*
+[2026-02-01T11:58:48.495+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Updating indices - .kibana-siem-rule-migrations-migrations-*
+[2026-02-01T11:58:48.495+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Updating indices - .kibana-siem-dashboard-migrations-dashboards-*
+[2026-02-01T11:58:48.496+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Updating indices - .kibana-siem-dashboard-migrations-migrations-*
+[2026-02-01T11:58:48.497+02:00][INFO ][plugins.securitySolution.siemDashboardMigrations] Updating indices - .kibana-siem-dashboard-migrations-resources-*
+[2026-02-01T11:58:48.497+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-conversations-*
+[2026-02-01T11:58:48.498+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Creating index - .kibana-siem-rule-migrations-integrations
+[2026-02-01T11:58:48.498+02:00][INFO ][plugins.securitySolution.siemRuleMigrations] Creating index - .kibana-siem-rule-migrations-prebuiltrules
+[2026-02-01T11:58:48.501+02:00][INFO ][plugins.securitySolution.health-diagnostic] Task scheduled
+[2026-02-01T11:58:48.513+02:00][INFO ][plugins.observabilityAIAssistant.lock-manager] Component template .kibana_locks-component created or updated successfully.
+[2026-02-01T11:58:48.514+02:00][INFO ][plugins.securitySolution] Updating data streams - .edr-workflow-insights-*
+[2026-02-01T11:58:48.538+02:00][INFO ][plugins.fleet.endpoint.agentPolicyLicenseWatch] All agent policies are compliant, nothing to do!
+[2026-02-01T11:58:48.568+02:00][INFO ][plugins.observabilityAIAssistant.lock-manager] Index template .kibana_locks-index-template created or updated successfully.
+[2026-02-01T11:58:48.570+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-security.attack.discovery.alerts-default-000001 - [{"index":".internal.alerts-security.attack.discovery.alerts-default-000001","alias":".alerts-security.attack.discovery.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.571+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-ml.anomaly-detection-health.alerts-default-000001 - [{"index":".internal.alerts-ml.anomaly-detection-health.alerts-default-000001","alias":".alerts-ml.anomaly-detection-health.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.571+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-ml.anomaly-detection.alerts-default-000001 - [{"index":".internal.alerts-ml.anomaly-detection.alerts-default-000001","alias":".alerts-ml.anomaly-detection.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.572+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-transform.health.alerts-default-000001 - [{"index":".internal.alerts-transform.health.alerts-default-000001","alias":".alerts-transform.health.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.572+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-stack.alerts-default-000001 - [{"index":".internal.alerts-stack.alerts-default-000001","alias":".alerts-stack.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.590+02:00][INFO ][plugins.eventLog] Updating index template .kibana-event-log-template
+[2026-02-01T11:58:48.634+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-streams.alerts-default-000001 - [{"index":".internal.alerts-streams.alerts-default-000001","alias":".alerts-streams.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.634+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.uptime.alerts-default-000001 - [{"index":".internal.alerts-observability.uptime.alerts-default-000001","alias":".alerts-observability.uptime.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.643+02:00][INFO ][plugins.securitySolution.entityAnalytics.migration] Skipping migration for Privileged Monitoring Entity Source.
+[2026-02-01T11:58:48.648+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-default.alerts-default-000001 - [{"index":".internal.alerts-default.alerts-default-000001","alias":".alerts-default.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.695+02:00][INFO ][plugins.observabilityAIAssistant] Knowledge base index does not exist. Aborting updating index assets
+[2026-02-01T11:58:48.696+02:00][INFO ][plugins.securitySolution.entityAnalytics.migration] No privilege monitoring engine descriptor found. Skipping migration.
+[2026-02-01T11:58:48.703+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-knowledge-base
+[2026-02-01T11:58:48.706+02:00][INFO ][plugins.fleet.lock-manager] Component template .kibana_locks-component created or updated successfully.
+[2026-02-01T11:58:48.708+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.slo.alerts-default-000001 - [{"index":".internal.alerts-observability.slo.alerts-default-000001","alias":".alerts-observability.slo.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.710+02:00][INFO ][plugins.taskManager] Background task node "9afef043-4ce4-4832-8b04-9c8e4260fc62" now claiming with assigned partitions
+[2026-02-01T11:58:48.725+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.threshold.alerts-default-000001 - [{"index":".internal.alerts-observability.threshold.alerts-default-000001","alias":".alerts-observability.threshold.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.735+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-knowledge-base
+[2026-02-01T11:58:48.736+02:00][INFO ][plugins.fleet.lock-manager] Index template .kibana_locks-index-template created or updated successfully.
+[2026-02-01T11:58:48.737+02:00][INFO ][plugins.eventLog] Updating concrete index mappings for .kibana-event-log-ds
+[2026-02-01T11:58:48.737+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.apm.alerts-default-000001 - [{"index":".internal.alerts-observability.apm.alerts-default-000001","alias":".alerts-observability.apm.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.738+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-dataset.quality.alerts-default-000001 - [{"index":".internal.alerts-dataset.quality.alerts-default-000001","alias":".alerts-dataset.quality.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.738+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.metrics.alerts-default-000001 - [{"index":".internal.alerts-observability.metrics.alerts-default-000001","alias":".alerts-observability.metrics.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.762+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-observability.logs.alerts-default-000001 - [{"index":".internal.alerts-observability.logs.alerts-default-000001","alias":".alerts-observability.logs.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.766+02:00][INFO ][plugins.fleet] Beginning fleet setup
+[2026-02-01T11:58:48.766+02:00][INFO ][plugins.fleet] Cleaning old indices
+[2026-02-01T11:58:48.786+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-knowledge-base-*
+[2026-02-01T11:58:48.795+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-prompts
+[2026-02-01T11:58:48.799+02:00][INFO ][plugins.alerting] Found 1 concrete indices for .internal.alerts-security.alerts-default-000001 - [{"index":".internal.alerts-security.alerts-default-000001","alias":".alerts-security.alerts-default","isWriteIndex":true,"isHidden":true}]
+[2026-02-01T11:58:48.814+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-prompts
+[2026-02-01T11:58:48.822+02:00][WARN ][plugins.fleet] Bundled package directory /Users/shaharglazner/git/kibana/x-pack/platform/plugins/shared/fleet/target/bundled_packages does not exist. All packages will be sourced from https://epr.elastic.co.
+[2026-02-01T11:58:48.853+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-prompts-*
+[2026-02-01T11:58:48.856+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-anonymization-fields
+[2026-02-01T11:58:48.858+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-anonymization-fields
+[2026-02-01T11:58:48.870+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-anonymization-fields-*
+[2026-02-01T11:58:48.876+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-defend-insights
+[2026-02-01T11:58:48.877+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-defend-insights
+[2026-02-01T11:58:48.903+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-defend-insights-*
+[2026-02-01T11:58:48.907+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-alert-summary
+[2026-02-01T11:58:48.911+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-alert-summary
+[2026-02-01T11:58:48.931+02:00][INFO ][plugins.elasticAssistant.service] Updating data streams - .kibana-elastic-ai-assistant-alert-summary-*
+[2026-02-01T11:58:48.936+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-checkpoints
+[2026-02-01T11:58:48.943+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-checkpoints
+[2026-02-01T11:58:48.957+02:00][INFO ][plugins.elasticAssistant.service] Updating indices - .kibana-elastic-ai-assistant-checkpoints-*
+[2026-02-01T11:58:48.965+02:00][INFO ][plugins.elasticAssistant.service] Installing component template .kibana-elastic-ai-assistant-component-template-checkpoint-writes
+[2026-02-01T11:58:49.014+02:00][INFO ][plugins.elasticAssistant.service] Installing index template .kibana-elastic-ai-assistant-index-template-checkpoint-writes
+[2026-02-01T11:58:49.029+02:00][INFO ][plugins.elasticAssistant.service] Updating indices - .kibana-elastic-ai-assistant-checkpoint-writes-*
+[2026-02-01T11:58:49.097+02:00][INFO ][plugins.fleet] Scheduling async setup tasks
+[2026-02-01T11:58:49.105+02:00][INFO ][plugins.fleet] Fleet setup completed
+[2026-02-01T11:58:49.111+02:00][INFO ][plugins.securitySolution] Dependent plugin setup complete
+[2026-02-01T11:58:49.111+02:00][INFO ][plugins.securitySolution] Starting ManifestTask
+[2026-02-01T11:58:49.124+02:00][INFO ][plugins.securitySolution.endpoint.policyProtectionsComplianceChecks] All relevant features are enabled. Nothing to do!
+[2026-02-01T11:58:49.124+02:00][INFO ][plugins.securitySolution.endpoint.agentPolicyFeatures] App feature [endpoint_agent_tamper_protection] is enabled. Nothing to do!
+[2026-02-01T11:58:49.140+02:00][INFO ][plugins.securitySolution.startupPolicyIndicesChecker] Nothing to do. No endpoint policies found.
+[2026-02-01T11:58:49.192+02:00][INFO ][plugins.screenshotting.chromium] Browser executable: /Users/shaharglazner/git/kibana/x-pack/platform/plugins/shared/screenshotting/chromium/chrome-headless-shell-mac-arm64/chrome-headless-shell
+[2026-02-01T11:58:50.649+02:00][INFO ][status.plugins.alerting] alerting plugin is now available: Alerting is (probably) ready
+[2026-02-01T11:58:50.649+02:00][INFO ][status.plugins.fleet] fleet plugin is now available: Fleet is available
+[2026-02-01T11:58:50.649+02:00][INFO ][status.plugins.licensing] licensing plugin is now available: License fetched
+[2026-02-01T11:58:50.649+02:00][INFO ][status.plugins.taskManager] taskManager plugin is now available: Task Manager is healthy
+[2026-02-01T11:58:50.730+02:00][INFO ][status] Kibana is now available
+[2026-02-01T11:58:52.176+02:00][INFO ][plugins.fleet] Found 0 package policies that need agent policy revision bump
+[2026-02-01T11:59:13.823+02:00][INFO ][plugins.fleet.fleet:auto-install-content-packages-task:1.0.3] [AutoInstallContentPackagesTask] Fetched content packages discovery map: {"kubeletstatsreceiver.otel":{"packages":[{"name":"kubernetes_otel","version":"1.4.0"}]},"k8sobjectsreceiver.otel":{"packages":[{"name":"kubernetes_otel","version":"1.4.0"}]},"k8seventsreceiver.otel":{"packages":[{"name":"kubernetes_otel","version":"1.4.0"}]},"k8sclusterreceiver.otel":{"packages":[{"name":"kubernetes_otel","version":"1.4.0"}]}}
+[2026-02-01T11:59:13.841+02:00][INFO ][plugins.fleet.fleet:auto-install-content-packages-task:1.0.3] [AutoInstallContentPackagesTask] Found datasets with data: apm.error, test, apm.app.kibana, apm.internal, apm.service_destination.1m, apm.service_summary.1m, apm.service_transaction.1m, apm.transaction.1m, apm

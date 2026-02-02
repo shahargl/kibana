@@ -1,0 +1,73 @@
+# =============================================================================
+# Test Workflow: Variables Across Foreach Iterations
+# 
+# PURPOSE: Verify that data.set variables are correctly passed between 
+# foreach iterations in chronological order.
+#
+# EXPECTED BEHAVIOR:
+# - Iteration 1: counter starts at 0, increments to 1, prints "Counter is now: 1"
+# - Iteration 2: counter starts at 1, increments to 2, prints "Counter is now: 2"
+# - Iteration 3: counter starts at 2, increments to 3, prints "Counter is now: 3"
+#
+# If the bug exists, all iterations would print "Counter is now: 1" because
+# they'd all see the initial counter value instead of the previous iteration's update.
+# =============================================================================
+version: "1"
+name: Test Variables Across Iterations
+description: Test that data.set variables persist correctly across foreach iterations
+enabled: true
+tags: ["test", "debug"]
+
+triggers:
+  - type: manual
+
+inputs:
+  properties:
+    startValue:
+      type: number
+      description: Starting counter value
+      default: 0
+
+steps:
+  # Initialize the counter
+  - name: init_counter
+    type: data.set
+    with:
+      counter: '{{ inputs.startValue }}'
+      history: '[]'
+
+  # Loop 5 times, each time incrementing the counter
+  - name: counting_loop
+    type: foreach
+    foreach: '[1,2,3,4,5]'
+    steps:
+      # Log what counter value we see at the START of this iteration
+      - name: log_start
+        type: data.set
+        with:
+          lastSeenCounter: '{{ variables.counter }}'
+          iterationNumber: '{{ foreach.item }}'
+
+      # Simulate some work - use ai.prompt to "increment" the counter
+      # (In real scenario this would be actual logic)
+      - name: increment_counter
+        type: data.set
+        with:
+          counter: '{{ variables.counter | plus: 1 }}'
+          lastUpdatedBy: 'iteration_{{ foreach.item }}'
+
+      # Log what counter is now AFTER the increment
+      - name: log_end
+        type: data.set
+        with:
+          counterAfterIncrement: '{{ variables.counter }}'
+          message: 'Iteration {{ foreach.item }}: Started with {{ variables.lastSeenCounter }}, now {{ variables.counter }}'
+
+  # Final summary
+  - name: final_summary
+    type: data.set
+    with:
+      finalCounter: '{{ variables.counter }}'
+      finalMessage: 'Loop completed. Final counter: {{ variables.counter }}'
+      expectedFinalCounter: 5
+      testPassed: '{{ variables.counter }}'

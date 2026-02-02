@@ -1,0 +1,1261 @@
+{
+  "timestamp": "2026-02-01T12:50:25.154Z",
+  "summary": {
+    "totalFull": 1234.500908203125,
+    "totalConfig": 158.23554687499998,
+    "totalLazy": 1076.2653613281243
+  },
+  "plugins": [
+    {
+      "name": "alerting",
+      "hasConfigFile": true,
+      "configMemory": 2.038916015625,
+      "fullMemory": 62.0308203125,
+      "lazyPotential": 59.991904296875,
+      "reExports": 12,
+      "relativeImports": 4
+    },
+    {
+      "name": "task_manager",
+      "hasConfigFile": true,
+      "configMemory": 2.0896875,
+      "fullMemory": 51.344384765624994,
+      "lazyPotential": 49.254697265625,
+      "reExports": 10,
+      "relativeImports": 2
+    },
+    {
+      "name": "actions",
+      "hasConfigFile": true,
+      "configMemory": 2.093544921875,
+      "fullMemory": 47.02451171875,
+      "lazyPotential": 44.930966796875,
+      "reExports": 9,
+      "relativeImports": 4
+    },
+    {
+      "name": "fleet",
+      "hasConfigFile": true,
+      "configMemory": 2.165830078125,
+      "fullMemory": 45.018212890625,
+      "lazyPotential": 42.852382812500004,
+      "reExports": 9,
+      "relativeImports": 0
+    },
+    {
+      "name": "rule_registry",
+      "hasConfigFile": true,
+      "configMemory": 2.01208984375,
+      "fullMemory": 40.018681640625,
+      "lazyPotential": 38.006591796875,
+      "reExports": 8,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_views",
+      "hasConfigFile": false,
+      "configMemory": 2.031201171875,
+      "fullMemory": 38.031201171875,
+      "lazyPotential": 36,
+      "reExports": 7,
+      "relativeImports": 2
+    },
+    {
+      "name": "observability_ai_assistant",
+      "hasConfigFile": true,
+      "configMemory": 2.006943359375,
+      "fullMemory": 36.03060546875,
+      "lazyPotential": 34.023662109374996,
+      "reExports": 7,
+      "relativeImports": 2
+    },
+    {
+      "name": "data",
+      "hasConfigFile": true,
+      "configMemory": 2.04712890625,
+      "fullMemory": 32.626689453125,
+      "lazyPotential": 30.579560546875,
+      "reExports": 6,
+      "relativeImports": 4
+    },
+    {
+      "name": "features",
+      "hasConfigFile": true,
+      "configMemory": 2.025908203125,
+      "fullMemory": 27.5149609375,
+      "lazyPotential": 25.489052734375,
+      "reExports": 5,
+      "relativeImports": 1
+    },
+    {
+      "name": "index_management",
+      "hasConfigFile": true,
+      "configMemory": 2.07216796875,
+      "fullMemory": 25.00759765625,
+      "lazyPotential": 22.935429687499997,
+      "reExports": 5,
+      "relativeImports": 0
+    },
+    {
+      "name": "security",
+      "hasConfigFile": true,
+      "configMemory": 2.181806640625,
+      "fullMemory": 23.83291015625,
+      "lazyPotential": 21.651103515625003,
+      "reExports": 4,
+      "relativeImports": 3
+    },
+    {
+      "name": "dashboard",
+      "hasConfigFile": false,
+      "configMemory": 2.024140625,
+      "fullMemory": 22.024140625,
+      "lazyPotential": 20,
+      "reExports": 4,
+      "relativeImports": 0
+    },
+    {
+      "name": "files",
+      "hasConfigFile": false,
+      "configMemory": 0.015517578125,
+      "fullMemory": 20.015517578125,
+      "lazyPotential": 20,
+      "reExports": 4,
+      "relativeImports": 0
+    },
+    {
+      "name": "licensing",
+      "hasConfigFile": false,
+      "configMemory": 0.0088671875,
+      "fullMemory": 20.0088671875,
+      "lazyPotential": 20,
+      "reExports": 4,
+      "relativeImports": 0
+    },
+    {
+      "name": "spaces",
+      "hasConfigFile": true,
+      "configMemory": 2.02556640625,
+      "fullMemory": 20.51482421875,
+      "lazyPotential": 18.4892578125,
+      "reExports": 4,
+      "relativeImports": 1
+    },
+    {
+      "name": "event_log",
+      "hasConfigFile": false,
+      "configMemory": 0.010830078125,
+      "fullMemory": 16.010830078125,
+      "lazyPotential": 16,
+      "reExports": 3,
+      "relativeImports": 2
+    },
+    {
+      "name": "monitoring",
+      "hasConfigFile": true,
+      "configMemory": 2.043955078125,
+      "fullMemory": 18.012919921875,
+      "lazyPotential": 15.96896484375,
+      "reExports": 3,
+      "relativeImports": 2
+    },
+    {
+      "name": "gen_ai_settings",
+      "hasConfigFile": false,
+      "configMemory": 0.008017578125,
+      "fullMemory": 15.808017578125,
+      "lazyPotential": 15.8,
+      "reExports": 3,
+      "relativeImports": 1
+    },
+    {
+      "name": "telemetry",
+      "hasConfigFile": false,
+      "configMemory": 0.011181640625000001,
+      "fullMemory": 15.511181640625,
+      "lazyPotential": 15.5,
+      "reExports": 3,
+      "relativeImports": 1
+    },
+    {
+      "name": "screenshotting",
+      "hasConfigFile": false,
+      "configMemory": 0.008701171875,
+      "fullMemory": 15.008701171875,
+      "lazyPotential": 15,
+      "reExports": 3,
+      "relativeImports": 0
+    },
+    {
+      "name": "reporting",
+      "hasConfigFile": false,
+      "configMemory": 0.007929687500000001,
+      "fullMemory": 15.0079296875,
+      "lazyPotential": 15,
+      "reExports": 3,
+      "relativeImports": 0
+    },
+    {
+      "name": "home",
+      "hasConfigFile": true,
+      "configMemory": 2.007177734375,
+      "fullMemory": 16.01509765625,
+      "lazyPotential": 14.007919921874999,
+      "reExports": 3,
+      "relativeImports": 2
+    },
+    {
+      "name": "triggers_actions_ui",
+      "hasConfigFile": true,
+      "configMemory": 2.016943359375,
+      "fullMemory": 16.009853515625,
+      "lazyPotential": 13.99291015625,
+      "reExports": 3,
+      "relativeImports": 2
+    },
+    {
+      "name": "encrypted_saved_objects",
+      "hasConfigFile": true,
+      "configMemory": 2.0111328125,
+      "fullMemory": 15.5119921875,
+      "lazyPotential": 13.500859375000001,
+      "reExports": 3,
+      "relativeImports": 1
+    },
+    {
+      "name": "cloud_connect",
+      "hasConfigFile": true,
+      "configMemory": 2.007294921875,
+      "fullMemory": 15.506572265625,
+      "lazyPotential": 13.49927734375,
+      "reExports": 3,
+      "relativeImports": 1
+    },
+    {
+      "name": "reindex_service",
+      "hasConfigFile": true,
+      "configMemory": 2.007197265625,
+      "fullMemory": 15.506318359375,
+      "lazyPotential": 13.499121093749999,
+      "reExports": 3,
+      "relativeImports": 1
+    },
+    {
+      "name": "logs_shared",
+      "hasConfigFile": true,
+      "configMemory": 2.00927734375,
+      "fullMemory": 15.007578125,
+      "lazyPotential": 12.99830078125,
+      "reExports": 3,
+      "relativeImports": 0
+    },
+    {
+      "name": "usage_collection",
+      "hasConfigFile": true,
+      "configMemory": 2.01556640625,
+      "fullMemory": 15.01259765625,
+      "lazyPotential": 12.99703125,
+      "reExports": 3,
+      "relativeImports": 0
+    },
+    {
+      "name": "cloud",
+      "hasConfigFile": true,
+      "configMemory": 2.045556640625,
+      "fullMemory": 15.006328125,
+      "lazyPotential": 12.960771484375,
+      "reExports": 3,
+      "relativeImports": 0
+    },
+    {
+      "name": "monitoring_collection",
+      "hasConfigFile": true,
+      "configMemory": 0.00529296875,
+      "fullMemory": 12.514404296875,
+      "lazyPotential": 12.509111328125,
+      "reExports": 2,
+      "relativeImports": 1
+    },
+    {
+      "name": "aiops",
+      "hasConfigFile": false,
+      "configMemory": 0.006787109375,
+      "fullMemory": 10.506787109375,
+      "lazyPotential": 10.5,
+      "reExports": 2,
+      "relativeImports": 1
+    },
+    {
+      "name": "charts",
+      "hasConfigFile": false,
+      "configMemory": 0.007265625,
+      "fullMemory": 10.007265625,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "content_management",
+      "hasConfigFile": false,
+      "configMemory": 0.00884765625,
+      "fullMemory": 10.00884765625,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "custom_integrations",
+      "hasConfigFile": false,
+      "configMemory": 2.010908203125,
+      "fullMemory": 12.010908203125,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "field_formats",
+      "hasConfigFile": false,
+      "configMemory": 0.008408203125,
+      "fullMemory": 10.008408203125,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "kibana_utils",
+      "hasConfigFile": false,
+      "configMemory": 0.0076171875,
+      "fullMemory": 10.0076171875,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "saved_search",
+      "hasConfigFile": false,
+      "configMemory": 0.0087109375,
+      "fullMemory": 10.0087109375,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_catalog",
+      "hasConfigFile": false,
+      "configMemory": 0.007314453125,
+      "fullMemory": 10.007314453125,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "lens",
+      "hasConfigFile": false,
+      "configMemory": 0.012734375000000001,
+      "fullMemory": 10.012734375,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "notifications",
+      "hasConfigFile": false,
+      "configMemory": 0.00724609375,
+      "fullMemory": 10.00724609375,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "intercepts",
+      "hasConfigFile": false,
+      "configMemory": 0.00603515625,
+      "fullMemory": 10.00603515625,
+      "lazyPotential": 10,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "maintenance_windows",
+      "hasConfigFile": true,
+      "configMemory": 2.00505859375,
+      "fullMemory": 11.512353515625,
+      "lazyPotential": 9.507294921875,
+      "reExports": 2,
+      "relativeImports": 3
+    },
+    {
+      "name": "maps",
+      "hasConfigFile": true,
+      "configMemory": 2.007568359375,
+      "fullMemory": 11.0302734375,
+      "lazyPotential": 9.022705078125,
+      "reExports": 2,
+      "relativeImports": 2
+    },
+    {
+      "name": "cases",
+      "hasConfigFile": true,
+      "configMemory": 2.01927734375,
+      "fullMemory": 11.010986328125,
+      "lazyPotential": 8.991708984375,
+      "reExports": 2,
+      "relativeImports": 2
+    },
+    {
+      "name": "maps_ems",
+      "hasConfigFile": true,
+      "configMemory": 2.0234765625,
+      "fullMemory": 11.0123046875,
+      "lazyPotential": 8.988828125000001,
+      "reExports": 2,
+      "relativeImports": 2
+    },
+    {
+      "name": "content_connectors",
+      "hasConfigFile": true,
+      "configMemory": 2.008408203125,
+      "fullMemory": 10.5071875,
+      "lazyPotential": 8.498779296875,
+      "reExports": 2,
+      "relativeImports": 1
+    },
+    {
+      "name": "workflows_extensions",
+      "hasConfigFile": true,
+      "configMemory": 2.005791015625,
+      "fullMemory": 10.012626953125,
+      "lazyPotential": 8.0068359375,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "workflows_management",
+      "hasConfigFile": true,
+      "configMemory": 2.009580078125,
+      "fullMemory": 10.009296875,
+      "lazyPotential": 7.999716796875001,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "saved_objects_tagging",
+      "hasConfigFile": true,
+      "configMemory": 2.0074609375,
+      "fullMemory": 10.00705078125,
+      "lazyPotential": 7.99958984375,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "cps",
+      "hasConfigFile": true,
+      "configMemory": 2.010537109375,
+      "fullMemory": 10.00775390625,
+      "lazyPotential": 7.9972167968750005,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "workflows_execution_engine",
+      "hasConfigFile": true,
+      "configMemory": 2.0148828125,
+      "fullMemory": 10.011865234375,
+      "lazyPotential": 7.996982421875,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "console",
+      "hasConfigFile": true,
+      "configMemory": 2.01505859375,
+      "fullMemory": 10.008017578125,
+      "lazyPotential": 7.992958984374999,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "automatic_import",
+      "hasConfigFile": true,
+      "configMemory": 2.01587890625,
+      "fullMemory": 10.00626953125,
+      "lazyPotential": 7.990390625,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "remote_clusters",
+      "hasConfigFile": true,
+      "configMemory": 2.033818359375,
+      "fullMemory": 10.005830078125,
+      "lazyPotential": 7.972011718749999,
+      "reExports": 2,
+      "relativeImports": 0
+    },
+    {
+      "name": "ml",
+      "hasConfigFile": false,
+      "configMemory": 0.01384765625,
+      "fullMemory": 5.81384765625,
+      "lazyPotential": 5.8,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "osquery",
+      "hasConfigFile": false,
+      "configMemory": 0.00859375,
+      "fullMemory": 5.60859375,
+      "lazyPotential": 5.6,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "embeddable",
+      "hasConfigFile": false,
+      "configMemory": 0.008779296875,
+      "fullMemory": 5.508779296875,
+      "lazyPotential": 5.5,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "expressions",
+      "hasConfigFile": false,
+      "configMemory": 0.0252734375,
+      "fullMemory": 5.5252734375,
+      "lazyPotential": 5.5,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "dashboard_agent",
+      "hasConfigFile": false,
+      "configMemory": 0.0053906250000000005,
+      "fullMemory": 5.505390625,
+      "lazyPotential": 5.5,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "stack_alerts",
+      "hasConfigFile": false,
+      "configMemory": 2.01494140625,
+      "fullMemory": 7.31494140625,
+      "lazyPotential": 5.3,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "dashboard_markdown",
+      "hasConfigFile": false,
+      "configMemory": 0.00658203125,
+      "fullMemory": 5.00658203125,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "es_ui_shared",
+      "hasConfigFile": false,
+      "configMemory": 0.006416015625,
+      "fullMemory": 5.006416015625,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "presentation_util",
+      "hasConfigFile": false,
+      "configMemory": 0.0064453125000000005,
+      "fullMemory": 5.0064453125,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "visualizations",
+      "hasConfigFile": false,
+      "configMemory": 0.009033203125,
+      "fullMemory": 5.009033203125,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "image_embeddable",
+      "hasConfigFile": false,
+      "configMemory": 0.006787109375,
+      "fullMemory": 5.006787109375,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "fields_metadata",
+      "hasConfigFile": false,
+      "configMemory": 0.0070996093750000005,
+      "fullMemory": 5.007099609375,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "inference_endpoint",
+      "hasConfigFile": false,
+      "configMemory": 0.00705078125,
+      "fullMemory": 5.00705078125,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "license_api_guard",
+      "hasConfigFile": false,
+      "configMemory": 0.00412109375,
+      "fullMemory": 5.00412109375,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "product_intercept",
+      "hasConfigFile": false,
+      "configMemory": 0.005517578125,
+      "fullMemory": 5.005517578125,
+      "lazyPotential": 5,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "agent_builder",
+      "hasConfigFile": true,
+      "configMemory": 2.006201171875,
+      "fullMemory": 6.310263671875,
+      "lazyPotential": 4.304062500000001,
+      "reExports": 1,
+      "relativeImports": 2
+    },
+    {
+      "name": "agent_builder_platform",
+      "hasConfigFile": true,
+      "configMemory": 2.006083984375,
+      "fullMemory": 6.309257812499999,
+      "lazyPotential": 4.303173828124999,
+      "reExports": 1,
+      "relativeImports": 2
+    },
+    {
+      "name": "global_search",
+      "hasConfigFile": true,
+      "configMemory": 2.00716796875,
+      "fullMemory": 6.011767578125,
+      "lazyPotential": 4.004599609375,
+      "reExports": 1,
+      "relativeImports": 2
+    },
+    {
+      "name": "share",
+      "hasConfigFile": true,
+      "configMemory": 2.012578125,
+      "fullMemory": 6.015205078125,
+      "lazyPotential": 4.002626953125,
+      "reExports": 1,
+      "relativeImports": 2
+    },
+    {
+      "name": "transform",
+      "hasConfigFile": true,
+      "configMemory": 2.006240234375,
+      "fullMemory": 5.507646484375,
+      "lazyPotential": 3.50140625,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "sample_data_ingest",
+      "hasConfigFile": true,
+      "configMemory": 2.008466796875,
+      "fullMemory": 5.50677734375,
+      "lazyPotential": 3.4983105468749995,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "indices_metadata",
+      "hasConfigFile": true,
+      "configMemory": 2.008466796875,
+      "fullMemory": 5.505068359375,
+      "lazyPotential": 3.4966015624999995,
+      "reExports": 1,
+      "relativeImports": 1
+    },
+    {
+      "name": "discover",
+      "hasConfigFile": true,
+      "configMemory": 2.01236328125,
+      "fullMemory": 5.31625,
+      "lazyPotential": 3.3038867187500003,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "automatic_import_v2",
+      "hasConfigFile": true,
+      "configMemory": 2.006376953125,
+      "fullMemory": 5.0075,
+      "lazyPotential": 3.001123046875,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "ftr_apis",
+      "hasConfigFile": true,
+      "configMemory": 2.008125,
+      "fullMemory": 5.007353515625,
+      "lazyPotential": 2.9992285156249996,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "advanced_settings",
+      "hasConfigFile": true,
+      "configMemory": 2.009541015625,
+      "fullMemory": 5.007548828125,
+      "lazyPotential": 2.9980078124999996,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "dev_tools",
+      "hasConfigFile": true,
+      "configMemory": 2.00951171875,
+      "fullMemory": 5.007392578125,
+      "lazyPotential": 2.997880859375,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "management",
+      "hasConfigFile": true,
+      "configMemory": 2.01025390625,
+      "fullMemory": 5.007421875,
+      "lazyPotential": 2.9971679687500004,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "global_search_bar",
+      "hasConfigFile": true,
+      "configMemory": 2.007099609375,
+      "fullMemory": 5.004189453125,
+      "lazyPotential": 2.99708984375,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "discover_enhanced",
+      "hasConfigFile": true,
+      "configMemory": 2.008798828125,
+      "fullMemory": 5.00525390625,
+      "lazyPotential": 2.996455078125,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "observability_ai_assistant_management",
+      "hasConfigFile": true,
+      "configMemory": 2.008076171875,
+      "fullMemory": 5.004306640625,
+      "lazyPotential": 2.99623046875,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "ingest_pipelines",
+      "hasConfigFile": true,
+      "configMemory": 2.0107421875,
+      "fullMemory": 5.0051953125,
+      "lazyPotential": 2.9944531249999997,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "banners",
+      "hasConfigFile": true,
+      "configMemory": 2.0144140625,
+      "fullMemory": 5.005087890625,
+      "lazyPotential": 2.990673828125,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "serverless",
+      "hasConfigFile": true,
+      "configMemory": 2.020712890625,
+      "fullMemory": 5.005390625,
+      "lazyPotential": 2.9846777343750004,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "rollup",
+      "hasConfigFile": true,
+      "configMemory": 2.03236328125,
+      "fullMemory": 5.005390625,
+      "lazyPotential": 2.9730273437500006,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "cross_cluster_replication",
+      "hasConfigFile": true,
+      "configMemory": 2.034619140625,
+      "fullMemory": 5.00583984375,
+      "lazyPotential": 2.9712207031249998,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "license_management",
+      "hasConfigFile": true,
+      "configMemory": 2.034140625,
+      "fullMemory": 5.005283203125,
+      "lazyPotential": 2.971142578125,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "snapshot_restore",
+      "hasConfigFile": true,
+      "configMemory": 2.03619140625,
+      "fullMemory": 5.0052734375,
+      "lazyPotential": 2.9690820312499997,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "index_lifecycle_management",
+      "hasConfigFile": true,
+      "configMemory": 2.03673828125,
+      "fullMemory": 5.00544921875,
+      "lazyPotential": 2.9687109375,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "upgrade_assistant",
+      "hasConfigFile": true,
+      "configMemory": 2.037568359375,
+      "fullMemory": 5.00529296875,
+      "lazyPotential": 2.9677246093750003,
+      "reExports": 1,
+      "relativeImports": 0
+    },
+    {
+      "name": "entity_manager",
+      "hasConfigFile": false,
+      "configMemory": 0.009287109375,
+      "fullMemory": 1.809287109375,
+      "lazyPotential": 1.8,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "streams",
+      "hasConfigFile": false,
+      "configMemory": 0.008203125,
+      "fullMemory": 1.8082031250000001,
+      "lazyPotential": 1.8,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "apm_sources_access",
+      "hasConfigFile": true,
+      "configMemory": 0.03546875,
+      "fullMemory": 1.3111328125000001,
+      "lazyPotential": 1.2756640625000002,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "interactive_setup",
+      "hasConfigFile": true,
+      "configMemory": 2.00951171875,
+      "fullMemory": 2.8099804687499996,
+      "lazyPotential": 0.8004687499999998,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "esql",
+      "hasConfigFile": false,
+      "configMemory": 0.008037109375,
+      "fullMemory": 0.508037109375,
+      "lazyPotential": 0.5,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "navigation",
+      "hasConfigFile": false,
+      "configMemory": 0.0069335937500000005,
+      "fullMemory": 0.50693359375,
+      "lazyPotential": 0.5,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "slo_shared",
+      "hasConfigFile": false,
+      "configMemory": 0.0062890625,
+      "fullMemory": 0.5062890625,
+      "lazyPotential": 0.5,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "data_visualizer",
+      "hasConfigFile": false,
+      "configMemory": 0.007880859375,
+      "fullMemory": 0.507880859375,
+      "lazyPotential": 0.5,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "global_search_providers",
+      "hasConfigFile": false,
+      "configMemory": 0.0059960937500000006,
+      "fullMemory": 0.50599609375,
+      "lazyPotential": 0.5,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "logs_data_access",
+      "hasConfigFile": false,
+      "configMemory": 0.0076269531250000005,
+      "fullMemory": 0.507626953125,
+      "lazyPotential": 0.49999999999999994,
+      "reExports": 0,
+      "relativeImports": 1
+    },
+    {
+      "name": "streams_app",
+      "hasConfigFile": true,
+      "configMemory": 2.004501953125,
+      "fullMemory": 2.110771484375,
+      "lazyPotential": 0.10626953124999972,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "inference",
+      "hasConfigFile": true,
+      "configMemory": 2.0097265625,
+      "fullMemory": 2.111611328125,
+      "lazyPotential": 0.10188476562499993,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "data_usage",
+      "hasConfigFile": true,
+      "configMemory": 2.016552734375,
+      "fullMemory": 2.111259765625,
+      "lazyPotential": 0.09470703125000002,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "controls",
+      "hasConfigFile": false,
+      "configMemory": 0.00580078125,
+      "fullMemory": 0.00580078125,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_view_field_editor",
+      "hasConfigFile": false,
+      "configMemory": 0.0070996093750000005,
+      "fullMemory": 0.0070996093750000005,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_view_management",
+      "hasConfigFile": false,
+      "configMemory": 0.007294921875,
+      "fullMemory": 0.007294921875,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "developer_toolbar",
+      "hasConfigFile": false,
+      "configMemory": 2.01275390625,
+      "fullMemory": 2.01275390625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "saved_objects_finder",
+      "hasConfigFile": false,
+      "configMemory": 0.0059960937500000006,
+      "fullMemory": 0.0059960937500000006,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "saved_objects_management",
+      "hasConfigFile": false,
+      "configMemory": 0.00865234375,
+      "fullMemory": 0.00865234375,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "screenshot_mode",
+      "hasConfigFile": false,
+      "configMemory": 0.008916015625,
+      "fullMemory": 0.008916015625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "telemetry_collection_manager",
+      "hasConfigFile": false,
+      "configMemory": 0.011015625,
+      "fullMemory": 0.011015625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "event_annotation",
+      "hasConfigFile": false,
+      "configMemory": 0.007392578125,
+      "fullMemory": 0.007392578125,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "kibana_usage_collection",
+      "hasConfigFile": false,
+      "configMemory": 0.008330078125,
+      "fullMemory": 0.008330078125,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "links",
+      "hasConfigFile": false,
+      "configMemory": 0.00974609375,
+      "fullMemory": 0.00974609375,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_quality",
+      "hasConfigFile": false,
+      "configMemory": 0.003759765625,
+      "fullMemory": 0.003759765625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "data_sources",
+      "hasConfigFile": false,
+      "configMemory": 0.004921875,
+      "fullMemory": 0.004921875,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "dataset_quality",
+      "hasConfigFile": false,
+      "configMemory": 0.005234375,
+      "fullMemory": 0.005234375,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "searchprofiler",
+      "hasConfigFile": false,
+      "configMemory": 0.0049023437500000005,
+      "fullMemory": 0.0049023437500000005,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "custom_branding",
+      "hasConfigFile": false,
+      "configMemory": 0.0050390625,
+      "fullMemory": 0.0050390625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "file_upload",
+      "hasConfigFile": false,
+      "configMemory": 0.005,
+      "fullMemory": 0.005,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "logstash",
+      "hasConfigFile": false,
+      "configMemory": 0.00474609375,
+      "fullMemory": 0.00474609375,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "painless_lab",
+      "hasConfigFile": false,
+      "configMemory": 2.00900390625,
+      "fullMemory": 2.00900390625,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "task_manager_dependencies",
+      "hasConfigFile": false,
+      "configMemory": 0.003955078125,
+      "fullMemory": 0.003955078125,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "telemetry_collection_xpack",
+      "hasConfigFile": false,
+      "configMemory": 0.005029296875,
+      "fullMemory": 0.005029296875,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "translations",
+      "hasConfigFile": false,
+      "configMemory": 0.004111328125,
+      "fullMemory": 0.004111328125,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "watcher",
+      "hasConfigFile": false,
+      "configMemory": 2.00841796875,
+      "fullMemory": 2.00841796875,
+      "lazyPotential": 0,
+      "reExports": 0,
+      "relativeImports": 0
+    },
+    {
+      "name": "kql",
+      "hasConfigFile": true,
+      "configMemory": 2.013701171875,
+      "fullMemory": 1.512421875,
+      "lazyPotential": -0.5012792968750002,
+      "reExports": 0,
+      "relativeImports": 3
+    },
+    {
+      "name": "input_control_vis",
+      "hasConfigFile": true,
+      "configMemory": 2.008427734375,
+      "fullMemory": 1.013046875,
+      "lazyPotential": -0.9953808593750002,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "vis_type_markdown",
+      "hasConfigFile": true,
+      "configMemory": 2.007041015625,
+      "fullMemory": 1.009013671875,
+      "lazyPotential": -0.99802734375,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "inspect_component",
+      "hasConfigFile": true,
+      "configMemory": 2.010029296875,
+      "fullMemory": 1.009736328125,
+      "lazyPotential": -1.00029296875,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "graph",
+      "hasConfigFile": true,
+      "configMemory": 2.008427734375,
+      "fullMemory": 1.00765625,
+      "lazyPotential": -1.0007714843750002,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "no_data_page",
+      "hasConfigFile": true,
+      "configMemory": 2.009951171875,
+      "fullMemory": 1.008759765625,
+      "lazyPotential": -1.00119140625,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "newsfeed",
+      "hasConfigFile": true,
+      "configMemory": 2.0129296875,
+      "fullMemory": 1.00916015625,
+      "lazyPotential": -1.0037695312499997,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "stack_connectors",
+      "hasConfigFile": true,
+      "configMemory": 2.015244140625,
+      "fullMemory": 1.0074609375,
+      "lazyPotential": -1.007783203125,
+      "reExports": 0,
+      "relativeImports": 2
+    },
+    {
+      "name": "canvas",
+      "hasConfigFile": true,
+      "configMemory": 2.003896484375,
+      "fullMemory": 0.506298828125,
+      "lazyPotential": -1.4975976562499997,
+      "reExports": 0,
+      "relativeImports": 1
+    }
+  ]
+}

@@ -9197,6 +9197,10 @@
   version "0.0.0"
   uid ""
 
+"@kbn/task-definitions@link:x-pack/platform/packages/shared/kbn-task-definitions":
+  version "0.0.0"
+  uid ""
+
 "@kbn/task-manager-dependencies-plugin@link:x-pack/platform/plugins/private/task_manager_dependencies":
   version "0.0.0"
   uid ""

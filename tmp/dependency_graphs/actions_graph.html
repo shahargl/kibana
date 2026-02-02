@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dependency Graph: actions</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    h1 { color: #333; }
+    #graph { width: 100%; height: 700px; border: 1px solid #ddd; background: white; }
+    .stats { margin: 10px 0; padding: 15px; background: white; border-radius: 5px; }
+    .legend { display: flex; gap: 20px; margin: 10px 0; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 20px; height: 20px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Dependency Graph: actions</h1>
+  
+  <div class="stats">
+    <strong>Stats:</strong> 34 plugins shown | Total memory: ~110.3MB
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#4488ff"></div> Root plugin</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff4444"></div> >50MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff8844"></div> >20MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffcc44"></div> >10MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#88cc44"></div> >5MB</div>
+    <div class="legend-item"><div class="legend-color" style="background:#44aa88"></div> <5MB</div>
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item">─── Required dependency</div>
+    <div class="legend-item">- - - Optional dependency</div>
+    <div class="legend-item" style="color:#4488ff">─── Depends on actions</div>
+  </div>
+  
+  <div id="graph"></div>
+  
+  <script>
+    const nodes = new vis.DataSet([{"id":"actions","label":"actions\n1.8MB","color":"#4488ff","font":{"color":"white"},"borderWidth":3,"size":16.8},{"id":"licensing","label":"licensing\n0.8MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15.8},{"id":"taskManager","label":"taskManager\n1.5MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":16.5},{"id":"encryptedSavedObjects","label":"encryptedSavedObjects\n1.2MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":16.2},{"id":"eventLog","label":"eventLog\n0.9MB","color":"#44aa88","font":{"color":"black"},"borderWidth":1,"size":15.9},{"id":"features","label":"features\n5.4MB","color":"#88cc44","font":{"color":"black"},"borderWidth":1,"size":20.36},{"id":"workflowsExecutionEngine","label":"workflowsExecutionEngine","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"workflowsExtensions","label":"workflowsExtensions","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"workflowsManagement","label":"workflowsManagement","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"agentBuilder","label":"agentBuilder\n38.2MB","color":"#ff8844","font":{"color":"black"},"size":50},{"id":"alerting","label":"alerting\n2.1MB","color":"#44aa88","font":{"color":"black"},"size":17.1},{"id":"automaticImport","label":"automaticImport","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"automaticImportVTwo","label":"automaticImportVTwo","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"cases","label":"cases\n19.3MB","color":"#ffcc44","font":{"color":"black"},"size":34.34},{"id":"dataSources","label":"dataSources","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"inference","label":"inference","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"observabilityAIAssistant","label":"observabilityAIAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"osquery","label":"osquery","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"stackConnectors","label":"stackConnectors\n1.0MB","color":"#44aa88","font":{"color":"black"},"size":16},{"id":"streams","label":"streams\n25.1MB","color":"#ff8844","font":{"color":"black"},"size":40.08},{"id":"triggersActionsUi","label":"triggersActionsUi","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"genAiSettings","label":"genAiSettings","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"observabilityAiAssistantManagement","label":"observabilityAiAssistantManagement","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"reporting","label":"reporting\n4.0MB","color":"#44aa88","font":{"color":"black"},"size":18.990000000000002},{"id":"observabilityAIAssistantApp","label":"observabilityAIAssistantApp","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"synthetics","label":"synthetics","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"uptime","label":"uptime","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"searchAssistant","label":"searchAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"searchInferenceEndpoints","label":"searchInferenceEndpoints","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"searchPlayground","label":"searchPlayground","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"elasticAssistant","label":"elasticAssistant","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"securitySolution","label":"securitySolution\n6.6MB","color":"#88cc44","font":{"color":"black"},"size":21.57},{"id":"securitySolutionServerless","label":"securitySolutionServerless","color":"#44aa88","font":{"color":"black"},"size":15},{"id":"workplaceAIApp","label":"workplaceAIApp\n2.4MB","color":"#44aa88","font":{"color":"black"},"size":17.42}]);
+    const edges = new vis.DataSet([{"from":"actions","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"actions","to":"taskManager","arrows":"to","color":{"color":"#666"}},{"from":"taskManager","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"taskManager","to":"cloud","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"taskManager","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"encryptedSavedObjects","arrows":"to","color":{"color":"#666"}},{"from":"encryptedSavedObjects","to":"security","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"eventLog","arrows":"to","color":{"color":"#666"}},{"from":"eventLog","to":"spaces","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"eventLog","to":"serverless","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"features","arrows":"to","color":{"color":"#666"}},{"from":"features","to":"licensing","arrows":"to","color":{"color":"#666"}},{"from":"actions","to":"usageCollection","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"spaces","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"actions","to":"security","arrows":"to","dashes":true,"color":{"color":"#aaa"}},{"from":"workflowsExecutionEngine","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"workflowsExtensions","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"workflowsManagement","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"agentBuilder","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"alerting","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"automaticImport","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"automaticImportVTwo","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"cases","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"dataSources","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"inference","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observabilityAIAssistant","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"osquery","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"stackConnectors","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"streams","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"triggersActionsUi","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"genAiSettings","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observabilityAiAssistantManagement","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"reporting","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"observabilityAIAssistantApp","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"synthetics","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"uptime","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"searchAssistant","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"searchInferenceEndpoints","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"searchPlayground","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"elasticAssistant","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"securitySolution","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"securitySolutionServerless","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2},{"from":"workplaceAIApp","to":"actions","arrows":"to","color":{"color":"#4488ff"},"width":2}]);
+    
+    const container = document.getElementById('graph');
+    const data = { nodes, edges };
+    const options = {
+      layout: {
+        hierarchical: {
+          direction: 'UD',
+          sortMethod: 'directed',
+          levelSeparation: 100,
+          nodeSpacing: 150,
+        }
+      },
+      physics: false,
+      nodes: {
+        shape: 'box',
+        margin: 10,
+        font: { size: 12 },
+      },
+      edges: {
+        smooth: { type: 'cubicBezier' },
+      },
+      interaction: {
+        hover: true,
+        tooltipDelay: 100,
+      },
+    };
+    
+    const network = new vis.Network(container, data, options);
+    
+    // Add click handler
+    network.on('click', function(params) {
+      if (params.nodes.length > 0) {
+        const nodeId = params.nodes[0];
+        console.log('Clicked:', nodeId);
+      }
+    });
+  </script>
+</body>
+</html>

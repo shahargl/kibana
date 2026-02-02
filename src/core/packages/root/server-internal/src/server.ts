@@ -171,6 +171,20 @@ export class Server {
   public async preboot(): Promise<InternalCorePreboot | undefined> {
     this.log.debug('prebooting server');
 
+    // MEMORY TRACKING helper
+    const trackMem = (label: string, memBefore: { heapUsed: number }) => {
+      const memAfter = process.memoryUsage();
+      const delta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
+      const current = memAfter.heapUsed / 1024 / 1024;
+      this.log.info(
+        `[PREBOOT_MEMORY] ${label.padEnd(30)} delta=${delta.toFixed(2).padStart(8)}MB, total=${current.toFixed(1)}MB`
+      );
+      return memAfter;
+    };
+
+    let memBefore = process.memoryUsage();
+    this.log.info(`[PREBOOT_MEMORY] === PREBOOT PHASE BREAKDOWN ===`);
+
     const config = await firstValueFrom(this.configService.atPath<CoreConfigType>(coreConfig.path));
     const { disablePreboot } = config.lifecycle;
     if (disablePreboot) {
@@ -182,25 +196,35 @@ export class Server {
 
     // service required for plugin discovery
     const analyticsPreboot = this.analytics.preboot();
+    memBefore = trackMem('analytics.preboot', memBefore);
+
     const environmentPreboot = await this.environment.preboot({ analytics: analyticsPreboot });
+    memBefore = trackMem('environment.preboot', memBefore);
+
     const nodePreboot = await this.node.preboot({ loggingSystem: this.loggingSystem });
     this.nodeRoles = nodePreboot.roles;
+    memBefore = trackMem('node.preboot', memBefore);
 
     // Discover any plugins before continuing. This allows other systems to utilize the plugin dependency graph.
     this.discoveredPlugins = await this.plugins.discover({
       environment: environmentPreboot,
       node: nodePreboot,
     });
+    memBefore = trackMem('plugins.discover', memBefore);
 
     if (!disablePreboot) {
       // Immediately terminate in case of invalid configuration. This needs to be done after plugin discovery. We also
       // silent deprecation warnings until `setup` stage where we'll validate config once again.
       await ensureValidConfiguration(this.configService, { logDeprecations: false });
+      memBefore = trackMem('ensureValidConfiguration', memBefore);
     }
 
     // services we need to preboot even when preboot is disabled
     const uiSettingsPreboot = await this.uiSettings.preboot();
+    memBefore = trackMem('uiSettings.preboot', memBefore);
+
     const loggingPreboot = this.logging.preboot({ loggingSystem: this.loggingSystem });
+    memBefore = trackMem('logging.preboot', memBefore);
 
     let corePreboot: InternalCorePreboot | undefined;
 
@@ -210,34 +234,45 @@ export class Server {
       const contextServicePreboot = this.context.preboot({
         pluginDependencies: new Map([...pluginTree.asOpaqueIds]),
       });
+      memBefore = trackMem('context.preboot', memBefore);
+
       const docLinksPreboot = this.docLinks.setup();
+      memBefore = trackMem('docLinks.setup', memBefore);
 
       const httpPreboot = await this.http.preboot({
         context: contextServicePreboot,
         docLinks: docLinksPreboot,
       });
+      memBefore = trackMem('http.preboot', memBefore);
 
       // setup i18n prior to any other service, to have translations ready
       const i18nPreboot = await this.i18n.preboot({ http: httpPreboot, pluginPaths });
+      memBefore = trackMem('i18n.preboot', memBefore);
 
       this.pricing.preboot({ http: httpPreboot });
+      memBefore = trackMem('pricing.preboot', memBefore);
 
       this.capabilities.preboot({ http: httpPreboot });
+      memBefore = trackMem('capabilities.preboot', memBefore);
 
       const elasticsearchServicePreboot = await this.elasticsearch.preboot();
+      memBefore = trackMem('elasticsearch.preboot', memBefore);
 
       await this.status.preboot({ http: httpPreboot });
+      memBefore = trackMem('status.preboot', memBefore);
 
       const renderingPreboot = await this.rendering.preboot({
         http: httpPreboot,
         uiPlugins,
         i18n: i18nPreboot,
       });
+      memBefore = trackMem('rendering.preboot', memBefore);
 
       const httpResourcesPreboot = this.httpResources.preboot({
         http: httpPreboot,
         rendering: renderingPreboot,
       });
+      memBefore = trackMem('httpResources.preboot', memBefore);
 
       corePreboot = {
         analytics: analyticsPreboot,
@@ -249,8 +284,10 @@ export class Server {
         logging: loggingPreboot,
         preboot: this.prebootService.preboot(),
       };
+      memBefore = trackMem('corePreboot object', memBefore);
 
       await this.plugins.preboot(corePreboot);
+      memBefore = trackMem('plugins.preboot', memBefore);
 
       httpPreboot.registerRouteHandlerContext<PrebootRequestHandlerContext, 'core'>(
         coreId,
@@ -261,7 +298,10 @@ export class Server {
       );
 
       this.coreApp.preboot(corePreboot, uiPlugins);
+      memBefore = trackMem('coreApp.preboot', memBefore);
     }
+
+    this.log.info(`[PREBOOT_MEMORY] === END PREBOOT BREAKDOWN ===`);
 
     prebootTransaction.end();
     this.uptimePerStep.preboot = { start: prebootStartUptime, end: performance.now() };
@@ -271,56 +311,82 @@ export class Server {
 
   public async setup() {
     this.log.debug('setting up server');
+
+    // MEMORY TRACKING helper
+    const trackMem = (label: string, memBefore: { heapUsed: number }) => {
+      const memAfter = process.memoryUsage();
+      const delta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
+      const current = memAfter.heapUsed / 1024 / 1024;
+      this.log.info(
+        `[SETUP_MEMORY] ${label.padEnd(30)} delta=${delta.toFixed(2).padStart(8)}MB, total=${current.toFixed(1)}MB`
+      );
+      return memAfter;
+    };
+
+    let memBefore = process.memoryUsage();
+    this.log.info(`[SETUP_MEMORY] === SETUP PHASE BREAKDOWN (core services) ===`);
+
     const setupStartUptime = performance.now();
     const setupTransaction = apm.startTransaction('server-setup', 'kibana-platform');
 
     const analyticsSetup = this.analytics.setup();
-
     registerRootEvents(analyticsSetup);
+    memBefore = trackMem('analytics.setup', memBefore);
 
     const environmentSetup = this.environment.setup();
+    memBefore = trackMem('environment.setup', memBefore);
 
     // Configuration could have changed after preboot.
     await this.ensureValidConfiguration();
+    memBefore = trackMem('ensureValidConfiguration', memBefore);
 
     const { uiPlugins, pluginPaths, pluginTree } = this.discoveredPlugins!.standard;
     const contextServiceSetup = this.context.setup({
       pluginDependencies: new Map([...pluginTree.asOpaqueIds]),
     });
+    memBefore = trackMem('context.setup', memBefore);
+
     const executionContextSetup = this.executionContext.setup();
     const docLinksSetup = this.docLinks.setup();
     const securitySetup = this.security.setup();
     const userProfileSetup = this.userProfile.setup();
-
     const injectionSetup = this.injection.setup();
+    memBefore = trackMem('misc services setup', memBefore);
 
     const httpSetup = await this.http.setup({
       context: contextServiceSetup,
       executionContext: executionContextSetup,
     });
+    memBefore = trackMem('http.setup', memBefore);
 
     // setup i18n prior to any other service, to have translations ready
     const i18nServiceSetup = await this.i18n.setup({ http: httpSetup, pluginPaths });
+    memBefore = trackMem('i18n.setup', memBefore);
 
     const capabilitiesSetup = this.capabilities.setup({ http: httpSetup });
+    memBefore = trackMem('capabilities.setup', memBefore);
 
     const elasticsearchServiceSetup = await this.elasticsearch.setup({
       analytics: analyticsSetup,
       http: httpSetup,
       executionContext: executionContextSetup,
     });
+    memBefore = trackMem('elasticsearch.setup', memBefore);
 
     const dataStreamsSetup = await this.dataStreams.setup();
+    memBefore = trackMem('dataStreams.setup', memBefore);
 
     const metricsSetup = await this.metrics.setup({
       http: httpSetup,
       elasticsearchService: elasticsearchServiceSetup,
     });
+    memBefore = trackMem('metrics.setup', memBefore);
 
     const httpRateLimiterSetup = this.httpRateLimiter.setup({
       http: httpSetup,
       metrics: metricsSetup,
     });
+    memBefore = trackMem('httpRateLimiter.setup', memBefore);
 
     const coreUsageDataSetup = this.coreUsageData.setup({
       http: httpSetup,
@@ -328,8 +394,10 @@ export class Server {
       savedObjectsStartPromise: this.savedObjectsStartPromise,
       changedDeprecatedConfigPath$: this.configService.getDeprecatedConfigPath$(),
     });
+    memBefore = trackMem('coreUsageData.setup', memBefore);
 
     const loggingSetup = this.logging.setup();
+    memBefore = trackMem('logging.setup', memBefore);
 
     const deprecationsSetup = await this.deprecations.setup({
       http: httpSetup,
@@ -337,6 +405,7 @@ export class Server {
       logging: loggingSetup,
       docLinks: docLinksSetup,
     });
+    memBefore = trackMem('deprecations.setup', memBefore);
 
     const savedObjectsSetup = await this.savedObjects.setup({
       http: httpSetup,
@@ -345,11 +414,13 @@ export class Server {
       coreUsageData: coreUsageDataSetup,
       docLinks: docLinksSetup,
     });
+    memBefore = trackMem('savedObjects.setup', memBefore);
 
     const uiSettingsSetup = await this.uiSettings.setup({
       http: httpSetup,
       savedObjects: savedObjectsSetup,
     });
+    memBefore = trackMem('uiSettings.setup', memBefore);
 
     const statusSetup = await this.status.setup({
       analytics: analyticsSetup,
@@ -362,10 +433,12 @@ export class Server {
       metrics: metricsSetup,
       coreUsageData: coreUsageDataSetup,
     });
+    memBefore = trackMem('status.setup', memBefore);
 
     const customBrandingSetup = this.customBranding.setup();
     const userSettingsServiceSetup = this.userSettingsService.setup();
     const featureFlagsSetup = this.featureFlags.setup();
+    memBefore = trackMem('misc setup (branding/flags)', memBefore);
 
     const renderingSetup = await this.rendering.setup({
       elasticsearch: elasticsearchServiceSetup,
@@ -377,13 +450,16 @@ export class Server {
       userSettings: userSettingsServiceSetup,
       i18n: i18nServiceSetup,
     });
+    memBefore = trackMem('rendering.setup', memBefore);
 
     const httpResourcesSetup = this.httpResources.setup({
       http: httpSetup,
       rendering: renderingSetup,
     });
+    memBefore = trackMem('httpResources.setup', memBefore);
 
     const pricingSetup = await this.pricing.setup({ http: httpSetup });
+    memBefore = trackMem('pricing.setup', memBefore);
 
     const coreSetup: InternalCoreSetup = {
       analytics: analyticsSetup,
@@ -414,7 +490,10 @@ export class Server {
       dataStreams: dataStreamsSetup,
     };
 
+    this.log.info(`[SETUP_MEMORY] === END CORE SERVICES, START PLUGINS ===`);
     const pluginsSetup = await this.plugins.setup(coreSetup);
+    memBefore = trackMem('plugins.setup (all 190)', memBefore);
+
     this.#pluginsInitialized = pluginsSetup.initialized;
     /**
      * This is a necessary step to ensure that the pricing service is ready to be used.
@@ -434,6 +513,21 @@ export class Server {
 
   public async start() {
     this.log.debug('starting server');
+
+    // MEMORY TRACKING helper
+    const trackMem = (label: string, memBefore: { heapUsed: number }) => {
+      const memAfter = process.memoryUsage();
+      const delta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
+      const current = memAfter.heapUsed / 1024 / 1024;
+      this.log.info(
+        `[START_MEMORY] ${label.padEnd(30)} delta=${delta.toFixed(2).padStart(8)}MB, total=${current.toFixed(1)}MB`
+      );
+      return memAfter;
+    };
+
+    let memBefore = process.memoryUsage();
+    this.log.info(`[START_MEMORY] === START PHASE BREAKDOWN ===`);
+
     const startStartUptime = performance.now();
     const startTransaction = apm.startTransaction('server-start', 'kibana-platform');
 
@@ -444,15 +538,18 @@ export class Server {
     this.userSettingsService.start({ userProfile: userProfileStart });
     const executionContextStart = this.executionContext.start();
     const docLinkStart = this.docLinks.start();
+    memBefore = trackMem('misc services start', memBefore);
 
     const elasticsearchStart = await this.elasticsearch.start();
     this.uptimePerStep.elasticsearch = {
       waitTime: elasticsearchStart.metrics.elasticsearchWaitTime,
     };
+    memBefore = trackMem('elasticsearch.start', memBefore);
 
     const dataStreamsStart = await this.dataStreams.start({
       elasticsearch: elasticsearchStart,
     });
+    memBefore = trackMem('dataStreams.start', memBefore);
 
     const deprecationsStart = this.deprecations.start();
     const soStartSpan = startTransaction.startSpan('saved_objects.migration', 'migration');
@@ -466,8 +563,8 @@ export class Server {
       migrationTime: savedObjectsStart.metrics.migrationDuration,
     };
     await this.resolveSavedObjectsStartPromise!(savedObjectsStart);
-
     soStartSpan?.end();
+    memBefore = trackMem('savedObjects.start+migration', memBefore);
 
     if (this.nodeRoles?.migrator === true) {
       startTransaction.end();
@@ -489,17 +586,16 @@ export class Server {
       savedObjects: savedObjectsStart,
       exposedConfigsToUsage: this.plugins.getExposedPluginConfigsToUsage(),
     });
+    memBefore = trackMem('misc core starts', memBefore);
 
     const featureFlagsStart = this.featureFlags.start();
-
     const pricingStart = this.pricing.start();
-
     this.httpRateLimiter.start();
     this.status.start();
-
     this.rendering.start({
       featureFlags: featureFlagsStart,
     });
+    memBefore = trackMem('feature flags/pricing/etc', memBefore);
 
     this.coreStart = {
       analytics: analyticsStart,
@@ -523,10 +619,15 @@ export class Server {
     };
 
     this.coreApp.start(this.coreStart);
+    memBefore = trackMem('coreApp.start', memBefore);
 
+    this.log.info(`[START_MEMORY] === START PLUGINS ===`);
     await this.plugins.start(this.coreStart);
+    memBefore = trackMem('plugins.start (all 190)', memBefore);
 
     await this.http.start();
+    memBefore = trackMem('http.start', memBefore);
+    this.log.info(`[START_MEMORY] === END START BREAKDOWN ===`);
 
     startTransaction.end();
 

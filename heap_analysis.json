@@ -1,0 +1,271 @@
+{
+  "timestamp": "2026-02-01T12:47:31.131Z",
+  "snapshotPath": "heap.heapsnapshot",
+  "totalNodes": 3499530,
+  "byType": {
+    "string": {
+      "size": 102664568,
+      "count": 825215
+    },
+    "array": {
+      "size": 61394528,
+      "count": 369591
+    },
+    "object": {
+      "size": 37365464,
+      "count": 778883
+    },
+    "code": {
+      "size": 30115224,
+      "count": 289112
+    },
+    "closure": {
+      "size": 26389608,
+      "count": 468717
+    },
+    "native": {
+      "size": 17355445,
+      "count": 267
+    },
+    "concatenated string": {
+      "size": 12794208,
+      "count": 399819
+    },
+    "object shape": {
+      "size": 6372552,
+      "count": 64865
+    },
+    "hidden": {
+      "size": 5218688,
+      "count": 113143
+    },
+    "sliced string": {
+      "size": 4820384,
+      "count": 150637
+    },
+    "number": {
+      "size": 551504,
+      "count": 36232
+    },
+    "regexp": {
+      "size": 102264,
+      "count": 1827
+    },
+    "symbol": {
+      "size": 27624,
+      "count": 1151
+    },
+    "synthetic": {
+      "size": 10096,
+      "count": 55
+    },
+    "bigint": {
+      "size": 352,
+      "count": 16
+    }
+  },
+  "byPlugin": {
+    "plugins": {
+      "size": 13190160,
+      "count": 106161
+    },
+    "security_solution": {
+      "size": 5871568,
+      "count": 39562
+    },
+    "packages": {
+      "size": 5294008,
+      "count": 66315
+    },
+    "apm": {
+      "size": 827696,
+      "count": 6236
+    },
+    "synthetics": {
+      "size": 586792,
+      "count": 4157
+    },
+    "infra": {
+      "size": 571600,
+      "count": 4515
+    },
+    "node": {
+      "size": 494648,
+      "count": 2225
+    },
+    "enterprise_search": {
+      "size": 457664,
+      "count": 2910
+    },
+    "uptime": {
+      "size": 362712,
+      "count": 2685
+    },
+    "observability": {
+      "size": 304408,
+      "count": 2290
+    },
+    "slo": {
+      "size": 288456,
+      "count": 2299
+    },
+    "cloud_security_posture": {
+      "size": 164176,
+      "count": 1227
+    },
+    "metrics_data_access": {
+      "size": 157296,
+      "count": 1129
+    },
+    "exploratory_view": {
+      "size": 137744,
+      "count": 933
+    },
+    "profiling": {
+      "size": 112768,
+      "count": 922
+    },
+    "search_playground": {
+      "size": 94736,
+      "count": 804
+    },
+    "observability_onboarding": {
+      "size": 88032,
+      "count": 639
+    },
+    "observability_shared": {
+      "size": 85632,
+      "count": 663
+    },
+    "ux": {
+      "size": 85568,
+      "count": 702
+    },
+    "search_indices": {
+      "size": 74632,
+      "count": 653
+    },
+    "session_view": {
+      "size": 71024,
+      "count": 592
+    },
+    "elastic_assistant": {
+      "size": 69464,
+      "count": 501
+    },
+    "search_inference_endpoints": {
+      "size": 62256,
+      "count": 425
+    },
+    "node .": {
+      "size": 56768,
+      "count": 320
+    },
+    "search_query_rules": {
+      "size": 56152,
+      "count": 441
+    },
+    "timelines": {
+      "size": 55016,
+      "count": 481
+    },
+    "observability_ai_assistant_app": {
+      "size": 54656,
+      "count": 398
+    },
+    "search_homepage": {
+      "size": 48424,
+      "count": 425
+    },
+    "security_solution_serverless": {
+      "size": 47776,
+      "count": 365
+    },
+    "cloud_defend": {
+      "size": 47360,
+      "count": 404
+    }
+  },
+  "byPackage": {
+    "elastic-apm-node": {
+      "size": 226336,
+      "count": 1527
+    },
+    "@elastic/opentelemetry-node": {
+      "size": 187080,
+      "count": 976
+    },
+    "@opentelemetry/sdk-node": {
+      "size": 185384,
+      "count": 991
+    },
+    "rxjs": {
+      "size": 134832,
+      "count": 1258
+    },
+    "@babel/core": {
+      "size": 116960,
+      "count": 893
+    },
+    "@opentelemetry/exporter-metrics-otlp-grpc": {
+      "size": 105096,
+      "count": 571
+    },
+    "@opentelemetry/exporter-trace-otlp-grpc": {
+      "size": 102976,
+      "count": 569
+    },
+    "@babel/traverse": {
+      "size": 98504,
+      "count": 732
+    },
+    "@opentelemetry/exporter-metrics-otlp-http": {
+      "size": 96176,
+      "count": 533
+    },
+    "lodash": {
+      "size": 95904,
+      "count": 1138
+    },
+    "@babel/helper-builder-binary-assignment-operator-visitor": {
+      "size": 95472,
+      "count": 540
+    },
+    "@opentelemetry/exporter-metrics-otlp-proto": {
+      "size": 94360,
+      "count": 518
+    },
+    "@opentelemetry/exporter-trace-otlp-proto": {
+      "size": 92440,
+      "count": 517
+    },
+    "@babel/helper-wrap-function": {
+      "size": 92312,
+      "count": 538
+    },
+    "@opentelemetry/exporter-trace-otlp-http": {
+      "size": 92048,
+      "count": 519
+    },
+    "@opentelemetry/instrumentation-aws-sdk": {
+      "size": 91608,
+      "count": 560
+    },
+    "@babel/helper-skip-transparent-expression-wrappers": {
+      "size": 91408,
+      "count": 530
+    },
+    "@babel/helper-member-expression-to-functions": {
+      "size": 88392,
+      "count": 530
+    },
+    "@babel/helper-function-name": {
+      "size": 87968,
+      "count": 536
+    },
+    "@babel/generator": {
+      "size": 86384,
+      "count": 649
+    }
+  }
+}
