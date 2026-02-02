@@ -36,17 +36,21 @@ case "$1" in
     
   ui)
     echo "============================================================"
-    echo "Starting UI-ONLY node (port 5602)"
+    echo "Starting UI-ONLY node (port 5610)"
     echo "============================================================"
     echo ""
-    echo "Access the UI at: http://localhost:5602"
+    echo "Access the UI at: http://localhost:5610/xxx  (xxx is the random basepath)"
     echo "Create rules/alerts to trigger tasks on the background node"
     echo ""
     cd "$KIBANA_DIR"
-    SERVER_PORT=5602 \
-    NODE_ROLES='["ui"]' \
-    XPACK_TASK_MANAGER_UNSAFE_EXCLUDE_TASK_TYPES='["*"]' \
-    node scripts/kibana --dev --no-watch 2>&1 | tee kibana_ui.log
+    # Increase file descriptor limit for this process
+    ulimit -n 65536 2>/dev/null || true
+    # Use --dev mode (required for elastic superuser) with separate config
+    # kibana.ui.yml sets dev.basePathProxyTarget to 5613 to avoid conflict with 5603
+    KBN_OPTIMIZER_NO_WATCH=1 \
+    node scripts/kibana --dev --no-watch \
+      --config config/kibana.ui.yml \
+      2>&1 | tee kibana_ui.log
     ;;
     
   stop)
