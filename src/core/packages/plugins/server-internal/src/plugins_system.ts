@@ -48,6 +48,12 @@ const CORE_INFRASTRUCTURE_PLUGINS = new Set([
   'security',
   // Multi-tenancy
   'spaces',
+  // Actions framework - deeply integrated with core services (HTTP, Features, EventLog,
+  // Analytics, SavedObjects). Required by most task-owning plugins. Too many locked
+  // registrations to make lazy-loadable without major architectural changes.
+  'actions',
+  // Stack connectors - actions dependency
+  'stackConnectors',
   // Usage tracking (lightweight)
   'usageCollection',
   // Telemetry infrastructure
@@ -77,8 +83,12 @@ export class PluginsSystem<T extends PluginType> {
   private readonly deferredPlugins = new Map<PluginName, PluginWrapper>();
   // LAZY LOADING: Store contracts for plugins (both eagerly and lazily loaded)
   private readonly pluginContracts = new Map<PluginName, unknown>();
+  // LAZY LOADING: Store start contracts for plugins (both eagerly and lazily loaded)
+  private readonly pluginStartContracts = new Map<PluginName, unknown>();
   // LAZY LOADING: Store the setup deps for lazy loading later
   private setupDeps?: PluginsServiceSetupDeps;
+  // LAZY LOADING: Store the start deps for lazy loading later
+  private startDeps?: PluginsServiceStartDeps;
   // LAZY LOADING: Track plugins currently being loaded (prevent circular loading)
   private readonly loadingPlugins = new Set<PluginName>();
 
@@ -325,6 +335,9 @@ export class PluginsSystem<T extends PluginType> {
       throw new Error('Preboot plugins cannot be started.');
     }
 
+    // LAZY LOADING: Store start deps for lazy loading later
+    this.startDeps = deps;
+
     const contracts = new Map<PluginName, unknown>();
     if (this.satupPlugins.length === 0) {
       return contracts;
@@ -389,6 +402,8 @@ export class PluginsSystem<T extends PluginType> {
       pluginStartDeltas.push({ name: pluginName, heapDelta });
 
       contracts.set(pluginName, contract);
+      // LAZY LOADING: Also store in pluginStartContracts for lazy loading lookup
+      this.pluginStartContracts.set(pluginName, contract);
     }
 
     // MEMORY TRACKING - Output summary of top start memory consumers
@@ -524,11 +539,43 @@ export class PluginsSystem<T extends PluginType> {
         throw new Error('Setup deps not available for lazy loading');
       }
 
+      // LAZY LOADING POC: Enable lazy loading mode on HTTP service
+      // This allows routers to be registered after the server has started
+      if (
+        this.setupDeps.http &&
+        typeof (this.setupDeps.http as any).enableLazyLoadingMode === 'function'
+      ) {
+        (this.setupDeps.http as any).enableLazyLoadingMode();
+      }
+
+      // LAZY LOADING POC: Unlock features registration to allow late feature registration
+      const featuresContract = this.pluginContracts.get('features') as {
+        _unlockRegistration?: () => void;
+        _lockRegistration?: () => void;
+      };
+      if (featuresContract && typeof featuresContract._unlockRegistration === 'function') {
+        this.log.debug('[LAZY_POC] Unlocking features registration for lazy plugin loading');
+        featuresContract._unlockRegistration();
+      }
+
       const pluginSetupContext = createPluginSetupContext({
         deps: this.setupDeps,
         plugin,
         runtimeResolver: this.runtimeResolver,
       });
+
+      // LAZY LOADING POC: Load and register the plugin's config schema BEFORE init()
+      // This ensures config defaults are properly applied when the plugin reads config
+      try {
+        const configDescriptor = plugin.getConfigDescriptor();
+        if (configDescriptor && configDescriptor.schema) {
+          this.log.debug(`[LAZY_POC] Registering config schema for "${pluginName}"`);
+          this.coreContext.configService.setSchema(plugin.configPath, configDescriptor.schema);
+        }
+      } catch (e) {
+        // Schema registration might fail if already registered with permissive schema
+        this.log.debug(`[LAZY_POC] Config schema registration for "${pluginName}": ${e}`);
+      }
 
       // Initialize plugin (loads code)
       await plugin.init();
@@ -549,19 +596,64 @@ export class PluginsSystem<T extends PluginType> {
         contract = contractOrPromise;
       }
 
-      // Store contract
+      // Store setup contract
       this.pluginContracts.set(pluginName, contract);
       this.satupPlugins.push(pluginName);
 
       // Remove from deferred since it's now loaded
       this.deferredPlugins.delete(pluginName);
 
+      // LAZY LOADING POC: Now call start() - this is critical for plugins to initialize their services
+      if (!this.startDeps) {
+        throw new Error(`Cannot lazy load "${pluginName}" - startDeps not available (startPlugins hasn't been called yet)`);
+      }
+
+      this.log.debug(`[LAZY_POC] Calling start() for lazy-loaded plugin "${pluginName}"`);
+      
+      // Build start dep contracts from already-started plugins
+      const pluginStartDepContracts = Array.from(pluginDeps).reduce((depContracts, dependencyName) => {
+        if (this.pluginStartContracts.has(dependencyName)) {
+          depContracts[dependencyName] = this.pluginStartContracts.get(dependencyName);
+        }
+        return depContracts;
+      }, {} as Record<PluginName, unknown>);
+
+      const pluginStartContext = createPluginStartContext({
+        deps: this.startDeps,
+        plugin,
+        runtimeResolver: this.runtimeResolver,
+      });
+
+      let startContract: unknown;
+      const startContractOrPromise = plugin.start(pluginStartContext, pluginStartDepContracts);
+      if (isPromise(startContractOrPromise)) {
+        const startContractMaybe = await withTimeout<any>({
+          promise: startContractOrPromise,
+          timeoutMs: 10 * Sec,
+        });
+        if (startContractMaybe.timedout) {
+          throw new Error(`Lazy start of "${pluginName}" timed out after 10sec`);
+        }
+        startContract = startContractMaybe.value;
+      } else {
+        startContract = startContractOrPromise;
+      }
+
+      // Store start contract
+      this.pluginStartContracts.set(pluginName, startContract);
+
+      // LAZY LOADING POC: Re-lock features registration after plugin is loaded
+      if (featuresContract && typeof featuresContract._lockRegistration === 'function') {
+        this.log.debug('[LAZY_POC] Re-locking features registration after lazy plugin loading');
+        featuresContract._lockRegistration();
+      }
+
       const memAfter = process.memoryUsage();
       const memDelta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
       const duration = Date.now() - startTime;
 
       this.log.info(
-        `[LAZY_POC] Loaded "${pluginName}" on-demand: ${memDelta.toFixed(2)}MB in ${duration}ms`
+        `[LAZY_POC] Loaded "${pluginName}" on-demand (setup+start): ${memDelta.toFixed(2)}MB in ${duration}ms`
       );
 
       return contract;

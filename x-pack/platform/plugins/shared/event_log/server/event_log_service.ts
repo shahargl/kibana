@@ -71,8 +71,10 @@ export class EventLogService implements IEventLogService {
       throw new Error(`actions parameter must not be empty for provider: "${provider}"`);
     }
 
+    // LAZY LOADING POC: Skip if already registered (idempotent for lazy loading)
     if (this.registeredProviderActions.has(provider)) {
-      throw new Error(`provider already registered: "${provider}"`);
+      // Already registered - this is fine during lazy loading
+      return;
     }
 
     this.registeredProviderActions.set(provider, new Set(actions));

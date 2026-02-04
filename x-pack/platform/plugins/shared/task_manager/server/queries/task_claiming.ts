@@ -132,10 +132,29 @@ export class TaskClaiming {
           .join(', ')}`
       );
     }
+
+    // LAZY LOADING: Also include task types from the static registry that aren't registered yet
+    // This allows Task Manager to claim tasks for plugins that haven't loaded
+    const allClaimableTypes = definitions.getAllClaimableTaskTypes();
+    const registeredTypes = new Set(
+      [...(unlimitedConcurrency || []), ...(limitedConcurrency || [])].map((d) => d.type)
+    );
+    const unregisteredTypes = allClaimableTypes.filter((type) => !registeredTypes.has(type));
+
+    if (unregisteredTypes.length > 0) {
+      this.logger.info(
+        `[LAZY_POC] Including ${unregisteredTypes.length} unregistered task types for lazy loading`
+      );
+    }
+
+    // Add unregistered types to the unlimited batch (default behavior)
+    const allUnlimitedTypes = new Set([
+      ...(unlimitedConcurrency ? unlimitedConcurrency.map(({ type }) => type) : []),
+      ...unregisteredTypes,
+    ]);
+
     return [
-      ...(unlimitedConcurrency
-        ? [asUnlimited(new Set(unlimitedConcurrency.map(({ type }) => type)))]
-        : []),
+      ...(allUnlimitedTypes.size > 0 ? [asUnlimited(allUnlimitedTypes)] : []),
       ...(limitedConcurrency ? limitedConcurrency.map(({ type }) => asLimited(type)) : []),
     ];
   }

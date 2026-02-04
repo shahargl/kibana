@@ -337,6 +337,8 @@ export class PluginsService
       'features', 'security', 'spaces', 'usageCollection', 'telemetry',
       'telemetryCollectionManager', 'telemetryCollectionXpack', 'files',
       'cloud', 'monitoringCollection', 'interactiveSetup',
+      // Actions framework - deeply integrated, needs proper config defaults
+      'actions', 'stackConnectors',
     ]);
 
     let skippedPluginCount = 0;

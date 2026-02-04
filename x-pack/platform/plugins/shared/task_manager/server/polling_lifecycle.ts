@@ -278,18 +278,37 @@ export class TaskPollingLifecycle implements ITaskEventEmitter<TaskLifecycleEven
   };
 
   private pollForWork = async (): Promise<TimedFillPoolResult> => {
+    const mem = process.memoryUsage();
+    const heapUsedMB = (mem.heapUsed / 1024 / 1024).toFixed(1);
+    const heapTotalMB = (mem.heapTotal / 1024 / 1024).toFixed(1);
+    const rssMB = (mem.rss / 1024 / 1024).toFixed(1);
+    this.logger.debug(`[LAZY_POC_POLL] Starting poll cycle... [Memory: heap ${heapUsedMB}/${heapTotalMB}MB, RSS ${rssMB}MB]`);
     return fillPool(
       // claim available tasks
       async () => {
+        this.logger.debug('[LAZY_POC_POLL] Claiming available tasks...');
         const result = await claimAvailableTasks(this.taskClaiming, this.logger);
 
-        if (isOk(result) && result.value.timing) {
-          this.emitEvent(
-            asTaskManagerStatEvent(
-              'claimDuration',
-              asOk(result.value.timing.stop - result.value.timing.start)
-            )
-          );
+        if (isOk(result)) {
+          const claimedCount = result.value.docs?.length || 0;
+          if (claimedCount > 0) {
+            const taskTypes = result.value.docs.map((d) => d.taskType).join(', ');
+            this.logger.info(
+              `[LAZY_POC_POLL] Claimed ${claimedCount} tasks: ${taskTypes}`
+            );
+          } else {
+            this.logger.debug('[LAZY_POC_POLL] No tasks claimed this cycle');
+          }
+          if (result.value.timing) {
+            this.emitEvent(
+              asTaskManagerStatEvent(
+                'claimDuration',
+                asOk(result.value.timing.stop - result.value.timing.start)
+              )
+            );
+          }
+        } else {
+          this.logger.warn(`[LAZY_POC_POLL] Claim failed: ${result.error}`);
         }
 
         return result;

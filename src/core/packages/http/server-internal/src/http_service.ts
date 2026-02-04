@@ -190,12 +190,17 @@ export class HttpService
 
     const config = await firstValueFrom(this.config$);
 
-    const { registerRouter, ...serverContract } = await this.httpServer.setup({
-      config$: this.config$,
-      executionContext: deps.executionContext,
-    });
+    const { registerRouter, registerRouterAfterListening, ...serverContract } =
+      await this.httpServer.setup({
+        config$: this.config$,
+        executionContext: deps.executionContext,
+      });
 
     registerCoreHandlers(serverContract, config, this.env, this.log);
+
+    // LAZY LOADING POC: Track whether we're in lazy loading mode
+    // When true, use registerRouterAfterListening instead of registerRouter
+    let lazyLoadingMode = false;
 
     this.internalSetup = {
       ...serverContract,
@@ -205,6 +210,11 @@ export class HttpService
       },
       getRegisteredDeprecatedApis: () => serverContract.getDeprecatedRoutes(),
       externalUrl: new ExternalUrlConfig(config.externalUrl),
+      // LAZY LOADING POC: Add method to enable lazy loading mode
+      enableLazyLoadingMode: () => {
+        lazyLoadingMode = true;
+        this.log.info('[LAZY_POC] HTTP service now in lazy loading mode - routes will be registered after listening');
+      },
       createRouter: <Context extends RequestHandlerContextBase = RequestHandlerContextBase>(
         path: string,
         pluginId: PluginOpaqueId = this.coreContext.coreId
@@ -215,7 +225,13 @@ export class HttpService
           versionedRouterOptions: getVersionedRouterOptions(config),
           pluginId,
         });
-        registerRouter(router);
+        // LAZY LOADING POC: Use appropriate registration method
+        if (lazyLoadingMode) {
+          this.log.debug(`[LAZY_POC] Registering router "${path}" after listening`);
+          registerRouterAfterListening(router);
+        } else {
+          registerRouter(router);
+        }
         return router;
       },
 

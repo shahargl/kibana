@@ -31,7 +31,10 @@ case "$1" in
     cd "$KIBANA_DIR"
     pkill -f "node scripts/kibana" || true
     sleep 2
-    LAZY_TASK_MANAGER_POC=true node scripts/kibana --dev 2>&1 | tee kibana_lazy.log
+    # Enable debug logging for taskManager to see polling activity
+    LAZY_TASK_MANAGER_POC=true node scripts/kibana --dev \
+      --logging.loggers='[{"name":"plugins.taskManager","level":"debug"}]' \
+      2>&1 | tee kibana_lazy.log
     ;;
     
   ui)

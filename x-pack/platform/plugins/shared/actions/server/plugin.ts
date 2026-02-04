@@ -209,12 +209,18 @@ export interface ActionsPluginsStart {
   serverless?: ServerlessPluginStart;
 }
 
-const includedHiddenTypes = [
-  ACTION_SAVED_OBJECT_TYPE,
-  ACTION_TASK_PARAMS_SAVED_OBJECT_TYPE,
-  ALERT_SAVED_OBJECT_TYPE,
-  CONNECTOR_TOKEN_SAVED_OBJECT_TYPE,
-];
+// LAZY LOADING POC: When lazy loading is enabled, we can't include ALERT_SAVED_OBJECT_TYPE
+// because the alerting plugin (which registers it) may not be loaded yet.
+// The alert type is only needed for tracing/logging when actions run from alerts.
+const LAZY_TASK_MANAGER_POC = process.env.LAZY_TASK_MANAGER_POC === 'true';
+const includedHiddenTypes = LAZY_TASK_MANAGER_POC
+  ? [ACTION_SAVED_OBJECT_TYPE, ACTION_TASK_PARAMS_SAVED_OBJECT_TYPE, CONNECTOR_TOKEN_SAVED_OBJECT_TYPE]
+  : [
+      ACTION_SAVED_OBJECT_TYPE,
+      ACTION_TASK_PARAMS_SAVED_OBJECT_TYPE,
+      ALERT_SAVED_OBJECT_TYPE,
+      CONNECTOR_TOKEN_SAVED_OBJECT_TYPE,
+    ];
 
 export class ActionsPlugin
   implements

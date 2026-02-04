@@ -285,12 +285,23 @@ export class TaskManagerRunner implements TaskRunner {
   public async ensureDefinitionLoaded(): Promise<TaskDefinition | undefined> {
     // Already have the definition? Return it directly
     if (this.definition) {
+      this.logger.debug(`[LAZY_POC_RUN] Task "${this.taskType}" - definition already loaded`);
       return this.definition;
     }
 
+    this.logger.info(
+      `[LAZY_POC_RUN] Task "${this.taskType}" - definition NOT loaded, attempting lazy load...`
+    );
+
     // Try async loading
     if (typeof this.definitions.getAsync === 'function') {
-      return this.definitions.getAsync(this.taskType);
+      const def = await this.definitions.getAsync(this.taskType);
+      if (def) {
+        this.logger.info(`[LAZY_POC_RUN] Task "${this.taskType}" - successfully lazy loaded!`);
+      } else {
+        this.logger.warn(`[LAZY_POC_RUN] Task "${this.taskType}" - lazy load FAILED`);
+      }
+      return def;
     }
 
     return this.definition;

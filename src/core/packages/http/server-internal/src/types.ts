@@ -77,6 +77,8 @@ export interface InternalHttpServiceSetup
     provider: IContextProvider<Context, ContextName>
   ) => IContextContainer;
   getRegisteredDeprecatedApis: () => RouterDeprecatedApiDetails[];
+  /** LAZY LOADING POC: Enable lazy loading mode - routes will be registered after server is listening */
+  enableLazyLoadingMode: () => void;
 }
 
 /** @internal */

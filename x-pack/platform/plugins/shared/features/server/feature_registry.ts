@@ -59,6 +59,14 @@ export class FeatureRegistry {
     this.locked = true;
   }
 
+  /**
+   * LAZY LOADING POC: Temporarily unlock registration to allow late feature registration
+   * This is needed when plugins are loaded on-demand after server startup.
+   */
+  public unlockRegistration() {
+    this.locked = false;
+  }
+
   public registerKibanaFeature(feature: KibanaFeatureConfig) {
     if (this.locked) {
       throw new Error(
@@ -68,8 +76,11 @@ export class FeatureRegistry {
 
     validateKibanaFeature(feature);
 
+    // LAZY LOADING POC: Skip if already registered (idempotent for lazy loading)
     if (feature.id in this.kibanaFeatures || feature.id in this.esFeatures) {
-      throw new Error(`Feature with id ${feature.id} is already registered.`);
+      // Already registered - this is fine during lazy loading when a plugin
+      // is loaded as a dependency but was already loaded earlier
+      return;
     }
 
     const featureCopy = cloneDeep(feature);
@@ -84,8 +95,9 @@ export class FeatureRegistry {
       );
     }
 
+    // LAZY LOADING POC: Skip if already registered (idempotent for lazy loading)
     if (feature.id in this.kibanaFeatures || feature.id in this.esFeatures) {
-      throw new Error(`Feature with id ${feature.id} is already registered.`);
+      return;
     }
 
     validateElasticsearchFeature(feature);

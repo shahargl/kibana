@@ -219,9 +219,15 @@ export class TaskTypeDictionary {
         return false;
       }
     } catch (error) {
+      // Log full stack trace for debugging
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : '';
       this.logger.error(
-        `[LAZY_POC] Failed to load plugin "${ownerPlugin}" for task "${taskType}": ${error}`
+        `[LAZY_POC] Failed to load plugin "${ownerPlugin}" for task "${taskType}": ${errorMessage}`
       );
+      if (errorStack) {
+        this.logger.error(`[LAZY_POC] Stack trace: ${errorStack}`);
+      }
       return false;
     } finally {
       this.loadingPlugins.delete(ownerPlugin);
@@ -294,11 +300,39 @@ export class TaskTypeDictionary {
     return callerPlugin;
   }
 
+  /**
+   * LAZY LOADING: Get all task types that should be claimable, including those
+   * from the static registry that haven't been registered yet.
+   * This is needed so Task Manager can claim tasks for plugins that haven't loaded.
+   */
+  public getAllClaimableTaskTypes(): string[] {
+    // Combine registered task types with static registry
+    const registeredTypes = new Set(this.definitions.keys());
+    const staticTypes = new Set(TASK_TO_PLUGIN_REGISTRY.keys());
+    
+    // Return union of both sets
+    const allTypes = new Set([...registeredTypes, ...staticTypes]);
+    
+    this.logger.debug(
+      `[LAZY_POC] getAllClaimableTaskTypes: ${registeredTypes.size} registered, ${staticTypes.size} in static registry, ${allTypes.size} total`
+    );
+    
+    return Array.from(allTypes);
+  }
+
   [Symbol.iterator]() {
     return this.definitions.entries();
   }
 
   public getAllTypes() {
+    // LAZY LOADING: Include task types from static registry when plugin loader is set
+    // This ensures we search for tasks even before their plugins are loaded
+    if (this.pluginLoader && TASK_TO_PLUGIN_REGISTRY.size > 0) {
+      const registeredTypes = new Set(this.definitions.keys());
+      const staticTypes = new Set(TASK_TO_PLUGIN_REGISTRY.keys());
+      const allTypes = [...new Set([...registeredTypes, ...staticTypes])];
+      return allTypes;
+    }
     return [...this.definitions.keys()];
   }
 

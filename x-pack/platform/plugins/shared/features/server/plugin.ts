@@ -116,6 +116,9 @@ export class FeaturesPlugin
     // capabilities provider wil never be called before plugin start
     core.capabilities.registerProvider(() => this.capabilities!);
 
+    // LAZY LOADING POC: Store reference to registry for late unlocking
+    const featureRegistry = this.featureRegistry;
+
     return deepFreeze({
       registerKibanaFeature: this.featureRegistry.registerKibanaFeature.bind(this.featureRegistry),
       registerElasticsearchFeature: this.featureRegistry.registerElasticsearchFeature.bind(
@@ -128,6 +131,9 @@ export class FeaturesPlugin
       enableReportingUiCapabilities: this.enableReportingUiCapabilities.bind(this),
       featurePrivilegeIterator,
       subFeaturePrivilegeIterator,
+      // LAZY LOADING POC: Allow late feature registration for plugins loaded on-demand
+      _unlockRegistration: () => featureRegistry.unlockRegistration(),
+      _lockRegistration: () => featureRegistry.lockRegistration(),
     });
   }
 

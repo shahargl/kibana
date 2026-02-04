@@ -48,11 +48,31 @@ export class AnalyticsService {
   }
 
   public setup(): AnalyticsServiceSetup {
+    // LAZY LOADING POC: Track registered event types to make registration idempotent
+    const registeredEventTypes = new Set<string>();
+
     return {
       optIn: this.analyticsClient.optIn,
       registerContextProvider: this.analyticsClient.registerContextProvider,
       removeContextProvider: this.analyticsClient.removeContextProvider,
-      registerEventType: this.analyticsClient.registerEventType,
+      // LAZY LOADING POC: Wrap registerEventType to skip if already registered
+      registerEventType: (eventTypeOpts) => {
+        if (registeredEventTypes.has(eventTypeOpts.eventType)) {
+          // Already registered - skip silently for lazy loading
+          return;
+        }
+        try {
+          this.analyticsClient.registerEventType(eventTypeOpts);
+          registeredEventTypes.add(eventTypeOpts.eventType);
+        } catch (error) {
+          // If the error is about already registered, just ignore it
+          if (error instanceof Error && error.message.includes('is already registered')) {
+            registeredEventTypes.add(eventTypeOpts.eventType);
+            return;
+          }
+          throw error;
+        }
+      },
       registerShipper: this.analyticsClient.registerShipper,
       reportEvent: this.analyticsClient.reportEvent,
       telemetryCounter$: this.analyticsClient.telemetryCounter$,

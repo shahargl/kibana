@@ -102,9 +102,9 @@ export const TASK_METADATA_REGISTRY: Record<string, TaskMetadata> = {
   'actions:.observability-ai-assistant': { ownerPlugin: 'actions', title: 'Observability AI Assistant' },
 
   // Workflows Execution Engine
-  'workflow:run': { ownerPlugin: 'workflows_execution_engine', title: 'Run Workflow' },
-  'workflow:resume': { ownerPlugin: 'workflows_execution_engine', title: 'Resume Workflow' },
-  'workflow:scheduled': { ownerPlugin: 'workflows_execution_engine', title: 'Scheduled Workflow Execution' },
+  'workflow:run': { ownerPlugin: 'workflowsExecutionEngine', title: 'Run Workflow' },
+  'workflow:resume': { ownerPlugin: 'workflowsExecutionEngine', title: 'Resume Workflow' },
+  'workflow:scheduled': { ownerPlugin: 'workflowsExecutionEngine', title: 'Scheduled Workflow Execution' },
 
   // Maintenance Windows
   'maintenance-window:generate-events': { ownerPlugin: 'maintenance_windows', title: 'Maintenance window events generator task' },

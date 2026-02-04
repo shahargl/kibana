@@ -392,10 +392,17 @@ function buildClaimPartitions(opts: BuildClaimPartitionsOpts): ClaimPartitions {
 
   const { types, excludedTaskTypes, getCapacity, definitions } = opts;
   for (const type of types) {
-    const definition = definitions.get(type);
-    if (definition == null) continue;
-
     if (excludedTaskTypes.has(type)) continue;
+
+    const definition = definitions.get(type);
+    
+    // LAZY LOADING: If no definition exists but the type is in our list,
+    // treat it as an unlimited concurrency task. This allows us to claim
+    // tasks for plugins that haven't loaded yet.
+    if (definition == null) {
+      result.unlimitedTypes.push(type);
+      continue;
+    }
 
     if (definition.maxConcurrency == null) {
       result.unlimitedTypes.push(definition.type);
