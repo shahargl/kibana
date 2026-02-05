@@ -126,6 +126,17 @@ export class ConfigService {
   }
 
   /**
+   * LAZY LOADING: Replace an existing config schema for a path.
+   * This is used when a plugin is lazy-loaded and needs to replace
+   * a permissive schema that was registered at startup.
+   */
+  public replaceSchema(path: ConfigPath, schema: Type<unknown>) {
+    const namespace = pathToString(path);
+    this.schemas.set(namespace, schema);
+    this.markAsHandled(path);
+  }
+
+  /**
    * Register a {@link ConfigDeprecationProvider} to be used when validating and migrating the configuration
    */
   public addDeprecationProvider(path: ConfigPath, provider: ConfigDeprecationProvider) {

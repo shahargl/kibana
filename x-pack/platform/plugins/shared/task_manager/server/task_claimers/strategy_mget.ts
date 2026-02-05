@@ -92,9 +92,15 @@ async function claimAvailableTasks(opts: TaskClaimerOpts): Promise<ClaimOwnershi
   const stopTaskTimer = startTaskTimer();
 
   // get a list of candidate tasks to claim, with their version info
+  const allTaskTypes = new Set(definitions.getAllTypes());
+  // LAZY_POC: Log periodically if workflow types are included
+  const hasWorkflowTypes = [...allTaskTypes].filter((t) => t.includes('workflow'));
+  if (hasWorkflowTypes.length > 0) {
+    logger.debug(`[LAZY_POC_CLAIM] Searching with ${allTaskTypes.size} task types, including workflow types: ${hasWorkflowTypes.join(', ')}`);
+  }
   const { docs, versionMap } = await searchAvailableTasks({
     definitions,
-    taskTypes: new Set(definitions.getAllTypes()),
+    taskTypes: allTaskTypes,
     excludedTaskTypePatterns: excludedTaskTypes,
     taskStore,
     events$,

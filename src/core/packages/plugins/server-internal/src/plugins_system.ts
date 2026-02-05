@@ -38,6 +38,9 @@ const CORE_INFRASTRUCTURE_PLUGINS = new Set([
   'licensing',
   // Task Manager itself
   'taskManager',
+  // Task Manager Dependencies - registers encryptedSavedObjects client with taskManager
+  // CRITICAL: Without this, Task Manager cannot decrypt API keys stored in tasks
+  'taskManagerDependencies',
   // Required for encrypted task state
   'encryptedSavedObjects',
   // Required for task events
@@ -558,105 +561,118 @@ export class PluginsSystem<T extends PluginType> {
         featuresContract._unlockRegistration();
       }
 
-      const pluginSetupContext = createPluginSetupContext({
-        deps: this.setupDeps,
-        plugin,
-        runtimeResolver: this.runtimeResolver,
-      });
-
-      // LAZY LOADING POC: Load and register the plugin's config schema BEFORE init()
-      // This ensures config defaults are properly applied when the plugin reads config
+      // Use inner try/finally to ensure features are ALWAYS re-locked
       try {
-        const configDescriptor = plugin.getConfigDescriptor();
-        if (configDescriptor && configDescriptor.schema) {
-          this.log.debug(`[LAZY_POC] Registering config schema for "${pluginName}"`);
-          this.coreContext.configService.setSchema(plugin.configPath, configDescriptor.schema);
-        }
-      } catch (e) {
-        // Schema registration might fail if already registered with permissive schema
-        this.log.debug(`[LAZY_POC] Config schema registration for "${pluginName}": ${e}`);
-      }
-
-      // Initialize plugin (loads code)
-      await plugin.init();
-
-      // Setup plugin
-      let contract: unknown;
-      const contractOrPromise = plugin.setup(pluginSetupContext, pluginDepContracts);
-      if (isPromise(contractOrPromise)) {
-        const contractMaybe = await withTimeout<any>({
-          promise: contractOrPromise,
-          timeoutMs: 10 * Sec,
+        const pluginSetupContext = createPluginSetupContext({
+          deps: this.setupDeps,
+          plugin,
+          runtimeResolver: this.runtimeResolver,
         });
-        if (contractMaybe.timedout) {
-          throw new Error(`Lazy setup of "${pluginName}" timed out after 10sec`);
+
+        // LAZY LOADING POC: Load and register the plugin's config schema BEFORE init()
+        // This ensures config defaults are properly applied when the plugin reads config
+        try {
+          const configDescriptor = plugin.getConfigDescriptor();
+          if (configDescriptor && configDescriptor.schema) {
+            this.log.info(`[LAZY_POC] Replacing config schema for "${pluginName}" at path "${plugin.configPath}"`);
+            // Use replaceSchema to override the permissive schema that was registered at startup
+            (this.coreContext.configService as any).replaceSchema(
+              plugin.configPath,
+              configDescriptor.schema
+            );
+            // Verify the config can be read with the new schema
+            try {
+              const testConfig = this.coreContext.configService.atPathSync(plugin.configPath);
+              this.log.info(`[LAZY_POC] Config schema replaced for "${pluginName}", test read: ${JSON.stringify(testConfig).substring(0, 200)}`);
+            } catch (configErr) {
+              this.log.error(`[LAZY_POC] Config read test failed for "${pluginName}": ${configErr}`);
+            }
+          }
+        } catch (e) {
+          this.log.warn(`[LAZY_POC] Config schema replacement for "${pluginName}" failed: ${e}`);
         }
-        contract = contractMaybe.value;
-      } else {
-        contract = contractOrPromise;
-      }
 
-      // Store setup contract
-      this.pluginContracts.set(pluginName, contract);
-      this.satupPlugins.push(pluginName);
+        // Initialize plugin (loads code)
+        await plugin.init();
 
-      // Remove from deferred since it's now loaded
-      this.deferredPlugins.delete(pluginName);
-
-      // LAZY LOADING POC: Now call start() - this is critical for plugins to initialize their services
-      if (!this.startDeps) {
-        throw new Error(`Cannot lazy load "${pluginName}" - startDeps not available (startPlugins hasn't been called yet)`);
-      }
-
-      this.log.debug(`[LAZY_POC] Calling start() for lazy-loaded plugin "${pluginName}"`);
-      
-      // Build start dep contracts from already-started plugins
-      const pluginStartDepContracts = Array.from(pluginDeps).reduce((depContracts, dependencyName) => {
-        if (this.pluginStartContracts.has(dependencyName)) {
-          depContracts[dependencyName] = this.pluginStartContracts.get(dependencyName);
+        // Setup plugin
+        let contract: unknown;
+        const contractOrPromise = plugin.setup(pluginSetupContext, pluginDepContracts);
+        if (isPromise(contractOrPromise)) {
+          const contractMaybe = await withTimeout<any>({
+            promise: contractOrPromise,
+            timeoutMs: 10 * Sec,
+          });
+          if (contractMaybe.timedout) {
+            throw new Error(`Lazy setup of "${pluginName}" timed out after 10sec`);
+          }
+          contract = contractMaybe.value;
+        } else {
+          contract = contractOrPromise;
         }
-        return depContracts;
-      }, {} as Record<PluginName, unknown>);
 
-      const pluginStartContext = createPluginStartContext({
-        deps: this.startDeps,
-        plugin,
-        runtimeResolver: this.runtimeResolver,
-      });
+        // Store setup contract
+        this.pluginContracts.set(pluginName, contract);
+        this.satupPlugins.push(pluginName);
 
-      let startContract: unknown;
-      const startContractOrPromise = plugin.start(pluginStartContext, pluginStartDepContracts);
-      if (isPromise(startContractOrPromise)) {
-        const startContractMaybe = await withTimeout<any>({
-          promise: startContractOrPromise,
-          timeoutMs: 10 * Sec,
+        // Remove from deferred since it's now loaded
+        this.deferredPlugins.delete(pluginName);
+
+        // LAZY LOADING POC: Now call start() - this is critical for plugins to initialize their services
+        if (!this.startDeps) {
+          throw new Error(`Cannot lazy load "${pluginName}" - startDeps not available (startPlugins hasn't been called yet)`);
+        }
+
+        this.log.debug(`[LAZY_POC] Calling start() for lazy-loaded plugin "${pluginName}"`);
+        
+        // Build start dep contracts from already-started plugins
+        const pluginStartDepContracts = Array.from(pluginDeps).reduce((depContracts, dependencyName) => {
+          if (this.pluginStartContracts.has(dependencyName)) {
+            depContracts[dependencyName] = this.pluginStartContracts.get(dependencyName);
+          }
+          return depContracts;
+        }, {} as Record<PluginName, unknown>);
+
+        const pluginStartContext = createPluginStartContext({
+          deps: this.startDeps,
+          plugin,
+          runtimeResolver: this.runtimeResolver,
         });
-        if (startContractMaybe.timedout) {
-          throw new Error(`Lazy start of "${pluginName}" timed out after 10sec`);
+
+        let startContract: unknown;
+        const startContractOrPromise = plugin.start(pluginStartContext, pluginStartDepContracts);
+        if (isPromise(startContractOrPromise)) {
+          const startContractMaybe = await withTimeout<any>({
+            promise: startContractOrPromise,
+            timeoutMs: 10 * Sec,
+          });
+          if (startContractMaybe.timedout) {
+            throw new Error(`Lazy start of "${pluginName}" timed out after 10sec`);
+          }
+          startContract = startContractMaybe.value;
+        } else {
+          startContract = startContractOrPromise;
         }
-        startContract = startContractMaybe.value;
-      } else {
-        startContract = startContractOrPromise;
+
+        // Store start contract
+        this.pluginStartContracts.set(pluginName, startContract);
+
+        const memAfter = process.memoryUsage();
+        const memDelta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
+        const duration = Date.now() - startTime;
+
+        this.log.info(
+          `[LAZY_POC] Loaded "${pluginName}" on-demand (setup+start): ${memDelta.toFixed(2)}MB in ${duration}ms`
+        );
+
+        return contract;
+      } finally {
+        // LAZY LOADING POC: ALWAYS re-lock features registration, even on error
+        if (featuresContract && typeof featuresContract._lockRegistration === 'function') {
+          this.log.debug('[LAZY_POC] Re-locking features registration after lazy plugin loading');
+          featuresContract._lockRegistration();
+        }
       }
-
-      // Store start contract
-      this.pluginStartContracts.set(pluginName, startContract);
-
-      // LAZY LOADING POC: Re-lock features registration after plugin is loaded
-      if (featuresContract && typeof featuresContract._lockRegistration === 'function') {
-        this.log.debug('[LAZY_POC] Re-locking features registration after lazy plugin loading');
-        featuresContract._lockRegistration();
-      }
-
-      const memAfter = process.memoryUsage();
-      const memDelta = (memAfter.heapUsed - memBefore.heapUsed) / 1024 / 1024;
-      const duration = Date.now() - startTime;
-
-      this.log.info(
-        `[LAZY_POC] Loaded "${pluginName}" on-demand (setup+start): ${memDelta.toFixed(2)}MB in ${duration}ms`
-      );
-
-      return contract;
     } finally {
       this.loadingPlugins.delete(pluginName);
     }

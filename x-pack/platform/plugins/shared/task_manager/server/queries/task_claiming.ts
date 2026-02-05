@@ -145,6 +145,11 @@ export class TaskClaiming {
       this.logger.info(
         `[LAZY_POC] Including ${unregisteredTypes.length} unregistered task types for lazy loading`
       );
+      // Log some of the unregistered types for debugging
+      const workflowTypes = unregisteredTypes.filter((t) => t.includes('workflow'));
+      if (workflowTypes.length > 0) {
+        this.logger.info(`[LAZY_POC] Workflow task types included: ${workflowTypes.join(', ')}`);
+      }
     }
 
     // Add unregistered types to the unlimited batch (default behavior)

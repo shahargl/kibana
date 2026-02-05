@@ -426,9 +426,22 @@ export class TaskManagerRunner implements TaskRunner {
 
     try {
       const sanitizedTaskInstance = omit(modifiedContext.taskInstance, ['apiKey', 'userScope']);
+      
+      // LAZY_POC: Debug logging for API key presence
+      const hasApiKey = !!modifiedContext.taskInstance.apiKey;
+      const hasUserScope = !!modifiedContext.taskInstance.userScope;
+      this.logger.debug(
+        `[LAZY_POC_AUTH] Task ${this.taskType} "${this.id}" - hasApiKey: ${hasApiKey}, hasUserScope: ${hasUserScope}, spaceId: ${modifiedContext.taskInstance.userScope?.spaceId || 'default'}`
+      );
+      
       const fakeRequest = this.getFakeKibanaRequest(
         modifiedContext.taskInstance.apiKey,
         modifiedContext.taskInstance.userScope?.spaceId
+      );
+      
+      // LAZY_POC: Debug if fakeRequest was created
+      this.logger.debug(
+        `[LAZY_POC_AUTH] Task ${this.taskType} "${this.id}" - fakeRequest created: ${!!fakeRequest}, has auth header: ${!!(fakeRequest?.headers as any)?.authorization}`
       );
 
       const abortController = new AbortController();

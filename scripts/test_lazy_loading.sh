@@ -36,6 +36,22 @@ case "$1" in
       --logging.loggers='[{"name":"plugins.taskManager","level":"debug"}]' \
       2>&1 | tee kibana_lazy.log
     ;;
+
+  background_original)
+    echo "============================================================"
+    echo "Starting BACKGROUND TASKS node (port 5601) WITHOUT lazy loading"
+    echo "This is the baseline for memory comparison"
+    echo "============================================================"
+    echo ""
+    cd "$KIBANA_DIR"
+    pkill -f "node scripts/kibana" || true
+    sleep 2
+    # Run background tasks node WITHOUT lazy loading (normal behavior)
+    # Enable debug logging for taskManager to see polling activity and memory
+    node scripts/kibana --dev \
+      --logging.loggers='[{"name":"plugins.taskManager","level":"debug"}]' \
+      2>&1 | tee kibana_original.log
+    ;;
     
   ui)
     echo "============================================================"
@@ -63,18 +79,25 @@ case "$1" in
     ;;
     
   *)
-    echo "Usage: $0 {background|ui|stop}"
+    echo "Usage: $0 {background|background_original|ui|stop}"
     echo ""
-    echo "  background  - Start background tasks node with lazy loading (port 5601)"
-    echo "  ui          - Start UI-only node (port 5602)"  
-    echo "  stop        - Stop all Kibana instances"
+    echo "  background          - Start background tasks node with lazy loading (port 5601)"
+    echo "  background_original - Start background tasks node WITHOUT lazy loading (baseline)"
+    echo "  ui                  - Start UI-only node (port 5610)"  
+    echo "  stop                - Stop all Kibana instances"
     echo ""
     echo "Test procedure:"
     echo "  1. Terminal 1: $0 background"
     echo "  2. Terminal 2: $0 ui"
-    echo "  3. Open http://localhost:5602"
+    echo "  3. Open http://localhost:5610"
     echo "  4. Create a rule in Stack Management > Rules"
     echo "  5. Watch Terminal 1 for [LAZY_POC] logs"
+    echo ""
+    echo "Memory comparison:"
+    echo "  1. Run: $0 background_original"
+    echo "  2. Note memory from logs (kibana_original.log)"
+    echo "  3. Stop and run: $0 background"
+    echo "  4. Compare memory from logs (kibana_lazy.log)"
     exit 1
     ;;
 esac

@@ -542,6 +542,14 @@ export class ActionsPlugin
     const getActionsClientWithRequest = async (request: KibanaRequest) => {
       throwIfCannotEncrypt();
 
+      // LAZY_POC: Debug logging for actions client creation
+      const authHeader = (request.headers as Record<string, string | string[] | undefined>)?.authorization;
+      const hasAuth = !!authHeader;
+      const authType = hasAuth ? (typeof authHeader === 'string' ? authHeader.split(' ')[0] : 'array') : 'none';
+      this.logger.debug(
+        `[LAZY_POC_ACTIONS] getActionsClientWithRequest - hasAuth: ${hasAuth}, authType: ${authType}, isFakeRequest: ${request.isFakeRequest}`
+      );
+
       const unsecuredSavedObjectsClient = getUnsecuredSavedObjectsClient(
         core.savedObjects,
         request
