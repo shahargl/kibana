@@ -816,7 +816,7 @@ export function convertToWorkflowGraph(
   return finalGraph;
 }
 
-function resolveWorklfowSettings(
+export function resolveWorklfowSettings(
   workflowSettings?: WorkflowSettings,
   defaultSettings?: WorkflowSettings
 ): WorkflowSettings | undefined {

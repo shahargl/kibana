@@ -1192,6 +1192,42 @@ describe('WorkflowContextManager', () => {
       });
     });
 
+    it('should deep merge nested objects when same key is set by multiple data.set steps', () => {
+      testContainer.workflowExecutionState.getAllStepExecutions = jest.fn().mockReturnValue([
+        {
+          stepType: 'data.set',
+          status: 'completed',
+          output: {
+            user: {
+              id: '123',
+              name: 'John',
+            },
+          },
+          globalExecutionIndex: 1,
+        } as unknown as EsWorkflowStepExecution,
+        {
+          stepType: 'data.set',
+          status: 'completed',
+          output: {
+            user: {
+              email: 'john@example.com',
+            },
+          },
+          globalExecutionIndex: 2,
+        } as unknown as EsWorkflowStepExecution,
+      ]);
+
+      const variables = testContainer.underTest.getVariables();
+
+      expect(variables).toEqual({
+        user: {
+          id: '123',
+          name: 'John',
+          email: 'john@example.com',
+        },
+      });
+    });
+
     it('should be called by getContext and include variables in context', () => {
       testContainer.workflowExecutionState.getAllStepExecutions = jest.fn().mockReturnValue([
         {

@@ -15,6 +15,7 @@ export class WorkflowEditorPage {
   public saveButton: Locator;
   public runButton: Locator;
   public validationErrorsAccordion: Locator;
+  public workflowDetailEnabledToggle: Locator;
 
   constructor(private readonly page: ScoutPage) {
     this.yamlEditor = this.page.testSubj.locator('workflowYamlEditor');
@@ -22,6 +23,9 @@ export class WorkflowEditorPage {
     this.runButton = this.page.testSubj.locator('runWorkflowHeaderButton');
     this.validationErrorsAccordion = this.page.testSubj.locator(
       'workflowYamlEditorValidationErrorsList'
+    );
+    this.workflowDetailEnabledToggle = this.page.testSubj.locator(
+      'workflowDetailHeaderEnabledToggle'
     );
   }
 
@@ -73,6 +77,28 @@ export class WorkflowEditorPage {
    */
   async setYamlEditorValue(value: string): Promise<void> {
     await this.setEditorValue(this.yamlEditor, value);
+  }
+
+  /**
+   * Get the current value of the YAML editor
+   */
+  async getYamlEditorValue(): Promise<string> {
+    const uri = await this.yamlEditor.locator('.monaco-editor[data-uri]').getAttribute('data-uri');
+    if (!uri) {
+      throw new Error('Editor data-uri not found');
+    }
+    return this.page.evaluate(({ modelUri }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const monacoEnv = (window as any).MonacoEnvironment;
+      if (!monacoEnv?.monaco?.editor) {
+        throw new Error('MonacoEnvironment.monaco.editor is not available');
+      }
+      const editorModel = monacoEnv.monaco.editor.getModel(modelUri);
+      if (!editorModel) {
+        throw new Error('Editor not found');
+      }
+      return editorModel.getValue();
+    }, { modelUri: uri });
   }
 
   /**

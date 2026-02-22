@@ -165,4 +165,13 @@ describe('buildElasticsearchRequest', () => {
     expect(result.path).toBe('/test-index/_doc');
     expect(result.body).toEqual({ name: 'Yellowstone' });
   });
+
+  it('should not throw when elasticsearch.index has document key but value is undefined', () => {
+    expect(() =>
+      buildElasticsearchRequest('elasticsearch.index', {
+        index: 'test-index',
+        document: undefined,
+      })
+    ).not.toThrow();
+  });
 });

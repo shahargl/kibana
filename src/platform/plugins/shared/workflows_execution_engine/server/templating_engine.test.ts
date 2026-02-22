@@ -512,6 +512,71 @@ describe('WorkflowTemplatingEngine', () => {
     });
   });
 
+  describe('${{ }} edge cases', () => {
+    it('should handle two consecutive ${{ }} expressions as raw value, not string', () => {
+      const obj = {
+        combined: '${{ inputs.a }}${{ inputs.b }}',
+      };
+      const context = {
+        inputs: {
+          a: [1, 2],
+          b: [3, 4],
+        },
+      };
+
+      const rendered = templatingEngine.render(obj, context);
+
+      // The string starts with ${{ and ends with }} so it matches the ${{ }} pattern
+      // But it contains TWO expressions — the second ${{ should not be treated as part of the first
+      // Expected: either a string concatenation "1,23,4" or an error
+      // NOT: the raw value of just inputs.a (ignoring the second expression)
+      expect(rendered.combined).not.toEqual([1, 2]);
+    });
+
+    it('should not treat "${{ expr }} trailing text" as raw expression', () => {
+      const obj = {
+        value: '${{ inputs.count }} items',
+      };
+      const context = {
+        inputs: { count: 5 },
+      };
+
+      const rendered = templatingEngine.render(obj, context);
+
+      // Does NOT end with }} so should be treated as regular string template
+      expect(typeof rendered.value).toBe('string');
+      expect(rendered.value).toBe('5 items');
+    });
+
+    it('should not treat "leading text ${{ expr }}" as raw expression', () => {
+      const obj = {
+        value: 'Total: ${{ inputs.count }}',
+      };
+      const context = {
+        inputs: { count: 42 },
+      };
+
+      const rendered = templatingEngine.render(obj, context);
+
+      expect(typeof rendered.value).toBe('string');
+      expect(rendered.value).toBe('Total: 42');
+    });
+
+    it('should handle ${{ }} with undefined variable gracefully', () => {
+      const obj = {
+        value: '${{ inputs.missing }}',
+      };
+      const context = {
+        inputs: {},
+      };
+
+      const rendered = templatingEngine.render(obj, context);
+
+      // Should return undefined or null, not throw
+      expect(rendered.value).toBeUndefined();
+    });
+  });
+
   describe('template engine restrictions', () => {
     describe('in-memory filesystem', () => {
       it('should reject file existence for any path', () => {

@@ -1256,4 +1256,56 @@ describe('convertToWorkflowGraph', () => {
       ]);
     });
   });
+
+  describe('duplicate step names', () => {
+    it('should produce distinct nodes for steps with the same name', () => {
+      const workflowDefinition = {
+        steps: [
+          {
+            name: 'duplicateStep',
+            type: 'slack',
+            connectorId: 'slack',
+            with: { message: 'First step' },
+          } as ConnectorStep,
+          {
+            name: 'duplicateStep',
+            type: 'slack',
+            connectorId: 'slack',
+            with: { message: 'Second step' },
+          } as ConnectorStep,
+        ],
+      } as Partial<WorkflowYaml>;
+
+      const executionGraph = convertToWorkflowGraph(workflowDefinition as any);
+      const nodes = executionGraph.nodes();
+
+      expect(nodes).toHaveLength(2);
+    });
+
+    it('should preserve both steps configuration when names are duplicated', () => {
+      const workflowDefinition = {
+        steps: [
+          {
+            name: 'duplicateStep',
+            type: 'slack',
+            connectorId: 'slack',
+            with: { message: 'First step' },
+          } as ConnectorStep,
+          {
+            name: 'duplicateStep',
+            type: 'slack',
+            connectorId: 'slack',
+            with: { message: 'Second step' },
+          } as ConnectorStep,
+        ],
+      } as Partial<WorkflowYaml>;
+
+      const executionGraph = convertToWorkflowGraph(workflowDefinition as any);
+      const allNodes = executionGraph.nodes().map((id) => executionGraph.node(id));
+
+      const messages = allNodes.map((n: any) => n.configuration.with.message);
+      expect(messages).toContain('First step');
+      expect(messages).toContain('Second step');
+    });
+  });
 });

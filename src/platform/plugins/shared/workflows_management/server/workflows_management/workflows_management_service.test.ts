@@ -1611,6 +1611,28 @@ steps:
       });
     });
 
+    it('should unschedule tasks when deleting workflows with scheduled triggers', async () => {
+      const mockTaskScheduler = {
+        unscheduleWorkflowTasks: jest.fn().mockResolvedValue(undefined),
+        scheduleWorkflowTask: jest.fn(),
+      };
+      service.setTaskScheduler(mockTaskScheduler as any);
+
+      mockEsClient.search.mockResolvedValue({
+        hits: {
+          hits: [mockWorkflowDocument],
+          total: { value: 1 },
+        },
+      } as any);
+      mockEsClient.bulk.mockResolvedValue({
+        items: [{ index: { _id: 'test-workflow-id', status: 200 } }],
+      } as any);
+
+      await service.deleteWorkflows(['test-workflow-id'], 'default');
+
+      expect(mockTaskScheduler.unscheduleWorkflowTasks).toHaveBeenCalledWith('test-workflow-id');
+    });
+
     it('should handle not found workflows gracefully', async () => {
       mockEsClient.search.mockResolvedValue({
         hits: {

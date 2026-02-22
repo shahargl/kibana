@@ -276,6 +276,7 @@ export const WorkflowDetailHeader = React.memo(
                   }
                 >
                   <EuiSwitch
+                    data-test-subj="workflowDetailHeaderEnabledToggle"
                     disabled={
                       !workflowId ||
                       isLoading ||

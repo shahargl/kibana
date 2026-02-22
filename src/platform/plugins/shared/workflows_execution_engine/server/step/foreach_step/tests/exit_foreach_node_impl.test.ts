@@ -83,6 +83,64 @@ describe('ExitForeachNodeImpl', () => {
     });
   });
 
+  describe('when next item is a falsy value (0, false, null, empty string)', () => {
+    it('should continue iterating when next item is 0', async () => {
+      (stepExecutionRuntime.getCurrentStepState as jest.Mock).mockReturnValue({
+        items: [1, 0, 2],
+        index: 0,
+        item: 1,
+        total: 3,
+      });
+
+      await underTest.run();
+
+      expect(wfExecutionRuntimeManager.navigateToNode).toHaveBeenCalledWith(node.startNodeId);
+      expect(stepExecutionRuntime.finishStep).not.toHaveBeenCalled();
+    });
+
+    it('should continue iterating when next item is false', async () => {
+      (stepExecutionRuntime.getCurrentStepState as jest.Mock).mockReturnValue({
+        items: [true, false, true],
+        index: 0,
+        item: true,
+        total: 3,
+      });
+
+      await underTest.run();
+
+      expect(wfExecutionRuntimeManager.navigateToNode).toHaveBeenCalledWith(node.startNodeId);
+      expect(stepExecutionRuntime.finishStep).not.toHaveBeenCalled();
+    });
+
+    it('should continue iterating when next item is empty string', async () => {
+      (stepExecutionRuntime.getCurrentStepState as jest.Mock).mockReturnValue({
+        items: ['hello', '', 'world'],
+        index: 0,
+        item: 'hello',
+        total: 3,
+      });
+
+      await underTest.run();
+
+      expect(wfExecutionRuntimeManager.navigateToNode).toHaveBeenCalledWith(node.startNodeId);
+      expect(stepExecutionRuntime.finishStep).not.toHaveBeenCalled();
+    });
+
+    it('should continue iterating when next item is null', async () => {
+      (stepExecutionRuntime.getCurrentStepState as jest.Mock).mockReturnValue({
+        items: ['a', null, 'b'],
+        index: 0,
+        item: 'a',
+        total: 3,
+      });
+
+      await underTest.run();
+
+      expect(wfExecutionRuntimeManager.navigateToNode).toHaveBeenCalledWith(node.startNodeId);
+      expect(stepExecutionRuntime.finishStep).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when no more items to process', () => {
     beforeEach(() => {
       (stepExecutionRuntime.getCurrentStepState as jest.Mock).mockReturnValue({

@@ -250,6 +250,38 @@ describe('evaluateKql', () => {
     });
   });
 
+  describe('null/undefined safety in nested path access', () => {
+    it('should return false when intermediate property is null', () => {
+      const kql = 'user.name: "John"';
+      expect(evaluateKql(kql, { user: null })).toBe(false);
+    });
+
+    it('should return false when intermediate property is undefined', () => {
+      const kql = 'user.name: "John"';
+      expect(evaluateKql(kql, { user: undefined })).toBe(false);
+    });
+
+    it('should return false when intermediate property is a primitive string', () => {
+      const kql = 'user.name: "John"';
+      expect(evaluateKql(kql, { user: 'not-an-object' })).toBe(false);
+    });
+
+    it('should return false when intermediate property is a number', () => {
+      const kql = 'user.name: "John"';
+      expect(evaluateKql(kql, { user: 42 })).toBe(false);
+    });
+
+    it('should return false for range when intermediate property is null', () => {
+      const kql = 'stats.count > 5';
+      expect(evaluateKql(kql, { stats: null })).toBe(false);
+    });
+
+    it('should return false for deeply nested null in path', () => {
+      const kql = 'a.b.c.d: "value"';
+      expect(evaluateKql(kql, { a: { b: null } })).toBe(false);
+    });
+  });
+
   describe('logical expressions', () => {
     it('should evaluate AND expressions correctly', () => {
       const kql = 'status: active and isActive: true';

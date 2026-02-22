@@ -40,4 +40,30 @@ steps:
     const json: any = [1, 2, 3];
     expect(() => stringifyWorkflowDefinition(json)).toThrow();
   });
+
+  it('should preserve YAML comments through parse-modify-stringify roundtrip', () => {
+    const originalYaml = `# This is my workflow
+name: test
+# A description comment
+description: test
+enabled: true
+steps:
+  - name: step1
+    type: noop
+    # Step comment
+    with:
+      message: Hello, world!
+`;
+    // Simulate the clone workflow roundtrip: parse YAML -> modify JSON -> stringify
+    const { parseDocument } = require('yaml');
+    const doc = parseDocument(originalYaml);
+    const json = doc.toJSON();
+    json.name = 'test-clone';
+
+    const result = stringifyWorkflowDefinition(json);
+
+    expect(result).toContain('# This is my workflow');
+    expect(result).toContain('# A description comment');
+    expect(result).toContain('# Step comment');
+  });
 });

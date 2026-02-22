@@ -10,6 +10,11 @@
 export { nationalParksWorkflow } from './national_parks_workflow';
 export { getCreateGetUpdateCaseWorkflowYaml } from './create_get_update_case';
 export {
+  getRichWorkflowForRoundtripYaml,
+  getDuplicateStepNamesYaml,
+  getManyStepsWorkflowYaml,
+} from './bug_hunt_workflows';
+export {
   getListTestWorkflowYaml,
   getTestRunWorkflowYaml,
   getWorkflowWithLoopYaml,
