@@ -18,6 +18,8 @@ import {
   selectStepExecutions,
 } from '../../../../entities/workflows/store';
 
+export const EXECUTION_ERROR_OWNER = 'workflow-execution-error';
+
 export const useStepDecorationsInExecution = (
   editor: monaco.editor.IStandaloneCodeEditor | null
 ) => {
@@ -86,6 +88,46 @@ export const useStepDecorationsInExecution = (
     });
     decorationsCollection?.set(decorations);
   }, [stepExecutions, decorationsCollection, workflowLookup, highlightedStepId]);
+
+  // Diagnostic markers for failed steps — shows as squiggly underline with
+  // selectable, copyable error text in the hover tooltip
+  useEffect(() => {
+    const model = editor?.getModel();
+    if (!model || !stepExecutions?.length || !workflowLookup?.steps) {
+      if (model) {
+        monaco.editor.setModelMarkers(model, EXECUTION_ERROR_OWNER, []);
+      }
+      return;
+    }
+
+    const markers: monaco.editor.IMarkerData[] = stepExecutions
+      .filter((se) => se.status === 'failed' && se.error?.message)
+      .map((se) => {
+        const stepInfo = workflowLookup.steps[se.stepId];
+        if (!stepInfo) {
+          return null;
+        }
+        const lineContent = model.getLineContent(stepInfo.lineStart);
+        return {
+          severity: monaco.MarkerSeverity.Error,
+          message: se.error?.message ?? 'Step execution failed',
+          startLineNumber: stepInfo.lineStart,
+          startColumn: 1,
+          endLineNumber: stepInfo.lineStart,
+          endColumn: lineContent.length + 1,
+          source: 'Workflow Execution',
+        };
+      })
+      .filter((m): m is monaco.editor.IMarkerData => m !== null);
+
+    monaco.editor.setModelMarkers(model, EXECUTION_ERROR_OWNER, markers);
+
+    return () => {
+      if (model) {
+        monaco.editor.setModelMarkers(model, EXECUTION_ERROR_OWNER, []);
+      }
+    };
+  }, [editor, stepExecutions, workflowLookup]);
 
   const { colors } = useEuiTheme().euiTheme;
   const styles = useMemo(

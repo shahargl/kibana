@@ -37,6 +37,7 @@ import {
   useTriggerTypeDecorations,
   useWorkflowIdDecorations,
 } from './decorations';
+import { EXECUTION_ERROR_OWNER } from './decorations/use_step_decorations_in_execution';
 import { useAgentBuilderIntegration } from './hooks/use_agent_builder_integration';
 import { useWorkflowYamlCompletionProvider } from './hooks/use_workflow_yaml_completion_provider';
 import { StepActions } from './step_actions';
@@ -95,6 +96,7 @@ import {
   registerMonacoConnectorHandler,
   registerUnifiedHoverProvider,
 } from '../lib/monaco_providers';
+import { registerStepDefinitionProvider } from '../lib/monaco_providers/step_definition_provider';
 import { insertStepSnippet } from '../lib/snippets/insert_step_snippet';
 import { insertTriggerSnippet } from '../lib/snippets/insert_trigger_snippet';
 import { useRegisterHoverCommands } from '../lib/use_register_hover_commands';
@@ -231,6 +233,8 @@ export const WorkflowYAMLEditor = ({
 
   const highlightedStepId = useSelector(selectHighlightedStepId);
   const workflowLookup = useSelector(selectEditorWorkflowLookup);
+  const workflowLookupRef = useRef(workflowLookup);
+  workflowLookupRef.current = workflowLookup;
 
   // Data
   const connectorsData = useAvailableConnectors();
@@ -436,6 +440,13 @@ export const WorkflowYAMLEditor = ({
         // Register the unified hover provider for API documentation and template expressions
         const hoverDisposable = registerUnifiedHoverProvider(providerConfig);
         disposablesRef.current.push(hoverDisposable);
+
+        // Register go-to-definition for step/consts/inputs/variables references (Cmd+Click)
+        const definitionDisposable = registerStepDefinitionProvider({
+          getWorkflowLookup: () => workflowLookupRef.current,
+          getYamlDocument: () => yamlDocumentRef.current,
+        });
+        disposablesRef.current.push(definitionDisposable);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -587,7 +598,11 @@ export const WorkflowYAMLEditor = ({
   );
 
   const options = useMemo(() => {
-    return { ...editorOptions, readOnly: isExecutionYaml };
+    return {
+      ...editorOptions,
+      readOnly: isExecutionYaml,
+      renderValidationDecorations: isExecutionYaml ? 'on' : ('editable' as const),
+    };
   }, [isExecutionYaml]);
 
   useEffect(() => {
@@ -597,7 +612,7 @@ export const WorkflowYAMLEditor = ({
     const setModelMarkers = monaco.editor.setModelMarkers;
     monaco.editor.setModelMarkers = function (model, owner, markers) {
       const editorUri = editorRef.current?.getModel()?.uri;
-      if (model.uri.path !== editorUri?.path) {
+      if (model.uri.path !== editorUri?.path || owner === EXECUTION_ERROR_OWNER) {
         setModelMarkers.call(monaco.editor, model, owner, markers);
         return;
       }
