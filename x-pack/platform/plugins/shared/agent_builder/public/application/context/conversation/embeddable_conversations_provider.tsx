@@ -74,12 +74,13 @@ export const EmbeddableConversationsProvider: React.FC<EmbeddableConversationsPr
   });
 
   const hasInitializedConversationIdRef = useRef(false);
+  const lastRequestedConversationIdRef = useRef<string | undefined>(undefined);
 
   const setConversationId = useCallback(
     (id?: string) => {
       if (currentProps.newConversation && id) {
         // reset new conversation flag when there is a valid id
-        setCurrentProps({ ...currentProps, newConversation: undefined });
+        setCurrentProps({ ...currentProps, conversationId: undefined, newConversation: undefined });
       }
       if (id !== persistedConversationId) {
         updatePersistedConversationId(id);
@@ -90,6 +91,9 @@ export const EmbeddableConversationsProvider: React.FC<EmbeddableConversationsPr
 
   const validateAndSetConversationId = useCallback(
     async (id: string) => {
+      if (id !== persistedConversationId) {
+        setConversationId(undefined);
+      }
       try {
         const conversation = await services.conversationsService.get({ conversationId: id });
         setConversationId(conversation.id ?? undefined);
@@ -97,27 +101,46 @@ export const EmbeddableConversationsProvider: React.FC<EmbeddableConversationsPr
         setConversationId(undefined);
       }
     },
-    [services.conversationsService, setConversationId]
+    [persistedConversationId, services.conversationsService, setConversationId]
   );
 
-  // One-time initialization per provider instance:
+  // Initializes and updates the active conversation:
   // - If newConversation flag is set, clears the conversation ID to start fresh.
+  // - If a specific conversationId is requested, validates and restores it.
   // - Otherwise, if there's a persisted conversation ID, validates and restores it.
   // - Otherwise, clears the conversation ID.
-  // Guarded by hasInitializedConversationIdRef to prevent re-running on subsequent renders.
+  // Persisted restoration is guarded to avoid re-running on every localStorage update, while
+  // explicit conversationId changes from sidebar callers are allowed to re-run.
   useEffect(() => {
-    if (hasInitializedConversationIdRef.current) return;
-
-    if (contextProps.newConversation) {
+    if (currentProps.newConversation) {
       setConversationId(undefined);
-    } else if (persistedConversationId) {
+      lastRequestedConversationIdRef.current = undefined;
+      hasInitializedConversationIdRef.current = true;
+      return;
+    }
+
+    if (currentProps.conversationId) {
+      if (lastRequestedConversationIdRef.current !== currentProps.conversationId) {
+        lastRequestedConversationIdRef.current = currentProps.conversationId;
+        validateAndSetConversationId(currentProps.conversationId);
+      }
+      hasInitializedConversationIdRef.current = true;
+      return;
+    }
+
+    if (hasInitializedConversationIdRef.current) {
+      return;
+    }
+
+    if (persistedConversationId) {
       validateAndSetConversationId(persistedConversationId);
     } else {
       setConversationId(undefined);
     }
     hasInitializedConversationIdRef.current = true;
   }, [
-    contextProps.newConversation,
+    currentProps.conversationId,
+    currentProps.newConversation,
     persistedConversationId,
     setConversationId,
     validateAndSetConversationId,
@@ -175,7 +198,12 @@ export const EmbeddableConversationsProvider: React.FC<EmbeddableConversationsPr
   }, []);
 
   const setAgentId = useCallback((id: string) => {
-    setCurrentProps((prev) => ({ ...prev, agentId: id, newConversation: true }));
+    setCurrentProps((prev) => ({
+      ...prev,
+      agentId: id,
+      conversationId: undefined,
+      newConversation: true,
+    }));
   }, []);
 
   const conversationContextValue = useMemo(

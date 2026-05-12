@@ -9,7 +9,7 @@
 
 import { EuiPanel } from '@elastic/eui';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from 'react-use/lib/useLocalStorage';
 
 import { useQueryClient } from '@kbn/react-query';
@@ -29,9 +29,11 @@ import {
 } from './workflow_pseudo_step_context';
 import { WorkflowStepExecutionDetails } from './workflow_step_execution_details';
 import { useWorkflowExecutionPolling } from '../../../entities/workflows/model/use_workflow_execution_polling';
+import { selectRuntimeConversationOpen } from '../../../entities/workflows/store/workflow_detail/selectors';
 import {
   HIGHLIGHTED_STEP_TRIGGER,
   setHighlightedStepId,
+  setRuntimeConversationOpen,
 } from '../../../entities/workflows/store/workflow_detail/slice';
 import { useWorkflowUrlState } from '../../../hooks/use_workflow_url_state';
 import { useChildWorkflowExecutions } from '../model/use_child_workflow_executions';
@@ -64,6 +66,7 @@ function assignSelectedStepId(
 export const WorkflowExecutionDetail: React.FC<WorkflowExecutionDetailProps> = React.memo(
   ({ executionId, onClose }) => {
     const dispatch = useDispatch();
+    const isRuntimeConversationOpen = useSelector(selectRuntimeConversationOpen);
     const { workflowExecution, error } = useWorkflowExecutionPolling(executionId);
     const queryClient = useQueryClient();
 
@@ -97,6 +100,16 @@ export const WorkflowExecutionDetail: React.FC<WorkflowExecutionDetailProps> = R
         setSelectedStepExecution(stepExecutionId);
       },
       [setSelectedStepExecution]
+    );
+
+    const handleStepExecutionClick = useCallback(
+      (stepExecutionId: string | null) => {
+        if (isRuntimeConversationOpen) {
+          dispatch(setRuntimeConversationOpen(false));
+        }
+        setSelectedStepExecutionId(stepExecutionId);
+      },
+      [dispatch, isRuntimeConversationOpen, setSelectedStepExecutionId]
     );
 
     const workflowDefinition = useMemo(() => {
@@ -257,48 +270,54 @@ export const WorkflowExecutionDetail: React.FC<WorkflowExecutionDetailProps> = R
       return lightweightStep;
     }, [workflowExecution, selectedStepExecutionId, lightweightStep, fullStepData]);
 
+    const executionPanel = (
+      <WorkflowExecutionPanel
+        definition={workflowDefinition}
+        execution={workflowExecution ?? null}
+        showBackButton={showBackButton}
+        error={error}
+        onClose={onClose}
+        onStepExecutionClick={handleStepExecutionClick}
+        selectedId={selectedStepExecutionId ?? null}
+        childExecutionsMap={childExecutions}
+        isLoadingChildExecutions={isLoadingChildExecutions}
+      />
+    );
+
     return (
       <EuiPanel paddingSize="none" color="plain" hasShadow={false} style={{ height: '100%' }}>
-        <ResizableLayout
-          fixedPanel={
-            <WorkflowExecutionPanel
-              definition={workflowDefinition}
-              execution={workflowExecution ?? null}
-              showBackButton={showBackButton}
-              error={error}
-              onClose={onClose}
-              onStepExecutionClick={setSelectedStepExecutionId}
-              selectedId={selectedStepExecutionId ?? null}
-              childExecutionsMap={childExecutions}
-              isLoadingChildExecutions={isLoadingChildExecutions}
-            />
-          }
-          fixedPanelSize={sidebarWidth}
-          onFixedPanelSizeChange={setSidebarWidth}
-          minFixedPanelSize={200}
-          fixedPanelOrder={ResizableLayoutOrder.Start}
-          flexPanel={
-            <WorkflowStepExecutionDetails
-              workflowExecutionId={executionId}
-              stepExecution={selectedStepExecution}
-              workflowExecutionDuration={workflowExecution?.duration ?? undefined}
-              isLoadingStepData={isLoadingStepData && !isPseudoStep}
-              workflowExecutionStatus={workflowExecution?.status}
-              resumeMessage={resumeMessage}
-              resumeSchema={resumeSchema}
-              shouldAutoResume={shouldAutoResume}
-              waitingStepExecutionId={waitingStepExecutionId}
-              childWorkflowExecution={selectedStepChildExecution}
-              parentWorkflowExecution={parentWorkflowExecution}
-            />
-          }
-          minFlexPanelSize={200}
-          mode={ResizableLayoutMode.Resizable}
-          direction={ResizableLayoutDirection.Horizontal}
-          resizeButtonClassName="workflowExecutionDetailResizeButton"
-          data-test-subj="WorkflowEditorWithExecutionDetailLayout"
-          className="workflowExecutionDetailResizableLayout"
-        />
+        {isRuntimeConversationOpen ? (
+          executionPanel
+        ) : (
+          <ResizableLayout
+            fixedPanel={executionPanel}
+            fixedPanelSize={sidebarWidth}
+            onFixedPanelSizeChange={setSidebarWidth}
+            minFixedPanelSize={200}
+            fixedPanelOrder={ResizableLayoutOrder.Start}
+            flexPanel={
+              <WorkflowStepExecutionDetails
+                workflowExecutionId={executionId}
+                stepExecution={selectedStepExecution}
+                workflowExecutionDuration={workflowExecution?.duration ?? undefined}
+                isLoadingStepData={isLoadingStepData && !isPseudoStep}
+                workflowExecutionStatus={workflowExecution?.status}
+                resumeMessage={resumeMessage}
+                resumeSchema={resumeSchema}
+                shouldAutoResume={shouldAutoResume}
+                waitingStepExecutionId={waitingStepExecutionId}
+                childWorkflowExecution={selectedStepChildExecution}
+                parentWorkflowExecution={parentWorkflowExecution}
+              />
+            }
+            minFlexPanelSize={200}
+            mode={ResizableLayoutMode.Resizable}
+            direction={ResizableLayoutDirection.Horizontal}
+            resizeButtonClassName="workflowExecutionDetailResizeButton"
+            data-test-subj="WorkflowEditorWithExecutionDetailLayout"
+            className="workflowExecutionDetailResizableLayout"
+          />
+        )}
       </EuiPanel>
     );
   }

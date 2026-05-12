@@ -49,6 +49,7 @@ const initialState: WorkflowDetailState = {
   loading: initialLoadingState,
   hasYamlSchemaValidationErrors: false,
   aiAssisted: false,
+  runtimeConversationOpen: false,
   connectorFlyout: {
     isOpen: false,
     connectorType: undefined,
@@ -136,6 +137,9 @@ const workflowDetailSlice = createSlice({
     setAiAssisted: (state, action: { payload: boolean }) => {
       state.aiAssisted = action.payload;
     },
+    setRuntimeConversationOpen: (state, action: { payload: boolean }) => {
+      state.runtimeConversationOpen = action.payload;
+    },
 
     // Connector flyout actions
     openCreateConnectorFlyout: (
@@ -206,6 +210,7 @@ export const {
   setActiveTab,
   setHasYamlSchemaValidationErrors,
   setAiAssisted,
+  setRuntimeConversationOpen,
   openCreateConnectorFlyout,
   openEditConnectorFlyout,
   closeConnectorFlyout,

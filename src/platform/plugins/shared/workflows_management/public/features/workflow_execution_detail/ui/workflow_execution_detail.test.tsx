@@ -7,12 +7,14 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { useQueryClient } from '@kbn/react-query';
 import type { WorkflowExecutionDto, WorkflowYaml } from '@kbn/workflows';
 import { ExecutionStatus } from '@kbn/workflows';
 import { WorkflowExecutionDetail } from './workflow_execution_detail';
+import { createMockStore } from '../../../entities/workflows/store/__mocks__/store.mock';
+import { setRuntimeConversationOpen } from '../../../entities/workflows/store/workflow_detail/slice';
 import {
   createMockStepExecutionDto,
   createMockWorkflowYaml,
@@ -54,14 +56,21 @@ jest.mock('./workflow_execution_panel', () => ({
     execution,
     error,
     showBackButton,
+    onStepExecutionClick,
   }: {
     execution: WorkflowExecutionDto | null;
     error: Error | null;
     showBackButton: boolean;
+    onStepExecutionClick: (stepExecutionId: string | null) => void;
   }) => (
     <div data-test-subj="execution-panel">
       <div data-test-subj="show-back-button">{String(showBackButton)}</div>
       <div data-test-subj="panel-execution-status">{execution?.status ?? 'no-execution'}</div>
+      <button
+        type="button"
+        data-test-subj="select-step-execution"
+        onClick={() => onStepExecutionClick('step-exec-1')}
+      />
     </div>
   ),
 }));
@@ -221,6 +230,42 @@ describe('WorkflowExecutionDetail', () => {
       );
 
       expect(mockSetSelectedStepExecution).toHaveBeenCalledWith('__overview');
+    });
+  });
+
+  describe('runtime conversation layout', () => {
+    it('hides step execution details while the runtime Agent Builder conversation is open', () => {
+      const store = createMockStore();
+      store.dispatch(setRuntimeConversationOpen(true));
+      mockPollingResult.workflowExecution = createMockExecution();
+      mockUrlState.selectedStepExecutionId = '__overview';
+
+      render(
+        <TestWrapper store={store}>
+          <WorkflowExecutionDetail executionId="exec-1" onClose={jest.fn()} />
+        </TestWrapper>
+      );
+
+      expect(screen.getByTestId('execution-panel')).toBeInTheDocument();
+      expect(screen.queryByTestId('step-details')).not.toBeInTheDocument();
+    });
+
+    it('restores step execution details when a user explicitly selects a step', () => {
+      const store = createMockStore();
+      store.dispatch(setRuntimeConversationOpen(true));
+      mockPollingResult.workflowExecution = createMockExecution();
+      mockUrlState.selectedStepExecutionId = '__overview';
+
+      render(
+        <TestWrapper store={store}>
+          <WorkflowExecutionDetail executionId="exec-1" onClose={jest.fn()} />
+        </TestWrapper>
+      );
+
+      fireEvent.click(screen.getByTestId('select-step-execution'));
+
+      expect(mockSetSelectedStepExecution).toHaveBeenCalledWith('step-exec-1');
+      expect(screen.getByTestId('step-details')).toBeInTheDocument();
     });
   });
 

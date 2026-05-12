@@ -22,6 +22,11 @@ import { isTriggerType } from '@kbn/workflows';
 import { useWorkflowsMonacoTheme, WORKFLOWS_MONACO_EDITOR_THEME } from '@kbn/workflows-ui';
 import type { z } from '@kbn/zod/v4';
 import { ActionsMenuButton } from './actions_menu_button';
+import type { AiStepConversation } from './ai_step_conversation';
+import {
+  getAiStepConversationFromExecutionOutput,
+  getAiStepConversationFromLiteralInput,
+} from './ai_step_conversation';
 import {
   useAlertTriggerDecorations,
   useConnectorTypeDecorations,
@@ -69,6 +74,7 @@ import {
   HIGHLIGHTED_STEP_TRIGGER,
   setHasYamlSchemaValidationErrors,
   setIsTestModalOpen,
+  setRuntimeConversationOpen,
 } from '../../../entities/workflows/store/workflow_detail/slice';
 import { ActionsMenuPopover } from '../../../features/actions_menu_popover';
 import type {
@@ -316,13 +322,66 @@ export const WorkflowYAMLEditor = ({
   }, [validationErrors, dispatch]);
 
   // Agent Builder integration for AI-assisted editing
-  const { openAgentChat, isAgentBuilderAvailable } = useAgentBuilderIntegration({
-    editorRef,
-    isEditorMounted,
-    workflowId: workflow?.id,
-    workflowName: workflow?.name ?? workflowDefinition?.name,
-    validationErrors,
-  });
+  const { openAgentChat, openAgentConversation, isAgentBuilderAvailable } =
+    useAgentBuilderIntegration({
+      editorRef,
+      isEditorMounted,
+      workflowId: workflow?.id,
+      workflowName: workflow?.name ?? workflowDefinition?.name,
+      validationErrors,
+    });
+
+  const [focusedAiStepConversation, setFocusedAiStepConversation] = useState<
+    AiStepConversation | undefined
+  >();
+
+  useEffect(() => {
+    return () => {
+      dispatch(setRuntimeConversationOpen(false));
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const resolveFocusedConversation = async () => {
+      setFocusedAiStepConversation(undefined);
+
+      if (!isAgentBuilderAvailable || !focusedStepInfo) {
+        return;
+      }
+
+      if (execution?.id) {
+        const stepExecutionData = await fetchStepExecutionDataRef.current(focusedStepInfo.stepId);
+        if (isCancelled) {
+          return;
+        }
+
+        const executionConversation = getAiStepConversationFromExecutionOutput(
+          focusedStepInfo,
+          stepExecutionData
+        );
+        if (executionConversation) {
+          setFocusedAiStepConversation(executionConversation);
+          return;
+        }
+      }
+
+      setFocusedAiStepConversation(getAiStepConversationFromLiteralInput(focusedStepInfo));
+    };
+
+    resolveFocusedConversation();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    execution?.id,
+    fetchStepExecutionDataRef,
+    focusedStepInfo,
+    isAgentBuilderAvailable,
+    stepExecutions,
+  ]);
 
   const handleErrorClick = useCallback((error: YamlValidationResult) => {
     if (!editorRef.current) {
@@ -613,6 +672,18 @@ export const WorkflowYAMLEditor = ({
     [closeActionsPopover]
   );
 
+  const handleContinueConversation = useCallback(
+    (conversation: AiStepConversation) => {
+      dispatch(setRuntimeConversationOpen(true));
+      openAgentConversation({
+        conversationId: conversation.conversationId,
+        agentId: conversation.agentId,
+        onClose: () => dispatch(setRuntimeConversationOpen(false)),
+      });
+    },
+    [dispatch, openAgentConversation]
+  );
+
   const editorCommands: EditorCommand[] = useMemo(
     () => [
       {
@@ -798,7 +869,11 @@ export const WorkflowYAMLEditor = ({
         style={positionStyles ?? {}}
         data-test-subj={`workflowStepActionsContainer-${focusedStepInfo?.stepId}`}
       >
-        <StepActions onStepRun={onStepRun} />
+        <StepActions
+          onStepRun={onStepRun}
+          aiStepConversation={focusedAiStepConversation}
+          onContinueConversation={handleContinueConversation}
+        />
       </div>
       {(isAgentBuilderAvailable || isDevelopment) && !isExecutionYaml ? (
         <div css={styles.agentBuilderSectionCss}>

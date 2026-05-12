@@ -35,8 +35,15 @@ interface OpenAgentChatOptions {
   autoSendInitialMessage?: boolean;
 }
 
+interface OpenAgentConversationOptions {
+  conversationId: string;
+  agentId?: string;
+  onClose?: () => void;
+}
+
 interface UseAgentBuilderIntegrationReturn {
   openAgentChat: (options?: OpenAgentChatOptions) => void;
+  openAgentConversation: (options: OpenAgentConversationOptions) => void;
   isAgentBuilderAvailable: boolean;
   proposalManager: ProposalManager | null;
 }
@@ -314,8 +321,25 @@ export const useAgentBuilderIntegration = ({
     ]
   );
 
+  const openAgentConversation = useCallback(
+    ({ conversationId, agentId, onClose }: OpenAgentConversationOptions) => {
+      if (!agentBuilder || !isExperimentalEnabled) {
+        return;
+      }
+
+      const { chatRef } = agentBuilder.openChat({
+        conversationId,
+        agentId,
+        ...(onClose ? { onClose } : {}),
+      });
+      chatRefHandle.current = chatRef;
+    },
+    [agentBuilder, isExperimentalEnabled]
+  );
+
   return {
     openAgentChat,
+    openAgentConversation,
     isAgentBuilderAvailable: agentBuilder != null && isExperimentalEnabled,
     proposalManager: proposalManagerRef.current,
   };

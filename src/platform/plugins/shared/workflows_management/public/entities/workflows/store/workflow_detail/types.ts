@@ -63,6 +63,8 @@ export interface WorkflowDetailState {
   hasYamlSchemaValidationErrors: boolean;
   /** Whether the user has accepted at least one AI proposal in the current editing session */
   aiAssisted: boolean;
+  /** Whether a runtime Agent Builder conversation is open from a workflow step */
+  runtimeConversationOpen: boolean;
   /** Connector flyout state */
   connectorFlyout: {
     isOpen: boolean;

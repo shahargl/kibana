@@ -67,6 +67,11 @@ export const selectAiAssisted = createSelector(
   (detail): boolean => detail.aiAssisted
 );
 
+export const selectRuntimeConversationOpen = createSelector(
+  selectDetail,
+  (detail): boolean => detail.runtimeConversationOpen
+);
+
 export const selectFocusedStepId = createSelector(selectDetail, (detail) => detail.focusedStepId);
 
 export const selectHighlightedStepId = createSelector(

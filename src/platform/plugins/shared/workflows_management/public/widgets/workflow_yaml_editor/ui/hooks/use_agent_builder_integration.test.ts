@@ -519,6 +519,63 @@ describe('useAgentBuilderIntegration', () => {
     });
   });
 
+  describe('openAgentConversation', () => {
+    it('opens an existing conversation without workflow authoring attachments', () => {
+      const agentBuilder = createMockAgentBuilder();
+      setupKibanaMock(agentBuilder);
+      const editor = createMockEditor(mockModel);
+
+      const { result } = renderHook(() =>
+        useAgentBuilderIntegration({
+          editorRef: { current: editor },
+          isEditorMounted: true,
+          workflowId: 'wf-456',
+          workflowName: 'Test Flow',
+        })
+      );
+
+      act(() => {
+        result.current.openAgentConversation({
+          conversationId: 'conversation-1',
+          agentId: 'agent-1',
+        });
+      });
+
+      expect(agentBuilder.openChat).toHaveBeenCalledWith({
+        conversationId: 'conversation-1',
+        agentId: 'agent-1',
+      });
+    });
+
+    it('passes the close handler for runtime conversation layout cleanup', () => {
+      const agentBuilder = createMockAgentBuilder();
+      setupKibanaMock(agentBuilder);
+      const editor = createMockEditor(mockModel);
+      const onClose = jest.fn();
+
+      const { result } = renderHook(() =>
+        useAgentBuilderIntegration({
+          editorRef: { current: editor },
+          isEditorMounted: true,
+        })
+      );
+
+      act(() => {
+        result.current.openAgentConversation({
+          conversationId: 'conversation-1',
+          agentId: 'agent-1',
+          onClose,
+        });
+      });
+
+      expect(agentBuilder.openChat).toHaveBeenCalledWith({
+        conversationId: 'conversation-1',
+        agentId: 'agent-1',
+        onClose,
+      });
+    });
+  });
+
   describe('isAgentBuilderAvailable', () => {
     it('returns true when agentBuilder is available and experimental features enabled', () => {
       const agentBuilder = createMockAgentBuilder();

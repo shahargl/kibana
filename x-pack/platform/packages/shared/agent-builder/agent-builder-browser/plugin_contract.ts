@@ -27,6 +27,12 @@ export interface EmbeddableConversationProps {
   newConversation?: boolean;
 
   /**
+   * Existing conversation ID to open directly. When provided, the embeddable
+   * validates the conversation before restoring it.
+   */
+  conversationId?: string;
+
+  /**
    * Session tag for conversation context. Used to maintain separate conversation
    * histories for different parts of the application.
    *

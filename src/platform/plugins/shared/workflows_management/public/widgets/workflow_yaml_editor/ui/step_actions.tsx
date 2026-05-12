@@ -14,11 +14,13 @@ import {
   EuiFlexGroup,
   EuiFlexItem,
   EuiPopover,
+  EuiToolTip,
 } from '@elastic/eui';
 import { css } from '@emotion/react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { i18n } from '@kbn/i18n';
+import type { AiStepConversation } from './ai_step_conversation';
 import { RunStepButton } from './run_step_button';
 import {
   CopyDevToolsOption,
@@ -32,93 +34,125 @@ import {
 
 export interface StepActionsProps {
   onStepRun?: (params: { stepId: string; actionType: string }) => void;
+  aiStepConversation?: AiStepConversation;
+  onContinueConversation?: (conversation: AiStepConversation) => void;
 }
 
-export const StepActions = React.memo<StepActionsProps>(({ onStepRun }) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const focusedStepInfo = useSelector(selectEditorFocusedStepInfo);
-  const isExecutionsTab = useSelector(selectIsExecutionsTab);
+export const StepActions = React.memo<StepActionsProps>(
+  ({ onStepRun, aiStepConversation, onContinueConversation }) => {
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const focusedStepInfo = useSelector(selectEditorFocusedStepInfo);
+    const isExecutionsTab = useSelector(selectIsExecutionsTab);
 
-  const togglePopover = useCallback(() => {
-    setIsPopoverOpen((prev) => !prev);
-  }, []);
+    const togglePopover = useCallback(() => {
+      setIsPopoverOpen((prev) => !prev);
+    }, []);
 
-  const closePopover = useCallback(() => {
-    setIsPopoverOpen(false);
-  }, []);
+    const closePopover = useCallback(() => {
+      setIsPopoverOpen(false);
+    }, []);
 
-  const menuButton = useMemo(() => {
-    return (
-      <EuiButtonIcon
-        onClick={togglePopover}
-        data-test-subj="toggleConsoleMenu"
-        aria-label={i18n.translate('console.requestOptionsButtonAriaLabel', {
-          defaultMessage: 'Request options',
-        })}
-        iconType="boxesVertical"
-        iconSize="s"
-      />
-    );
-  }, [togglePopover]);
+    const menuButton = useMemo(() => {
+      return (
+        <EuiButtonIcon
+          onClick={togglePopover}
+          data-test-subj="toggleConsoleMenu"
+          aria-label={i18n.translate('console.requestOptionsButtonAriaLabel', {
+            defaultMessage: 'Request options',
+          })}
+          iconType="boxesVertical"
+          iconSize="s"
+        />
+      );
+    }, [togglePopover]);
 
-  const items = useMemo(() => {
+    const items = useMemo(() => {
+      if (!focusedStepInfo) {
+        return [];
+      }
+
+      const showDevToolsOption =
+        focusedStepInfo.stepType.startsWith('elasticsearch.') ||
+        focusedStepInfo.stepType.startsWith('kibana.');
+
+      return [
+        ...(showDevToolsOption
+          ? [<CopyDevToolsOption key="copy-as-console" onClick={closePopover} />]
+          : []),
+        <CopyWorkflowStepOption key="copy-workflow-step" onClick={closePopover} />,
+        <CopyWorkflowStepJsonOption key="copy-step-as-json" onClick={closePopover} />,
+      ];
+    }, [focusedStepInfo, closePopover]);
+
     if (!focusedStepInfo) {
-      return [];
+      return null;
     }
 
-    const showDevToolsOption =
-      focusedStepInfo.stepType.startsWith('elasticsearch.') ||
-      focusedStepInfo.stepType.startsWith('kibana.');
-
-    return [
-      ...(showDevToolsOption
-        ? [<CopyDevToolsOption key="copy-as-console" onClick={closePopover} />]
-        : []),
-      <CopyWorkflowStepOption key="copy-workflow-step" onClick={closePopover} />,
-      <CopyWorkflowStepJsonOption key="copy-step-as-json" onClick={closePopover} />,
-    ];
-  }, [focusedStepInfo, closePopover]);
-
-  if (!focusedStepInfo) {
-    return null;
+    return (
+      <EuiFlexGroup
+        gutterSize="xs"
+        alignItems="center"
+        responsive={false}
+        css={componentStyles.actionsRow}
+      >
+        {focusedStepInfo && !isExecutionsTab && (
+          <EuiFlexItem grow={false}>
+            <RunStepButton
+              onClick={() =>
+                onStepRun?.({
+                  stepId: focusedStepInfo.stepId as string,
+                  actionType: 'run',
+                })
+              }
+            />
+          </EuiFlexItem>
+        )}
+        {aiStepConversation && onContinueConversation && (
+          <EuiFlexItem grow={false}>
+            <EuiToolTip
+              content={i18n.translate(
+                'workflows.yamlEditor.stepActions.continueConversationTooltip',
+                {
+                  defaultMessage: 'Continue conversation',
+                }
+              )}
+            >
+              <EuiButtonIcon
+                onClick={() => onContinueConversation(aiStepConversation)}
+                data-test-subj="workflowContinueConversationButton"
+                aria-label={i18n.translate(
+                  'workflows.yamlEditor.stepActions.continueConversationAriaLabel',
+                  {
+                    defaultMessage: 'Continue conversation',
+                  }
+                )}
+                iconType="comment"
+                iconSize="s"
+              />
+            </EuiToolTip>
+          </EuiFlexItem>
+        )}
+        {!!items.length && (
+          <EuiFlexItem grow={false}>
+            <EuiPopover
+              id="contextMenu"
+              aria-label={i18n.translate('workflows.yamlEditor.stepActions.popoverAriaLabel', {
+                defaultMessage: 'Step actions',
+              })}
+              button={menuButton}
+              isOpen={isPopoverOpen}
+              closePopover={closePopover}
+              panelPaddingSize="none"
+              anchorPosition="downLeft"
+            >
+              <EuiContextMenuPanel items={items} data-test-subj="consoleMenu" />
+            </EuiPopover>
+          </EuiFlexItem>
+        )}
+      </EuiFlexGroup>
+    );
   }
-
-  return (
-    <EuiFlexGroup
-      gutterSize="xs"
-      alignItems="center"
-      responsive={false}
-      css={componentStyles.actionsRow}
-    >
-      {focusedStepInfo && !isExecutionsTab && (
-        <EuiFlexItem grow={false}>
-          <RunStepButton
-            onClick={() =>
-              onStepRun?.({
-                stepId: focusedStepInfo.stepId as string,
-                actionType: 'run',
-              })
-            }
-          />
-        </EuiFlexItem>
-      )}
-      {!!items.length && (
-        <EuiFlexItem grow={false}>
-          <EuiPopover
-            id="contextMenu"
-            button={menuButton}
-            isOpen={isPopoverOpen}
-            closePopover={closePopover}
-            panelPaddingSize="none"
-            anchorPosition="downLeft"
-          >
-            <EuiContextMenuPanel items={items} data-test-subj="consoleMenu" />
-          </EuiPopover>
-        </EuiFlexItem>
-      )}
-    </EuiFlexGroup>
-  );
-});
+);
 StepActions.displayName = 'StepActions';
 
 const componentStyles = {
