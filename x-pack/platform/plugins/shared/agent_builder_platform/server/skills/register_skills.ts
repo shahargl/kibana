@@ -15,4 +15,5 @@ export const registerSkills = (agentBuilder: AgentBuilderPluginSetup) => {
   agentBuilder.skills.register(visualizationCreationSkill);
   agentBuilder.skills.register(graphCreationSkill);
   agentBuilder.skills.register(UniversalSkill.fromDirectory(path.join(__dirname, 'esql')));
+  agentBuilder.skills.register(UniversalSkill.fromDirectory(path.join(__dirname, 'workflows')));
 };

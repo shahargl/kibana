@@ -126,6 +126,7 @@ export const AGENT_BUILDER_BUILTIN_SKILLS = [
   'ki-identification-management',
 
   // Platform – Workflows
+  'kibana-workflows',
   'workflow-authoring',
 
   // Security Solution
