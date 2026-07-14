@@ -161,6 +161,11 @@ export const LiquidSettingsSchema = z.object({
 export type LiquidSettings = z.infer<typeof LiquidSettingsSchema>;
 
 export const WorkflowSettingsSchema = z.object({
+  run_as: z
+    .string()
+    .min(1)
+    .optional()
+    .describe('ID of the space-scoped service account used to execute this workflow'),
   'on-failure': WorkflowOnFailureSchema.optional(),
   timezone: z.string().optional(), // Should follow IANA TZ format
   timeout: DurationSchema.optional(), // e.g., '5s', '1m', '2h'

@@ -111,6 +111,8 @@ const makeDeps = (
       asSystemUser: jest.fn(),
     } as any,
     ...depsOverrides,
+    validateExecutionIdentityBinding:
+      depsOverrides?.validateExecutionIdentityBinding ?? jest.fn().mockResolvedValue(undefined),
   };
   return { deps, client };
 };

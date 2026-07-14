@@ -84,6 +84,7 @@ export interface TaskPollingLifecycleOpts {
   apiKeyStrategy: ApiKeyStrategy;
   eventLogger: TaskEventLogger;
   enrichFakeRequest?: FakeRequestEnricher;
+  resolveExecutionIdentity?: (id: string, spaceId: string) => Promise<{ authorization: string }>;
 }
 
 export type TaskLifecycleEvent =
@@ -126,6 +127,7 @@ export class TaskPollingLifecycle implements ITaskEventEmitter<TaskLifecycleEven
   private apiKeyStrategy: ApiKeyStrategy;
   private currentTmUtilization$ = new BehaviorSubject<number>(0);
   private enrichFakeRequest?: FakeRequestEnricher;
+  private resolveExecutionIdentity?: TaskPollingLifecycleOpts['resolveExecutionIdentity'];
 
   private eventLogger: TaskEventLogger;
 
@@ -149,6 +151,7 @@ export class TaskPollingLifecycle implements ITaskEventEmitter<TaskLifecycleEven
     apiKeyStrategy,
     eventLogger,
     enrichFakeRequest,
+    resolveExecutionIdentity,
   }: TaskPollingLifecycleOpts) {
     this.logger = logger;
     this.middleware = middleware;
@@ -159,6 +162,7 @@ export class TaskPollingLifecycle implements ITaskEventEmitter<TaskLifecycleEven
     this.config = config;
     this.apiKeyStrategy = apiKeyStrategy;
     this.enrichFakeRequest = enrichFakeRequest;
+    this.resolveExecutionIdentity = resolveExecutionIdentity;
     const { poll_interval: pollInterval, claim_strategy: claimStrategy } = config;
     this.currentPollInterval = pollInterval;
     this.eventLogger = eventLogger;
@@ -287,6 +291,7 @@ export class TaskPollingLifecycle implements ITaskEventEmitter<TaskLifecycleEven
       apiKeyStrategy: this.apiKeyStrategy,
       eventLogger: this.eventLogger,
       enrichFakeRequest: this.enrichFakeRequest,
+      resolveExecutionIdentity: this.resolveExecutionIdentity,
     });
   };
 

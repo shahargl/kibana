@@ -17,6 +17,7 @@ import type {
   AlertingServerSetup,
 } from '@kbn/alerting-plugin/server';
 import type { CustomRequestHandlerContext, IRouter } from '@kbn/core/server';
+import type { ExecutionIdentityPluginStart } from '@kbn/execution-identity-plugin/server';
 import type { FeaturesPluginSetup } from '@kbn/features-plugin/server';
 
 import type { InboxPluginSetup } from '@kbn/inbox-plugin/server';
@@ -47,6 +48,7 @@ export interface WorkflowsServerPluginSetup {
 export interface WorkflowsServerPluginStart {}
 
 export interface WorkflowsServerPluginSetupDeps {
+  executionIdentity: void;
   features?: FeaturesPluginSetup;
   taskManager?: TaskManagerSetupContract;
   actions?: ActionsPluginSetupContract;
@@ -63,6 +65,7 @@ export interface WorkflowsServerPluginSetupDeps {
 }
 
 export interface WorkflowsServerPluginStartDeps {
+  executionIdentity: ExecutionIdentityPluginStart;
   taskManager: TaskManagerStartContract;
   workflowsExecutionEngine: WorkflowsExecutionEnginePluginStart;
   actions: ActionsPluginStartContract;

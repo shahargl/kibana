@@ -55,6 +55,7 @@ describe('WorkflowsManagementApi', () => {
       getWorkflowExecution: jest.fn(),
       markStepAsResponded: jest.fn(),
       getWaitingStepExecutionId: jest.fn(),
+      getExecutionIdentityRequest: jest.fn(),
       getWorkflowsExecutionEngine: () => mockWorkflowsExecutionEngine,
     } as any;
 
@@ -720,6 +721,49 @@ steps:
         'test-exec-id',
         'default',
         { includeOutput: true }
+      );
+    });
+
+    it('resolves run_as for every saved-workflow execution path', async () => {
+      const executionRequest = httpServerMock.createKibanaRequest();
+      mockWorkflowsService.getExecutionIdentityRequest.mockResolvedValue(executionRequest);
+      mockWorkflowsService.getWorkflow.mockResolvedValue({
+        id: 'workflow-123',
+        name: 'Test Workflow',
+        enabled: true,
+        valid: true,
+        yaml: 'name: Test Workflow',
+        definition: {
+          ...workflowDefinition,
+          settings: { run_as: 'identity-1' },
+        },
+      } as any);
+
+      await runWithTimers(
+        api.executeWorkflow({
+          workflowId: 'workflow-123',
+          inputs: {},
+          spaceId: 'team-a',
+          request: mockRequest,
+          waitForCompletion: false,
+          metadata: { agent_id: 'agent-1' },
+        })
+      );
+
+      expect(mockWorkflowsService.getExecutionIdentityRequest).toHaveBeenCalledWith(
+        'identity-1',
+        'team-a'
+      );
+      expect(mockWorkflowsExecutionEngine.executeWorkflow).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+          metadata: {
+            agent_id: 'agent-1',
+            executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+          },
+        }),
+        executionRequest
       );
     });
 

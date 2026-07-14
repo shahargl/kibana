@@ -8,6 +8,7 @@
  */
 
 import type { KibanaRequest, Logger } from '@kbn/core/server';
+import type { ExecutionIdentityPluginStart } from '@kbn/execution-identity-plugin/server';
 import {
   calculateNextRunAtFromSchedule,
   type TaskManagerStartContract,
@@ -31,7 +32,8 @@ export interface WorkflowTaskSchedulerParams {
 export class WorkflowTaskScheduler {
   constructor(
     private readonly logger: Logger,
-    private readonly taskManager: TaskManagerStartContract
+    private readonly taskManager: TaskManagerStartContract,
+    private readonly executionIdentity?: ExecutionIdentityPluginStart
   ) {}
 
   /**
@@ -45,10 +47,32 @@ export class WorkflowTaskScheduler {
   ): Promise<string[]> {
     const scheduledTriggers = getScheduledTriggers(workflow.definition?.triggers ?? []);
     const scheduledTaskIds: string[] = [];
+    const runAs = workflow.definition?.settings?.run_as;
+    if (runAs && !this.executionIdentity) {
+      throw new Error('Execution identity service is not available');
+    }
+    const executionIdentityBinding =
+      runAs && this.executionIdentity
+        ? await this.executionIdentity.getForBinding(request, runAs)
+        : undefined;
+    if (executionIdentityBinding && executionIdentityBinding.spaceId !== spaceId) {
+      throw new Error(
+        `Execution identity "${runAs}" belongs to space "${executionIdentityBinding.spaceId}", not "${spaceId}"`
+      );
+    }
+    const executionIdentity = executionIdentityBinding
+      ? { id: executionIdentityBinding.id, spaceId: executionIdentityBinding.spaceId }
+      : undefined;
 
     for (const trigger of scheduledTriggers) {
       try {
-        const taskId = await this.scheduleWorkflowTask(workflow.id, spaceId, trigger, request);
+        const taskId = await this.scheduleWorkflowTask(
+          workflow.id,
+          spaceId,
+          trigger,
+          request,
+          executionIdentity
+        );
         scheduledTaskIds.push(taskId);
         this.logger.debug(
           `Scheduled workflow task for workflow ${workflow.id}, trigger ${trigger.type}, task ID: ${taskId}`
@@ -74,7 +98,8 @@ export class WorkflowTaskScheduler {
     workflowId: string,
     spaceId: string,
     trigger: WorkflowTrigger,
-    request: KibanaRequest
+    request: KibanaRequest,
+    executionIdentity?: { id: string; spaceId: string }
   ): Promise<string> {
     const schedule = convertWorkflowScheduleToTaskSchedule(trigger);
     const taskId = `workflow:${workflowId}:${trigger.type}`;
@@ -105,21 +130,41 @@ export class WorkflowTaskScheduler {
       },
       scope: ['workflows'],
       enabled: true,
+      ...(executionIdentity ? { executionIdentity } : {}),
     };
 
     try {
-      // Use Task Manager's first-class API key support by passing the request.
-      // Task Manager will automatically create and manage the API key for user context.
-      const scheduledTask = await this.taskManager.schedule(taskInstance, { request });
+      const scheduledTask = await this.taskManager.schedule(
+        taskInstance,
+        executionIdentity ? {} : { request }
+      );
 
       return scheduledTask.id;
     } catch (err) {
       if ((err as { statusCode?: number }).statusCode === VERSION_CONFLICT_STATUS) {
+        const existingTask = await this.taskManager.get(taskId).catch((error) => {
+          if ((error as { statusCode?: number }).statusCode === NOT_FOUND_STATUS) {
+            return undefined;
+          }
+          throw error;
+        });
+        const existingIdentity = existingTask?.executionIdentity;
+        const identityChanged =
+          existingIdentity?.id !== executionIdentity?.id ||
+          existingIdentity?.spaceId !== executionIdentity?.spaceId;
+        if (identityChanged) {
+          await this.taskManager.removeIfExists(taskId);
+          const scheduledTask = await this.taskManager.schedule(
+            taskInstance,
+            executionIdentity ? {} : { request }
+          );
+          return scheduledTask.id;
+        }
+
         // Task already exists — update its schedule in place rather than failing.
         // This handles both interval and RRule schedule types.
         const result = await this.taskManager.bulkUpdateSchedules([taskId], schedule, {
-          request,
-          regenerateApiKey: true,
+          ...(executionIdentity ? {} : { request, regenerateApiKey: true }),
         });
         if (result.errors.length > 0) {
           const firstError = result.errors[0].error;
@@ -137,12 +182,6 @@ export class WorkflowTaskScheduler {
         // are not returned in either `tasks` or `errors`. Recreate the deterministic workflow task
         // so it picks up the latest schedule interval and refreshed execution credentials.
         if (!result.tasks.some((task) => task.id === taskId)) {
-          const existingTask = await this.taskManager.get(taskId).catch((error) => {
-            if ((error as { statusCode?: number }).statusCode === NOT_FOUND_STATUS) {
-              return undefined;
-            }
-            throw error;
-          });
           const recreatedTaskInstance = existingTask
             ? {
                 ...taskInstance,
@@ -156,7 +195,10 @@ export class WorkflowTaskScheduler {
               }
             : taskInstance;
           await this.taskManager.removeIfExists(taskId);
-          const scheduledTask = await this.taskManager.schedule(recreatedTaskInstance, { request });
+          const scheduledTask = await this.taskManager.schedule(
+            recreatedTaskInstance,
+            executionIdentity ? {} : { request }
+          );
           this.logger.debug(
             `Recreated scheduled task for workflow ${workflowId} after in-place update was skipped`
           );

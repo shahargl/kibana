@@ -25,6 +25,7 @@ export const apiKeysMock = {
       uiam: {
         grant: jest.fn(),
         invalidate: jest.fn(),
+        invalidateWithApiKey: jest.fn(),
         convert: jest.fn(),
       },
     }),

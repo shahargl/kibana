@@ -45,11 +45,13 @@ describe('WorkflowsPlugin', () => {
     const coreSetup = coreMock.createSetup();
 
     plugin.setup(coreSetup, {
+      executionIdentity: undefined,
       spaces: { spacesService: { getActiveSpace: jest.fn() } } as any,
       workflowsExtensions: workflowsExtensionsMock.createSetup(),
     });
 
     const start = plugin.start(coreMock.createStart(), {
+      executionIdentity: {} as any,
       taskManager: {} as any,
       workflowsExecutionEngine: {} as any,
       actions: {} as any,

@@ -95,7 +95,13 @@ export interface TaskManagerSetupContract {
   registerTaskDefinitions: (taskDefinitions: TaskDefinitionRegistry) => void;
   registerCanEncryptedSavedObjects: (canEncrypt: boolean) => void;
   registerTaskEventLogger: (logger: TaskEventLogger) => void;
+  registerExecutionIdentityResolver: (resolver: ExecutionIdentityResolver) => void;
 }
+
+export type ExecutionIdentityResolver = (
+  id: string,
+  spaceId: string
+) => Promise<{ authorization: string }>;
 
 export type TaskManagerStartContract = Pick<
   TaskScheduling,
@@ -167,6 +173,7 @@ export class TaskManagerPlugin
   private startContract?: TaskManagerStartContract;
   private uiamApiKeyProvisioningTask?: UiamApiKeyProvisioningTask;
   private enrichFakeRequest?: FakeRequestEnricher;
+  private executionIdentityResolver?: ExecutionIdentityResolver;
 
   constructor(private readonly initContext: PluginInitializerContext) {
     this.initContext = initContext;
@@ -355,6 +362,9 @@ export class TaskManagerPlugin
       registerTaskEventLogger: (logger: TaskEventLogger) => {
         this.taskEventLogger = logger;
       },
+      registerExecutionIdentityResolver: (resolver: ExecutionIdentityResolver) => {
+        this.executionIdentityResolver = resolver;
+      },
     };
   }
 
@@ -466,6 +476,7 @@ export class TaskManagerPlugin
         apiKeyStrategy,
         eventLogger: this.taskEventLogger!,
         enrichFakeRequest,
+        resolveExecutionIdentity: this.executionIdentityResolver,
       });
     }
 

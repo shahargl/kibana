@@ -490,20 +490,30 @@ export class WorkflowsManagementApi {
     metadata?: Record<string, unknown>
   ): Promise<string> {
     const { event, ...manualInputs } = inputs;
+    const runAs = workflow.definition?.settings?.run_as;
+    const executionRequest = runAs
+      ? await this.workflowsService.getExecutionIdentityRequest(runAs, spaceId)
+      : request;
+    const executionMetadata = runAs
+      ? { ...metadata, executionIdentity: { id: runAs, spaceId } }
+      : metadata;
     const context: Record<string, unknown> = {
       event,
       spaceId,
       inputs: manualInputs,
       triggeredBy,
     };
-    if (metadata) {
-      context.metadata = metadata;
+    if (runAs) {
+      context.executionIdentity = { id: runAs, spaceId };
+    }
+    if (executionMetadata) {
+      context.metadata = executionMetadata;
     }
     const workflowsExecutionEngine = await this.getWorkflowsExecutionEngine();
     const executeResponse = await workflowsExecutionEngine.executeWorkflow(
       workflow,
       context,
-      request
+      executionRequest
     );
     return executeResponse.workflowExecutionId;
   }

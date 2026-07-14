@@ -546,6 +546,7 @@ export class WorkflowCrudService {
       spaceId,
       triggerDefinitions,
     });
+    await this.validateExecutionIdentityBinding(definition, request, spaceId);
 
     let id = baseId;
     if (workflow.id) {
@@ -631,6 +632,7 @@ export class WorkflowCrudService {
           spaceId,
           triggerDefinitions,
         });
+        await this.validateExecutionIdentityBinding(prepared.definition, request, spaceId);
 
         validWorkflows.push({
           idx: i,
@@ -779,6 +781,17 @@ export class WorkflowCrudService {
     return { created, failed, historyActionsById };
   }
 
+  private async validateExecutionIdentityBinding(
+    definition: WorkflowYaml | undefined,
+    request: KibanaRequest,
+    spaceId: string
+  ): Promise<void> {
+    const runAs = definition?.settings?.run_as;
+    if (runAs) {
+      await this.deps.validateExecutionIdentityBinding(request, runAs, spaceId);
+    }
+  }
+
   private async applyWorkflowUpdate(
     id: string,
     workflow: Partial<EsWorkflow>,
@@ -808,6 +821,13 @@ export class WorkflowCrudService {
             }),
           }
         : undefined;
+    if (yamlResult?.updatedDataPatch.definition) {
+      await this.validateExecutionIdentityBinding(
+        yamlResult.updatedDataPatch.definition,
+        request,
+        spaceId
+      );
+    }
 
     const finalData = await this.readModifyWriteWorkflowDocument(id, spaceId, {
       getOptions: { includeDeleted: true, includeGlobal: true },

@@ -471,6 +471,7 @@ export class AuthenticationService {
           ? {
               grant: uiamAPIKeys.grant.bind(uiamAPIKeys),
               invalidate: uiamAPIKeys.invalidate.bind(uiamAPIKeys),
+              invalidateWithApiKey: uiamAPIKeys.invalidateWithApiKey.bind(uiamAPIKeys),
               convert: uiamAPIKeys.convert.bind(uiamAPIKeys),
             }
           : null,

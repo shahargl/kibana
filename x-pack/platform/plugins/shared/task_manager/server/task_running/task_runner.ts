@@ -133,6 +133,7 @@ type Opts = {
   apiKeyStrategy: ApiKeyStrategy;
   eventLogger: TaskEventLogger;
   enrichFakeRequest?: FakeRequestEnricher;
+  resolveExecutionIdentity?: (id: string, spaceId: string) => Promise<{ authorization: string }>;
 } & Pick<Middleware, 'beforeRun' | 'beforeMarkRunning'>;
 
 export enum TaskRunResult {
@@ -191,6 +192,7 @@ export class TaskManagerRunner implements TaskRunner {
   private eventLogger: TaskEventLogger;
   private isCancelled = false;
   private readonly enrichFakeRequest?: FakeRequestEnricher;
+  private readonly resolveExecutionIdentity?: Opts['resolveExecutionIdentity'];
 
   /**
    * Creates an instance of TaskManagerRunner.
@@ -220,6 +222,7 @@ export class TaskManagerRunner implements TaskRunner {
     apiKeyStrategy,
     eventLogger,
     enrichFakeRequest,
+    resolveExecutionIdentity,
   }: Opts) {
     this.instance = asPending(sanitizeInstance(instance));
     this.definitions = definitions;
@@ -243,6 +246,7 @@ export class TaskManagerRunner implements TaskRunner {
     this.apiKeyStrategy = apiKeyStrategy;
     this.eventLogger = eventLogger;
     this.enrichFakeRequest = enrichFakeRequest;
+    this.resolveExecutionIdentity = resolveExecutionIdentity;
   }
 
   /**
@@ -444,15 +448,31 @@ export class TaskManagerRunner implements TaskRunner {
             'uiamApiKey',
             'userScope',
           ]);
-          const apiKeyForRequest = this.apiKeyStrategy.getApiKeyForFakeRequest(
-            modifiedContext.taskInstance
-          );
-          const userProfileId = modifiedContext.taskInstance.userScope?.userProfileId;
-          const userName = modifiedContext.taskInstance.userScope?.userName;
+          const executionIdentity = modifiedContext.taskInstance.executionIdentity;
+          if (executionIdentity && !this.resolveExecutionIdentity) {
+            throw new Error('Execution identity resolver is not available');
+          }
+          const resolvedExecutionIdentity = executionIdentity
+            ? await this.resolveExecutionIdentity?.(executionIdentity.id, executionIdentity.spaceId)
+            : undefined;
+          if (executionIdentity && !resolvedExecutionIdentity) {
+            throw new Error(`Execution identity "${executionIdentity.id}" could not be resolved`);
+          }
+
+          const apiKeyForRequest = executionIdentity
+            ? undefined
+            : this.apiKeyStrategy.getApiKeyForFakeRequest(modifiedContext.taskInstance);
+          const userProfileId = executionIdentity
+            ? undefined
+            : modifiedContext.taskInstance.userScope?.userProfileId;
+          const userName = executionIdentity
+            ? undefined
+            : modifiedContext.taskInstance.userScope?.userName;
 
           const fakeRequest = buildTaskFakeRequest({
             apiKey: apiKeyForRequest,
-            spaceId: modifiedContext.taskInstance.userScope?.spaceId,
+            authorization: resolvedExecutionIdentity?.authorization,
+            spaceId: executionIdentity?.spaceId ?? modifiedContext.taskInstance.userScope?.spaceId,
             userProfileId,
             userName,
             enrichFakeRequest: this.enrichFakeRequest,

@@ -1233,6 +1233,62 @@ describe('TaskManagerRunner', () => {
       expect(createTaskRunnerParams.taskInstance).toEqual(instance);
     });
 
+    test('resolves an execution identity into the fake request authorization', async () => {
+      const createTaskRunnerFn = jest.fn();
+      const resolveExecutionIdentity = jest
+        .fn()
+        .mockResolvedValue({ authorization: 'ApiKey essu_managed_key' });
+      const { runner } = await readyToRunStageSetup({
+        instance: {
+          ...mockInstance(),
+          executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+        },
+        definitions: {
+          bar: {
+            title: 'Bar!',
+            createTaskRunner: createTaskRunnerFn,
+          },
+        },
+        resolveExecutionIdentity,
+      });
+
+      await runner.run();
+
+      expect(resolveExecutionIdentity).toHaveBeenCalledWith('identity-1', 'team-a');
+      expect(createTaskRunnerFn.mock.calls[0][0].fakeRequest).toEqual(
+        expect.objectContaining({
+          headers: expect.objectContaining({ authorization: 'ApiKey essu_managed_key' }),
+          spaceId: 'team-a',
+        })
+      );
+    });
+
+    test('fails closed when an execution identity cannot be resolved', async () => {
+      const { runner } = await readyToRunStageSetup({
+        instance: {
+          ...mockInstance(),
+          executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+        },
+        definitions: {
+          bar: {
+            title: 'Bar!',
+            createTaskRunner: jest.fn(),
+          },
+        },
+      });
+
+      const result = await runner.run();
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          tag: 'err',
+          error: expect.objectContaining({
+            error: new Error('Execution identity resolver is not available'),
+          }),
+        })
+      );
+    });
+
     test('calls enrichFakeRequest with the fake request and userProfileId when both are present', async () => {
       const enrichFakeRequest = jest.fn();
       const createTaskRunnerFn = jest.fn();
@@ -4034,6 +4090,7 @@ describe('TaskManagerRunner', () => {
     allowReadingInvalidState?: boolean;
     strategy?: string;
     enrichFakeRequest?: jest.Mock;
+    resolveExecutionIdentity?: (id: string, spaceId: string) => Promise<{ authorization: string }>;
   }
 
   function withAnyTiming(taskRun: TaskRun) {
@@ -4116,6 +4173,7 @@ describe('TaskManagerRunner', () => {
       apiKeyStrategy: new EsApiKeyStrategy(),
       eventLogger: eventLoggerMock,
       enrichFakeRequest: opts.enrichFakeRequest,
+      resolveExecutionIdentity: opts.resolveExecutionIdentity,
     });
 
     if (stage === TaskRunningStage.READY_TO_RUN) {

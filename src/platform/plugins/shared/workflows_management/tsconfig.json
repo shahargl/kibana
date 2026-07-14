@@ -16,6 +16,9 @@
   ],
   "kbn_references": [
     "@kbn/core",
+    "@kbn/core-http-server-utils",
+    "@kbn/core-spaces-common",
+    "@kbn/execution-identity-plugin",
     "@kbn/esql-language",
     "@kbn/esql-types",
     "@kbn/esql-utils",

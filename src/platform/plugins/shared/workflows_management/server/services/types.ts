@@ -40,6 +40,11 @@ export interface WorkflowCrudDeps extends WorkflowStorageDeps {
   executionQueryService: WorkflowExecutionQueryService;
   validationService: WorkflowValidationService;
   getCoreStart: () => CoreStart;
+  validateExecutionIdentityBinding: (
+    request: KibanaRequest,
+    identityId: string,
+    spaceId: string
+  ) => Promise<void>;
   changeHistoryService: IWorkflowChangeHistoryService;
 }
 

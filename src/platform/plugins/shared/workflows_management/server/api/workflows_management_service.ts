@@ -16,6 +16,8 @@ import type {
   KibanaRequest,
   Logger,
 } from '@kbn/core/server';
+import { kibanaRequestFactory } from '@kbn/core-http-server-utils';
+import { asSpaceId } from '@kbn/core-spaces-common';
 import type { PublicMethodsOf } from '@kbn/utility-types';
 import type {
   CreateWorkflowCommand,
@@ -180,7 +182,11 @@ export class WorkflowsService {
     this.coreStart = coreStart;
     this.pluginsStart = pluginsStart;
     this.esClient = coreStart.elasticsearch.client.asInternalUser;
-    this.taskScheduler = new WorkflowTaskScheduler(this.logger, pluginsStart.taskManager);
+    this.taskScheduler = new WorkflowTaskScheduler(
+      this.logger,
+      pluginsStart.taskManager,
+      pluginsStart.executionIdentity
+    );
 
     this.workflowStorage = createStorage({
       logger: this.logger,
@@ -224,6 +230,17 @@ export class WorkflowsService {
       executionQueryService: this.executionQueryService,
       validationService: this.validationService,
       getCoreStart: () => this.coreStart,
+      validateExecutionIdentityBinding: async (request, identityId, spaceId) => {
+        const binding = await this.pluginsStart.executionIdentity.getForBinding(
+          request,
+          identityId
+        );
+        if (binding.spaceId !== spaceId) {
+          throw new Error(
+            `Execution identity "${identityId}" belongs to space "${binding.spaceId}", not "${spaceId}"`
+          );
+        }
+      },
       changeHistoryService: this.changeHistoryService,
     });
 
@@ -253,6 +270,18 @@ export class WorkflowsService {
   public async getPluginsStart(): Promise<WorkflowsServerPluginStartDeps> {
     await this.ensureInitialized();
     return this.pluginsStart;
+  }
+
+  public async getExecutionIdentityRequest(
+    identityId: string,
+    spaceId: string
+  ): Promise<KibanaRequest> {
+    await this.ensureInitialized();
+    const resolved = await this.pluginsStart.executionIdentity.resolve(identityId, spaceId);
+    return kibanaRequestFactory({
+      headers: { authorization: resolved.authorization },
+      spaceId: asSpaceId(spaceId),
+    });
   }
 
   public async getWorkflow(

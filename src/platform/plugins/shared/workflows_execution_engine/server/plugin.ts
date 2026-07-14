@@ -120,6 +120,30 @@ const WORKFLOW_RESUME_TASK_MAX_ATTEMPTS = 3;
 /** Batch size for bulk cancel search_after paging (internal; not exposed on the public API). */
 const BULK_CANCEL_PAGE_SIZE = 10;
 
+const getExecutionIdentityAttribution = async (
+  executionIdentity: { id: string; spaceId: string } | undefined,
+  fakeRequest: KibanaRequest,
+  coreStart: CoreStart
+): Promise<{
+  executedBy: string;
+  metadata?: { executionIdentity: { id: string; spaceId: string } };
+}> => {
+  if (!executionIdentity) {
+    return {
+      executedBy: await getAuthenticatedUser(
+        fakeRequest,
+        coreStart.security,
+        coreStart.elasticsearch.client
+      ),
+    };
+  }
+
+  return {
+    executedBy: `service_account:${executionIdentity.id}`,
+    metadata: { executionIdentity },
+  };
+};
+
 type SetupDependencies = Pick<ContextDependencies, 'cloudSetup'>;
 
 export class WorkflowsExecutionEnginePlugin
@@ -551,6 +575,20 @@ export class WorkflowsExecutionEnginePlugin
 
               // Create workflow execution record
               const workflowCreatedAt = new Date();
+
+              // Extract user from fake request (contains API key of user who scheduled the workflow)
+              const span = apm.startSpan(
+                'workflow get authenticated user',
+                'workflow',
+                'execution'
+              );
+              const executionIdentityAttribution = await getExecutionIdentityAttribution(
+                taskInstance.executionIdentity,
+                fakeRequest,
+                coreStart
+              );
+              span?.end();
+
               const executionContext = {
                 workflowRunId: `scheduled-${Date.now()}`,
                 spaceId,
@@ -561,26 +599,14 @@ export class WorkflowsExecutionEnginePlugin
                   source: 'task-manager',
                 },
                 triggeredBy: 'scheduled',
+                metadata: executionIdentityAttribution.metadata,
               };
-
-              // Extract user from fake request (contains API key of user who scheduled the workflow)
-              const span = apm.startSpan(
-                'workflow get authenticated user',
-                'workflow',
-                'execution'
-              );
-              const executedBy = await getAuthenticatedUser(
-                fakeRequest,
-                coreStart.security,
-                coreStart.elasticsearch.client
-              );
-              span?.end();
 
               const workflowExecution = buildWorkflowExecutionDocument({
                 workflow: toWorkflowExecutionEngineModel(workflow),
                 context: executionContext,
                 defaultTriggeredBy: 'scheduled',
-                authenticatedUser: executedBy,
+                authenticatedUser: executionIdentityAttribution.executedBy,
                 now: workflowCreatedAt,
                 maxEventChainDepth: this.config.eventDriven.maxChainDepth,
                 getConcurrencyGroupKey: (execution) =>
@@ -750,10 +776,13 @@ export class WorkflowsExecutionEnginePlugin
 
       await ensureWorkflowEnabled(workflow, (context.spaceId as string | undefined) || 'default');
 
-      const authenticatedUser = await getAuthenticatedUser(
+      const executionIdentity = context.executionIdentity as
+        | { id: string; spaceId: string }
+        | undefined;
+      const { executedBy: authenticatedUser } = await getExecutionIdentityAttribution(
+        executionIdentity,
         request,
-        coreStart.security,
-        coreStart.elasticsearch.client
+        coreStart
       );
 
       const workflowExecution = await buildExecutionDocument({

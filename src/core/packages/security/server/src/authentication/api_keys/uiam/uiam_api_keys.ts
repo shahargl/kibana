@@ -40,6 +40,15 @@ export interface UiamAPIKeysType {
   ): Promise<InvalidateAPIKeyResult | null>;
 
   /**
+   * Invalidates a UIAM API key using the key's own credential.
+   * Intended for platform services that securely persist managed keys.
+   */
+  invalidateWithApiKey(params: {
+    id: string;
+    apiKey: string;
+  }): Promise<InvalidateAPIKeyResult | null>;
+
+  /**
    * Converts Elasticsearch API keys into UIAM API keys.
    *
    * @param keys The base64-encoded Elasticsearch API key values to convert.
@@ -61,7 +70,29 @@ export interface GrantUiamAPIKeyParams {
    * Optional expiration time for the API key
    */
   expiration?: string;
+
+  /**
+   * Optional exact project and application role assignments for the API key.
+   * When omitted, UIAM retains its existing behavior of deriving assignments
+   * from the caller.
+   */
+  projectRoleAssignments?: Partial<
+    Record<
+      UiamProjectType,
+      Array<{
+        projectIds: string[];
+        applicationRoles: string[];
+      }>
+    >
+  >;
 }
+
+export type UiamProjectType =
+  | 'elasticsearch'
+  | 'observability'
+  | 'security'
+  | 'workplaceai'
+  | 'vectordb';
 
 /**
  * Parameters for invalidating a UIAM API key.

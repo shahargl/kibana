@@ -12,6 +12,7 @@ import { asSpaceId } from '@kbn/core-spaces-common';
 
 interface BuildTaskFakeRequestOpts {
   apiKey?: string;
+  authorization?: string;
   spaceId?: string;
   userProfileId?: string;
   userName?: string;
@@ -27,14 +28,16 @@ interface BuildTaskFakeRequestOpts {
  */
 export const buildTaskFakeRequest = ({
   apiKey,
+  authorization,
   spaceId,
   userProfileId,
   userName,
   enrichFakeRequest,
 }: BuildTaskFakeRequestOpts): KibanaRequest | undefined => {
-  if (!apiKey) return;
+  const authorizationHeader = authorization ?? (apiKey ? `ApiKey ${apiKey}` : undefined);
+  if (!authorizationHeader) return;
 
-  const headers: Headers = { authorization: `ApiKey ${apiKey}` };
+  const headers: Headers = { authorization: authorizationHeader };
   const fakeRawRequest: FakeRawRequest = {
     headers,
     spaceId: asSpaceId(spaceId || 'default'),

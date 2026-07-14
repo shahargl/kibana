@@ -605,6 +605,54 @@ describe('UiamService', () => {
       });
     });
 
+    it('forwards exact project and application role assignments', async () => {
+      const mockResponse: GrantUiamApiKeyResponse = {
+        id: 'api-key-id',
+        key: 'encoded-key-value',
+        description: 'workflow-service-account',
+      };
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      });
+
+      await uiamService.grantApiKey(new HTTPAuthorizationHeader('Bearer', 'access-token'), {
+        name: 'workflow-service-account',
+        projectRoleAssignments: {
+          security: [
+            {
+              projectIds: ['origin-project', 'linked-project'],
+              applicationRoles: ['workflow_reader'],
+            },
+          ],
+        },
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://uiam.service/uiam/api/v1/api-keys/_grant',
+        expect.objectContaining({
+          body: JSON.stringify({
+            description: 'workflow-service-account',
+            internal: true,
+            role_assignments: {
+              limit: {
+                access: ['application'],
+                resource: ['project'],
+              },
+              project: {
+                security: [
+                  {
+                    project_ids: ['origin-project', 'linked-project'],
+                    application_roles: ['workflow_reader'],
+                  },
+                ],
+              },
+            },
+          }),
+        })
+      );
+    });
+
     it('throws error if granting API key fails with 400 status code', async () => {
       fetchSpy.mockResolvedValue({
         ok: false,

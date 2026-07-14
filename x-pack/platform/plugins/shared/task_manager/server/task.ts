@@ -312,6 +312,11 @@ export interface TaskUserScope {
   userName?: string;
 }
 
+export interface TaskExecutionIdentityReference {
+  id: string;
+  spaceId: string;
+}
+
 /*
  * A task instance represents all of the data required to store, fetch,
  * and execute a task.
@@ -432,6 +437,12 @@ export interface TaskInstance {
    * Meta data related to the API key associated with this task
    */
   userScope?: TaskUserScope;
+
+  /**
+   * Stable reference to a platform-managed execution identity. Task Manager
+   * resolves the credential at run time and never copies it into the task.
+   */
+  executionIdentity?: TaskExecutionIdentityReference;
 
   /*
    * Optionally override the priority defined in the task type for this specific task instance
@@ -580,6 +591,7 @@ export type SerializedConcreteTaskInstance = Omit<
   apiKey?: string;
   uiamApiKey?: string;
   userScope?: TaskUserScope;
+  executionIdentity?: TaskExecutionIdentityReference;
 };
 
 export type PartialSerializedConcreteTaskInstance = Partial<SerializedConcreteTaskInstance> & {

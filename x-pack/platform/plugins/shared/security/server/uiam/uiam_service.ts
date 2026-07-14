@@ -50,6 +50,16 @@ export interface GrantUiamApiKeyRequestBody {
       /** Resource types the API key can access (e.g., 'project'). */
       resource: string[];
     };
+    /** Exact assignments requested for a workload credential. */
+    project?: Partial<
+      Record<
+        keyof NonNullable<GrantUiamAPIKeyParams['projectRoleAssignments']>,
+        Array<{
+          project_ids: string[];
+          application_roles: string[];
+        }>
+      >
+    >;
   };
 }
 
@@ -485,6 +495,21 @@ export class UiamService implements UiamServicePublic {
             // limit access to projects  (i.e. not deployments, organizations, etc.)
             resource: ['project'],
           },
+          ...(params.projectRoleAssignments
+            ? {
+                project: Object.fromEntries(
+                  Object.entries(params.projectRoleAssignments).map(
+                    ([projectType, assignments]) => [
+                      projectType,
+                      assignments.map(({ projectIds, applicationRoles }) => ({
+                        project_ids: projectIds,
+                        application_roles: applicationRoles,
+                      })),
+                    ]
+                  )
+                ),
+              }
+            : {}),
         },
       };
 

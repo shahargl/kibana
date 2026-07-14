@@ -22,6 +22,13 @@ describe('buildTaskFakeRequest', () => {
     expect(fakeRequest!.isFakeRequest).toBe(true);
   });
 
+  it('uses an explicit authorization header for managed identities', () => {
+    const authorization = 'ApiKey essu_managed_key';
+    const fakeRequest = buildTaskFakeRequest({ apiKey, authorization });
+
+    expect(fakeRequest!.headers.authorization).toBe(authorization);
+  });
+
   it('uses the default space when none is provided', () => {
     const fakeRequest = buildTaskFakeRequest({ apiKey });
     expect(fakeRequest!.spaceId).toBe('default');

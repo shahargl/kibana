@@ -123,6 +123,59 @@ describe('WorkflowTaskScheduler', () => {
       );
     });
 
+    it('binds a managed execution identity without generating a user API key', async () => {
+      const mockTm = makeMockTaskManager();
+      const executionIdentity = {
+        getForBinding: jest
+          .fn()
+          .mockResolvedValue({ id: 'identity-1', name: 'Nightshift', spaceId: 'team-a' }),
+      };
+      const scheduler = new WorkflowTaskScheduler(mockLogger, mockTm, executionIdentity as any);
+      const workflow = makeWorkflow();
+      workflow.definition!.settings = { run_as: 'identity-1' };
+
+      await scheduler.scheduleWorkflowTasks(workflow, 'team-a', mockRequest);
+
+      expect(executionIdentity.getForBinding).toHaveBeenCalledWith(mockRequest, 'identity-1');
+      expect(mockTm.schedule).toHaveBeenCalledWith(
+        expect.objectContaining({
+          executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+        }),
+        {}
+      );
+    });
+
+    it('fails closed when run_as is configured but the identity service is unavailable', async () => {
+      const scheduler = new WorkflowTaskScheduler(mockLogger, makeMockTaskManager());
+      const workflow = makeWorkflow();
+      workflow.definition!.settings = { run_as: 'identity-1' };
+
+      await expect(
+        scheduler.scheduleWorkflowTasks(workflow, 'team-a', mockRequest)
+      ).rejects.toThrow('Execution identity service is not available');
+    });
+
+    it('rejects an execution identity from a different space', async () => {
+      const executionIdentity = {
+        getForBinding: jest
+          .fn()
+          .mockResolvedValue({ id: 'identity-1', name: 'Nightshift', spaceId: 'other-space' }),
+      };
+      const scheduler = new WorkflowTaskScheduler(
+        mockLogger,
+        makeMockTaskManager(),
+        executionIdentity as any
+      );
+      const workflow = makeWorkflow();
+      workflow.definition!.settings = { run_as: 'identity-1' };
+
+      await expect(
+        scheduler.scheduleWorkflowTasks(workflow, 'team-a', mockRequest)
+      ).rejects.toThrow(
+        'Execution identity "identity-1" belongs to space "other-space", not "team-a"'
+      );
+    });
+
     it('returns empty array when workflow has no scheduled triggers', async () => {
       const mockTm = makeMockTaskManager();
       const scheduler = new WorkflowTaskScheduler(mockLogger, mockTm);

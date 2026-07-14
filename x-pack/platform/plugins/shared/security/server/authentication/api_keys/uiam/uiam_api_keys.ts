@@ -155,6 +155,38 @@ export class UiamAPIKeys implements UiamAPIKeysType {
     }
   }
 
+  async invalidateWithApiKey({
+    id,
+    apiKey,
+  }: {
+    id: string;
+    apiKey: string;
+  }): Promise<InvalidateAPIKeyResult | null> {
+    if (!this.license.isEnabled()) {
+      return null;
+    }
+
+    try {
+      await this.uiam.revokeApiKey(id, apiKey);
+      return {
+        invalidated_api_keys: [id],
+        previously_invalidated_api_keys: [],
+        error_count: 0,
+      };
+    } catch (e) {
+      const errorMessage = `Failed to invalidate managed UIAM API key ${id}: ${getDetailedErrorMessage(
+        e
+      )}`;
+      this.logger.error(errorMessage);
+      return {
+        invalidated_api_keys: [],
+        previously_invalidated_api_keys: [],
+        error_count: 1,
+        error_details: [{ type: 'exception', reason: errorMessage }],
+      };
+    }
+  }
+
   /**
    * Converts Elasticsearch API keys into UIAM API keys.
    *

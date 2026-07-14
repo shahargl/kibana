@@ -130,3 +130,12 @@ export const taskSchemaV12 = taskSchemaV11.extends({
     })
   ),
 });
+
+export const taskSchemaV13 = taskSchemaV12.extends({
+  executionIdentity: schema.maybe(
+    schema.object({
+      id: schema.string(),
+      spaceId: schema.string(),
+    })
+  ),
+});
