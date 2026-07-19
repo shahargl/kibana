@@ -25,6 +25,7 @@ import { ActionsMenuButton } from './actions_menu_button';
 import {
   useAlertTriggerDecorations,
   useConnectorTypeDecorations,
+  useExecutionIdentityDecorations,
   useFocusedStepDecoration,
   useLineDifferencesDecorations,
   useStepDecorationsInExecution,
@@ -139,10 +140,23 @@ const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   suggestLineHeight: 25, // default 21 + 4px for padding
 };
 
+const runIfEditable = (readOnly: boolean, run: () => void): void => {
+  if (!readOnly) {
+    run();
+  }
+};
+
+const getIsReadOnly = (
+  explicitlyReadOnly: boolean,
+  isExecutionYaml: boolean,
+  isManagedWorkflow: boolean
+): boolean => explicitlyReadOnly || isExecutionYaml || isManagedWorkflow;
+
 export interface WorkflowYAMLEditorProps {
   highlightDiff?: boolean;
   onStepRun: (params: { stepId: string; actionType: string }) => void;
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  readOnly?: boolean;
   /**
    * When false, the editor is obscured by a peer layer (graph view). Used to
    * gate the highlighted-step scroll effect and skip accordion render work
@@ -172,6 +186,7 @@ export const WorkflowYAMLEditor = ({
   highlightDiff = false,
   onStepRun,
   editorRef: parentEditorRef,
+  readOnly = false,
   isActive = true,
   openActionsRef,
   onToggleEditorMode,
@@ -194,7 +209,7 @@ export const WorkflowYAMLEditor = ({
   const workflow = useSelector(selectWorkflow);
   const isExecutionYaml = useSelector(selectIsExecutionsTab);
   const isManagedWorkflow = workflow?.managed === true;
-  const isReadOnlyYaml = isExecutionYaml || isManagedWorkflow;
+  const isReadOnlyYaml = getIsReadOnly(readOnly, isExecutionYaml, isManagedWorkflow);
   const isReadOnlyYamlRef = useRef(isReadOnlyYaml);
   isReadOnlyYamlRef.current = isReadOnlyYaml;
   const onChange = useCallback(
@@ -385,7 +400,7 @@ export const WorkflowYAMLEditor = ({
         }
         saveYaml();
       },
-      run: () => dispatch(setIsTestModalOpen(true)),
+      run: () => runIfEditable(isReadOnlyYamlRef.current, () => dispatch(setIsTestModalOpen(true))),
       saveAndRun: () => {
         if (isSavingRef.current || isReadOnlyYamlRef.current) {
           return;
@@ -545,6 +560,12 @@ export const WorkflowYAMLEditor = ({
   });
 
   useWorkflowIdDecorations({
+    editor: editorRef.current,
+    yamlDocument: yamlDocument || null,
+    isEditorMounted,
+  });
+
+  useExecutionIdentityDecorations({
     editor: editorRef.current,
     yamlDocument: yamlDocument || null,
     isEditorMounted,

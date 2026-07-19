@@ -21,9 +21,9 @@ import type { Viewport } from '@xyflow/react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from 'react-use/lib/useLocalStorage';
+import type { monaco } from '@kbn/code-editor';
 import { useMemoCss } from '@kbn/css-utils/public/use_memo_css';
 import { i18n } from '@kbn/i18n';
-import type { monaco } from '@kbn/monaco';
 import { isMac } from '@kbn/shared-ux-utility';
 import {
   WORKFLOWS_EXPERIMENTAL_FEATURES_SETTING_ID,
@@ -75,9 +75,11 @@ const WorkflowVisualEditor = React.lazy(() =>
 
 interface WorkflowDetailEditorProps {
   highlightDiff?: boolean;
+  canUseRunAs?: boolean;
 }
 
-export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ highlightDiff }) => {
+export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>((props) => {
+  const { highlightDiff, canUseRunAs = true } = props;
   const styles = useMemoCss(componentStyles);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const openActionsRef = useRef<(() => void) | null>(null);
@@ -126,7 +128,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ hig
         return;
       }
 
-      if (!canExecuteWorkflow) {
+      if (!canExecuteWorkflow || !canUseRunAs) {
         return;
       }
 
@@ -170,6 +172,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ hig
       dispatch,
       notifications.toasts,
       canExecuteWorkflow,
+      canUseRunAs,
     ]
   );
 
@@ -205,24 +208,32 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ hig
   );
 
   const openTestModal = useCallback(() => {
+    if (!canUseRunAs) {
+      return;
+    }
     dispatch(setIsTestModalOpen(true));
-  }, [dispatch]);
+  }, [canUseRunAs, dispatch]);
 
   const { handleRunClick: handleRunClickWithUnsavedCheck, runConfirmationModal } =
     useRunWorkflowWithConfirmation(openTestModal);
 
-  const runWorkflowTooltipContent = useMemo(
-    () =>
-      getTestRunTooltipContent({
-        isExecutionsTab,
-        isValid: Boolean(isSyntaxValid),
-        canRunWorkflow: canExecuteWorkflow,
-        isSaving: Boolean(isSaving),
-      }),
-    [isExecutionsTab, isSyntaxValid, canExecuteWorkflow, isSaving]
-  );
+  const runWorkflowTooltipContent = useMemo(() => {
+    if (!canUseRunAs) {
+      return i18n.translate('workflows.workflowDetailEditor.executionIdentityUseDenied', {
+        defaultMessage:
+          'You cannot use this workflow service account because it has project roles that are not assigned to your current session.',
+      });
+    }
+    return getTestRunTooltipContent({
+      isExecutionsTab,
+      isValid: Boolean(isSyntaxValid),
+      canRunWorkflow: canExecuteWorkflow,
+      isSaving: Boolean(isSaving),
+    });
+  }, [canUseRunAs, isExecutionsTab, isSyntaxValid, canExecuteWorkflow, isSaving]);
 
-  const runDisabled = isExecutionsTab || !canExecuteWorkflow || !isSyntaxValid || isSaving;
+  const runDisabled =
+    isExecutionsTab || !canExecuteWorkflow || !canUseRunAs || !isSyntaxValid || isSaving;
 
   const testWorkflowButton = useMemo(
     () => (
@@ -362,6 +373,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ hig
                 highlightDiff={highlightDiff}
                 onStepRun={handleStepRun}
                 editorRef={editorRef}
+                readOnly={!canUseRunAs}
                 isActive={!showGraph}
                 hideEditorTools={isVisualEditorEnabled}
                 openActionsRef={openActionsRef}
@@ -377,6 +389,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>(({ hig
               <React.Suspense fallback={<EuiLoadingSpinner />}>
                 <WorkflowVisualEditor
                   onStepRun={handleStepRun}
+                  canUseRunAs={canUseRunAs}
                   direction={graphDirection}
                   defaultViewport={graphViewportRef.current}
                   onViewportChange={handleGraphViewportChange}

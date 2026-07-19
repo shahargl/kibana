@@ -50,6 +50,14 @@ export const selectWorkflowDefinition = createSelector(
   selectYamlComputed,
   (computed) => computed?.workflowDefinition
 );
+export const selectRunAsIdentityId = createSelector(
+  selectYamlComputed,
+  selectWorkflow,
+  (computed, workflow) =>
+    computed?.workflowDefinition === undefined
+      ? workflow?.definition?.settings?.run_as
+      : computed.workflowDefinition?.settings?.run_as
+);
 
 export const selectGraphBuildError = createSelector(
   selectYamlComputed,

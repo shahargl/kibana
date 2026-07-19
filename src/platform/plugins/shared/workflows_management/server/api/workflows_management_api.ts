@@ -492,7 +492,7 @@ export class WorkflowsManagementApi {
     const { event, ...manualInputs } = inputs;
     const runAs = workflow.definition?.settings?.run_as;
     const executionRequest = runAs
-      ? await this.workflowsService.getExecutionIdentityRequest(runAs, spaceId)
+      ? await this.workflowsService.getExecutionIdentityRequest(runAs, spaceId, request)
       : request;
     const executionMetadata = runAs
       ? { ...metadata, executionIdentity: { id: runAs, spaceId } }
@@ -730,11 +730,18 @@ export class WorkflowsManagementApi {
 
     const workflowJson = transformWorkflowYamlJsontoEsWorkflow(validation.parsedWorkflow);
     const { event, ...manualInputs } = inputs;
-    const context = {
+    const runAs = workflowJson.definition?.settings?.run_as;
+    const executionRequest = runAs
+      ? await this.workflowsService.getExecutionIdentityRequest(runAs, spaceId, request)
+      : request;
+    const context: Record<string, unknown> = {
       event,
       spaceId,
       inputs: manualInputs,
     };
+    if (runAs) {
+      context.executionIdentity = { id: runAs, spaceId };
+    }
     const workflowsExecutionEngine = await this.getWorkflowsExecutionEngine();
     const executeResponse = await workflowsExecutionEngine.executeWorkflow(
       toWorkflowExecutionEngineModel(
@@ -753,7 +760,7 @@ export class WorkflowsManagementApi {
         { isTestRun: true, isEphemeral: true }
       ),
       context,
-      request
+      executionRequest
     );
     return executeResponse.workflowExecutionId;
   }

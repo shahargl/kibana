@@ -49,6 +49,19 @@ export interface UiamAPIKeysType {
   }): Promise<InvalidateAPIKeyResult | null>;
 
   /**
+   * Checks whether the current user can use a managed UIAM API key.
+   */
+  canUse(request: KibanaRequest, id: string): Promise<CanUseUiamAPIKeyResult | null>;
+
+  /**
+   * Lists application roles the current user may delegate across the requested projects.
+   */
+  delegableRoles(
+    request: KibanaRequest,
+    params: DelegableUiamRolesParams
+  ): Promise<DelegableUiamRolesResult | null>;
+
+  /**
    * Converts Elasticsearch API keys into UIAM API keys.
    *
    * @param keys The base64-encoded Elasticsearch API key values to convert.
@@ -76,16 +89,30 @@ export interface GrantUiamAPIKeyParams {
    * When omitted, UIAM retains its existing behavior of deriving assignments
    * from the caller.
    */
-  projectRoleAssignments?: Partial<
-    Record<
-      UiamProjectType,
-      Array<{
-        projectIds: string[];
-        applicationRoles: string[];
-      }>
-    >
-  >;
+  projectRoleAssignments?: UiamProjectRoleAssignments;
+
+  /**
+   * Explicit project application roles allowed to use this delegated key through
+   * trusted Kibana paths. When omitted, use is authorized by role containment
+   * against the key's granted role assignments.
+   */
+  allowedRoleAssignments?: UiamProjectRoleAssignments;
+
+  /**
+   * Stable UIAM user IDs allowed to use the delegated key through trusted Kibana paths.
+   */
+  allowedUserIds?: number[];
 }
+
+export type UiamProjectRoleAssignments = Partial<
+  Record<
+    UiamProjectType,
+    Array<{
+      projectIds: string[];
+      applicationRoles: string[];
+    }>
+  >
+>;
 
 export type UiamProjectType =
   | 'elasticsearch'
@@ -93,6 +120,26 @@ export type UiamProjectType =
   | 'security'
   | 'workplaceai'
   | 'vectordb';
+
+export interface CanUseUiamAPIKeyResult {
+  allowed: boolean;
+  reason: string;
+}
+
+export interface DelegableUiamRolesParams {
+  projectType: UiamProjectType;
+  projectIds: string[];
+  customApplicationRoles?: string[];
+}
+
+export interface DelegableUiamRole {
+  roleId: string;
+  kind: 'built_in' | 'custom';
+}
+
+export interface DelegableUiamRolesResult {
+  roles: DelegableUiamRole[];
+}
 
 /**
  * Parameters for invalidating a UIAM API key.

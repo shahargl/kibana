@@ -14,9 +14,12 @@ const executionIdentitySchema = schema.object({
   name: schema.string(),
   description: schema.string(),
   projectAssignments: schema.string(),
+  allowedProjectAssignments: schema.maybe(schema.string()),
+  allowedUserIds: schema.maybe(schema.arrayOf(schema.number())),
   apiKeyId: schema.string(),
   apiKey: schema.string(),
   createdBy: schema.string(),
+  createdByDisplayName: schema.maybe(schema.string()),
   createdAt: schema.string(),
 });
 
@@ -30,8 +33,10 @@ export const executionIdentitySavedObjectType: SavedObjectsType = {
       name: { type: 'keyword' },
       description: { type: 'text' },
       projectAssignments: { type: 'text', index: false },
+      allowedProjectAssignments: { type: 'text', index: false },
       apiKeyId: { type: 'keyword' },
       createdBy: { type: 'keyword' },
+      createdByDisplayName: { type: 'keyword' },
       createdAt: { type: 'date' },
     },
   },

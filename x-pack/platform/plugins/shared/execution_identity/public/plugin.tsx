@@ -5,13 +5,28 @@
  * 2.0.
  */
 
+import type { CloudSetup } from '@kbn/cloud-plugin/public';
 import type { CoreSetup, Plugin } from '@kbn/core/public';
 import type { ManagementSetup } from '@kbn/management-plugin/public';
-import { EXECUTION_IDENTITY_PLUGIN_ID, EXECUTION_IDENTITY_PLUGIN_NAME } from '../common/types';
+import {
+  EXECUTION_IDENTITY_PLUGIN_ID,
+  EXECUTION_IDENTITY_PLUGIN_NAME,
+  type ExecutionIdentityProjectType,
+} from '../common/types';
 
 interface SetupDependencies {
+  cloud: CloudSetup;
   management: ManagementSetup;
 }
+
+const toExecutionIdentityProjectType = (
+  projectType: CloudSetup['serverless']['projectType']
+): ExecutionIdentityProjectType | undefined => {
+  if (projectType === 'search') {
+    return 'elasticsearch';
+  }
+  return projectType;
+};
 
 export class ExecutionIdentityPublicPlugin implements Plugin<void, void, SetupDependencies> {
   public setup(core: CoreSetup, plugins: SetupDependencies): void {
@@ -23,7 +38,18 @@ export class ExecutionIdentityPublicPlugin implements Plugin<void, void, SetupDe
       mount: async (params) => {
         const [coreStart] = await core.getStartServices();
         const { renderApp } = await import('./application');
-        return renderApp(coreStart, params);
+        const { projectId, projectName, projectType } = plugins.cloud.serverless;
+        return renderApp(
+          coreStart,
+          params,
+          projectId && projectType
+            ? {
+                id: projectId,
+                name: projectName ?? 'Current project',
+                type: toExecutionIdentityProjectType(projectType),
+              }
+            : undefined
+        );
       },
     });
   }

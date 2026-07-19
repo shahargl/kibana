@@ -1,0 +1,63 @@
+sequenceDiagram
+    actor User
+    participant UI as Kibana Workflow UI
+    participant Identity as Kibana Execution Identity
+    participant Security as Kibana Security UIAM Client
+    participant ESO as Encrypted Saved Objects
+    participant UIAM
+    participant Engine as Workflow Management / Engine
+    participant ES as Elasticsearch / CPS Projects
+
+    Note over User,UIAM: 1. Create a service account
+    User->>UI: Choose projects
+    UI->>Security: delegableRoles(projects, custom role candidates)
+    Security->>UIAM: POST /api-keys/_delegable_roles
+    UIAM-->>UI: Covered built-in and custom roles
+    User->>UI: Choose roles and optional trusted caller roles
+    UI->>Identity: Create execution identity
+    Identity->>Security: grantApiKey(projectRoleAssignments, allowedRoleAssignments)
+    Security->>UIAM: POST /api-keys/_grant with assignments and use policy
+    UIAM-->>Security: Downscoped UIAM API key
+    Identity->>ESO: Encrypt key and save space-scoped identity
+    Identity-->>UI: Service account UUID
+
+    Note over User,UIAM: 2. Open or edit a workflow with settings.run_as
+    UI->>Identity: getForDisplay(UUID)
+    Identity-->>UI: Name, roles, and projects
+    UI->>Identity: canUse(UUID)
+    Identity->>Security: canUse(apiKeyId)
+    Security->>UIAM: POST /api-keys/{id}/_can_use
+    UIAM->>UIAM: Check organization admin, role trust policy, or role containment
+    UIAM-->>Security: Allowed or denied
+    Security-->>Identity: Authorization result
+    Identity-->>UI: Authorization result
+    Note right of UI: Denied means read-only workflow and disabled Run/Save
+
+    Note over User,ES: 3. Execute an allowed workflow
+    User->>UI: Run workflow
+    UI->>Engine: Execute with run_as UUID
+    Engine->>Identity: Re-check canUse and resolve credential
+    Identity->>ESO: Decrypt UIAM API key
+    Identity-->>Engine: Scoped execution request
+    Engine->>ES: API key plus project_routing
+    ES-->>Engine: Results from authorized projects only
+    Engine-->>UI: Execution result and service-account audit metadata
+
+    Note over Engine,UIAM: 4. Nested service-account switch
+    Engine->>Engine: Child workflow declares a different run_as UUID
+    Engine->>Identity: canUse(child UUID) with parent API-key request
+    Identity->>UIAM: POST /api-keys/{childKeyId}/_can_use
+    UIAM->>UIAM: Check parent key roles against child trust policy
+    UIAM-->>Engine: Allow or deny identity switch
+    Engine->>Identity: Resolve child credential only when allowed
+
+    Note over User,ES: Known PoC boundary
+    Note over UIAM,ES: Runtime authentication sees the API key, not the human actor or workflow binding
+
+    Note over User,ES: Long-term native UIAM service account
+    User->>UIAM: Bind native service account to workflow
+    UIAM-->>Engine: Actor and workload-scoped binding capability
+    Engine->>UIAM: Exchange capability at execution time
+    UIAM->>UIAM: Re-evaluate policy and revocation
+    UIAM-->>Engine: Short-lived execution credential
+    Engine->>ES: Execute with short-lived credential

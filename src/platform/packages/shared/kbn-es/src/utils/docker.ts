@@ -354,13 +354,21 @@ export function getServerlessNodes(
 ): Array<Omit<ServerlessEsNodeArgs, 'image'>> {
   const n1 = `es01${nameSuffix}`;
   const n2 = `es02${nameSuffix}`;
+  const transportPort = Number.parseInt(
+    (process.env.TEST_ES_TRANSPORT_PORT ?? '9300').split('-')[0],
+    10
+  );
+
+  if (!Number.isInteger(transportPort) || transportPort <= 0 || transportPort > 65535) {
+    throw createCliError(`Invalid TEST_ES_TRANSPORT_PORT: ${process.env.TEST_ES_TRANSPORT_PORT}`);
+  }
 
   return [
     {
       name: n1,
       params: [
         '-p',
-        `127.0.0.1:${9300 + portOffset}:${9300 + portOffset}`,
+        `127.0.0.1:${transportPort + portOffset}:${9300 + portOffset}`,
 
         '--env',
         `discovery.seed_hosts=${n2}`,
@@ -381,7 +389,7 @@ export function getServerlessNodes(
         `127.0.0.1:${9202 + portOffset}:${9202 + portOffset}`,
 
         '-p',
-        `127.0.0.1:${9302 + portOffset}:${9302 + portOffset}`,
+        `127.0.0.1:${transportPort + 2 + portOffset}:${9302 + portOffset}`,
 
         '--env',
         `discovery.seed_hosts=${n1}`,

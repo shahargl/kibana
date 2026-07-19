@@ -14,6 +14,7 @@ jest.mock('./api/workflows_management_api', () => ({
 jest.mock('./api/workflows_management_service');
 
 import { coreMock } from '@kbn/core/server/mocks';
+import { workflowsExecutionEngineMock } from '@kbn/workflows-execution-engine/server/mocks';
 import { workflowsExtensionsMock } from '@kbn/workflows-extensions/server/mocks';
 
 import { WorkflowsService } from './api/workflows_management_service';
@@ -43,10 +44,12 @@ describe('WorkflowsPlugin', () => {
 
     const plugin = new WorkflowsPlugin(initializerContext);
     const coreSetup = coreMock.createSetup();
+    const workflowsExecutionEngineSetup = workflowsExecutionEngineMock.createSetup();
 
     plugin.setup(coreSetup, {
       executionIdentity: undefined,
       spaces: { spacesService: { getActiveSpace: jest.fn() } } as any,
+      workflowsExecutionEngine: workflowsExecutionEngineSetup,
       workflowsExtensions: workflowsExtensionsMock.createSetup(),
     });
 
@@ -61,5 +64,8 @@ describe('WorkflowsPlugin', () => {
     });
 
     expect(start).toEqual({});
+    expect(
+      workflowsExecutionEngineSetup.registerWorkflowExecutionRequestResolver
+    ).toHaveBeenCalledWith(expect.any(Function));
   });
 });

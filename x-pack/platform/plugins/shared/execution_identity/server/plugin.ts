@@ -25,6 +25,7 @@ import {
   EXECUTION_IDENTITY_PLUGIN_ID,
   EXECUTION_IDENTITY_PLUGIN_NAME,
   EXECUTION_IDENTITY_SAVED_OBJECT_TYPE,
+  type ExecutionIdentityUseAuthorization,
   type ResolvedExecutionIdentity,
 } from '../common/types';
 import { registerRoutes } from './routes';
@@ -51,6 +52,7 @@ export interface ExecutionIdentityPluginStart {
     request: KibanaRequest,
     id: string
   ) => Promise<{ id: string; name: string; spaceId: string }>;
+  canUse: (request: KibanaRequest, id: string) => Promise<ExecutionIdentityUseAuthorization>;
   resolve: (id: string, spaceId: string) => Promise<ResolvedExecutionIdentity>;
 }
 
@@ -104,6 +106,7 @@ export class ExecutionIdentityPlugin
     });
     return {
       getForBinding: (request, id) => this.service.getForBinding(request, id),
+      canUse: (request, id) => this.service.canUse(request, id),
       resolve: (id, spaceId) => this.service.resolve(id, spaceId),
     };
   }

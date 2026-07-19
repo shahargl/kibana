@@ -92,6 +92,67 @@ test.describe(
       await expect(validationAccordion).toContainText('No validation errors');
     });
 
+    test('shows the service account name next to settings.run_as', async ({
+      pageObjects,
+      page,
+    }) => {
+      const executionIdentityId = '11b7b80f-2675-4b5e-bd0f-9a197c768ae2';
+      await page.route('**/internal/execution_identity', async (route) => {
+        await route.fulfill({
+          contentType: 'application/json',
+          body: JSON.stringify([
+            {
+              id: executionIdentityId,
+              name: 'Workflow reader',
+              description: '',
+              spaceId: 'default',
+              projectAssignments: [
+                {
+                  projectType: 'security',
+                  projectIds: ['abcdef12345678901234567890123456'],
+                  roleNames: ['viewer'],
+                },
+              ],
+              createdBy: 'test-user',
+              createdAt: '2026-07-15T00:00:00.000Z',
+              updatedAt: '2026-07-15T00:00:00.000Z',
+            },
+          ]),
+        });
+      });
+      await pageObjects.workflowEditor.gotoNewWorkflow();
+      await pageObjects.workflowEditor.setYamlEditorValue(`
+name: execution identity badge
+enabled: true
+settings:
+  run_as: ${executionIdentityId}
+triggers:
+  - type: manual
+steps:
+  - name: log_message
+    type: console
+    with:
+      message: hello
+`);
+
+      await expect(page.locator('.execution-identity-name-badge')).toContainText('Workflow reader');
+      const identityBadge = page.locator('.execution-identity-name-badge');
+      await expect(identityBadge).toHaveCount(1);
+      const badgeRows = await identityBadge.evaluateAll(
+        (elements) => new Set(elements.map((element) => element.getBoundingClientRect().y)).size
+      );
+      expect(badgeRows).toBe(1);
+
+      await identityBadge.hover();
+      const hover = page.locator('.monaco-hover');
+      await expect(hover).toContainText('Roles');
+      await expect(hover).toContainText('viewer');
+      await expect(hover).toContainText('Projects');
+      await expect(hover).toContainText('security');
+      await expect(hover.locator('img')).toBeVisible();
+      await expect(hover.locator('img')).toHaveAttribute('src', /^data:image\/svg\+xml,/);
+    });
+
     test('should show step type autocompletion suggestions', async ({ pageObjects, page }) => {
       await pageObjects.workflowEditor.gotoNewWorkflow();
       const workflowName = 'Autocomplete Test';

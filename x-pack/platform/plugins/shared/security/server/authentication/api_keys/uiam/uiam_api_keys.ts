@@ -10,7 +10,10 @@ import Boom from '@hapi/boom';
 import type { KibanaRequest, Logger } from '@kbn/core/server';
 import { HTTPAuthorizationHeader, isUiamCredential } from '@kbn/core-security-server';
 import type {
+  CanUseUiamAPIKeyResult,
   ConvertUiamAPIKeysResponse,
+  DelegableUiamRolesParams,
+  DelegableUiamRolesResult,
   GrantAPIKeyResult,
   GrantUiamAPIKeyParams,
   InvalidateAPIKeyResult,
@@ -44,6 +47,37 @@ export class UiamAPIKeys implements UiamAPIKeysType {
     this.logger = logger;
     this.license = license;
     this.uiam = uiam;
+  }
+
+  async canUse(request: KibanaRequest, id: string): Promise<CanUseUiamAPIKeyResult | null> {
+    if (!this.license.isEnabled()) {
+      return null;
+    }
+
+    const authorization = UiamAPIKeys.getAuthorizationHeader(request);
+    if (!isUiamCredential(authorization)) {
+      throw new Error('Cannot check API key use: provided credential is not compatible with UIAM');
+    }
+
+    return this.uiam.canUseApiKey(authorization, id);
+  }
+
+  async delegableRoles(
+    request: KibanaRequest,
+    params: DelegableUiamRolesParams
+  ): Promise<DelegableUiamRolesResult | null> {
+    if (!this.license.isEnabled()) {
+      return null;
+    }
+
+    const authorization = UiamAPIKeys.getAuthorizationHeader(request);
+    if (!isUiamCredential(authorization)) {
+      throw new Error(
+        'Cannot list delegable roles: provided credential is not compatible with UIAM'
+      );
+    }
+
+    return this.uiam.delegableRoles(authorization, params);
   }
 
   /**

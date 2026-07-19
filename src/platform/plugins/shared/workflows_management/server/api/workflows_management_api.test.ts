@@ -579,6 +579,40 @@ steps:
         );
       });
 
+      it('resolves run_as for test executions', async () => {
+        const executionRequest = httpServerMock.createKibanaRequest();
+        mockWorkflowsService.getExecutionIdentityRequest.mockResolvedValue(executionRequest);
+        mockWorkflowsService.validateWorkflow.mockResolvedValue({
+          valid: true,
+          diagnostics: [],
+          parsedWorkflow: {
+            ...parsedMockWorkflow,
+            settings: { run_as: 'identity-1' },
+          } as any,
+        });
+
+        await api.testWorkflow({
+          workflowYaml: mockWorkflowYaml,
+          inputs,
+          spaceId: 'team-a',
+          request: mockRequest,
+        });
+
+        expect(mockWorkflowsService.getExecutionIdentityRequest).toHaveBeenCalledWith(
+          'identity-1',
+          'team-a',
+          mockRequest
+        );
+        const engine = await mockWorkflowsService.getWorkflowsExecutionEngine();
+        expect(engine.executeWorkflow).toHaveBeenCalledWith(
+          expect.any(Object),
+          expect.objectContaining({
+            executionIdentity: { id: 'identity-1', spaceId: 'team-a' },
+          }),
+          executionRequest
+        );
+      });
+
       it('should pass spaceId in execution context', async () => {
         const customSpaceId = 'custom-space';
 
@@ -752,7 +786,8 @@ steps:
 
       expect(mockWorkflowsService.getExecutionIdentityRequest).toHaveBeenCalledWith(
         'identity-1',
-        'team-a'
+        'team-a',
+        mockRequest
       );
       expect(mockWorkflowsExecutionEngine.executeWorkflow).toHaveBeenCalledWith(
         expect.any(Object),

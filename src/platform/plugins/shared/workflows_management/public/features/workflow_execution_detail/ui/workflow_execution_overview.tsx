@@ -7,15 +7,28 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { EuiFlexGroup, EuiFlexItem, EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
+import {
+  EuiBadge,
+  EuiFlexGroup,
+  EuiFlexItem,
+  EuiIcon,
+  EuiPanel,
+  EuiText,
+  useEuiTheme,
+} from '@elastic/eui';
 import { css } from '@emotion/react';
 import React from 'react';
 
 import { i18n } from '@kbn/i18n';
 import type { WorkflowStepExecutionDto, WorkflowTokenUsage } from '@kbn/workflows';
 import type { JsonModelSchemaType } from '@kbn/workflows/spec/schema/common/json_model_schema';
+import { ExecutionIdentityDetails } from './execution_identity_details';
 import { type ApprovalLabels, ResumeExecutionButton } from './resume_execution_button';
 import { StepExecutionDataView } from './step_execution_data_view';
+import {
+  getExecutionIdentityProjectIconType,
+  useExecutionIdentity,
+} from '../../../entities/execution_identities/model/use_execution_identities';
 import { formatDuration } from '../../../shared/lib/format_duration';
 import { getStatusLabel } from '../../../shared/translations/status_translations';
 import { FormattedRelativeEnhanced } from '../../../shared/ui/formatted_relative_enhanced/formatted_relative_enhanced';
@@ -72,7 +85,16 @@ export const WorkflowExecutionOverview = React.memo<WorkflowExecutionOverviewPro
     const { euiTheme } = useEuiTheme();
 
     const context = stepExecution.input as Record<string, unknown> | undefined;
-    const executionData = context?.execution as { isTestRun?: boolean } | undefined;
+    const executionData = context?.execution as
+      | { isTestRun?: boolean; executedBy?: string }
+      | undefined;
+    const executionIdentityId = executionData?.executedBy?.startsWith('service_account:')
+      ? executionData.executedBy.slice('service_account:'.length)
+      : undefined;
+    const { data: executionIdentity } = useExecutionIdentity(executionIdentityId);
+    const executionIdentityProjectIcon = executionIdentity?.projectAssignments[0]
+      ? getExecutionIdentityProjectIconType(executionIdentity.projectAssignments[0].projectType)
+      : undefined;
     const isTestRun = executionData?.isTestRun === true;
     const executionStarted = stepExecution.startedAt;
     const executionEnded = context?.now as string | undefined;
@@ -116,6 +138,16 @@ export const WorkflowExecutionOverview = React.memo<WorkflowExecutionOverviewPro
               </EuiFlexItem>
               <EuiFlexItem grow={false}>
                 <EuiFlexGroup alignItems="center" gutterSize="s" responsive={false}>
+                  {executionData?.executedBy && (
+                    <EuiFlexItem grow={false}>
+                      <EuiBadge color="hollow" iconType={executionIdentityProjectIcon}>
+                        {i18n.translate('workflowsManagement.executionOverview.executedByBadge', {
+                          defaultMessage: 'Executed by: {identity}',
+                          values: { identity: executionIdentity?.name ?? executionData.executedBy },
+                        })}
+                      </EuiBadge>
+                    </EuiFlexItem>
+                  )}
                   {isTestRun && (
                     <EuiFlexItem grow={false}>
                       <EuiIcon type="flask" size="s" color="subdued" aria-hidden={true} />
@@ -207,6 +239,12 @@ export const WorkflowExecutionOverview = React.memo<WorkflowExecutionOverviewPro
               </EuiFlexGroup>
             </div>
           </EuiFlexItem>
+
+          {executionIdentity && (
+            <EuiFlexItem grow={false}>
+              <ExecutionIdentityDetails identity={executionIdentity} />
+            </EuiFlexItem>
+          )}
 
           {showResumeUI && executionId && (
             <EuiFlexItem grow={false}>

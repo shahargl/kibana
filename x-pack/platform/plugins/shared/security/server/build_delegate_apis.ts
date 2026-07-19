@@ -8,6 +8,7 @@
 import type { KibanaRequest } from '@kbn/core-http-server';
 import type {
   CoreSecurityDelegateContract,
+  DelegableUiamRolesParams,
   GrantUiamAPIKeyParams,
   InvalidateUiamAPIKeyParams,
 } from '@kbn/core-security-server';
@@ -71,6 +72,10 @@ export const buildSecurityApi = ({
               ) => getAuthc().apiKeys.uiam!.invalidate(request, invalidateUiamApiKeyParams),
               invalidateWithApiKey: (params: { id: string; apiKey: string }) =>
                 getAuthc().apiKeys.uiam!.invalidateWithApiKey(params),
+              canUse: (request: KibanaRequest, id: string) =>
+                getAuthc().apiKeys.uiam!.canUse(request, id),
+              delegableRoles: (request: KibanaRequest, params: DelegableUiamRolesParams) =>
+                getAuthc().apiKeys.uiam!.delegableRoles(request, params),
               convert: (keys: string[]) => getAuthc().apiKeys.uiam!.convert(keys),
             }
           : null,

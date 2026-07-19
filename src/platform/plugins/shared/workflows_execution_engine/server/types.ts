@@ -43,9 +43,14 @@ export interface ResumeWorkflowExecutionResponse {
 }
 
 export interface WorkflowsExecutionEnginePluginSetup {
-  // No setup contract exposed yet. Extend this interface when other plugins need to configure the engine during setup.
-  [key: string]: unknown;
+  registerWorkflowExecutionRequestResolver: (resolver: WorkflowExecutionRequestResolver) => void;
 }
+
+export type WorkflowExecutionRequestResolver = (params: {
+  runAs: string;
+  spaceId: string;
+  request: KibanaRequest;
+}) => Promise<KibanaRequest>;
 
 export interface TriggerEventsContract {
   emitEvent: EmitEvent;

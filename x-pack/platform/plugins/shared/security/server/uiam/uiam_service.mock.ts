@@ -24,6 +24,10 @@ export const uiamServiceMock = {
       key: 'mock-api-key-value',
       description: 'mock-api-key-name',
     }),
+    canUseApiKey: jest
+      .fn()
+      .mockResolvedValue({ allowed: true, reason: 'role_assignments_covered' }),
+    delegableRoles: jest.fn().mockResolvedValue({ roles: [] }),
     exchangeOAuthToken: jest.fn().mockResolvedValue('mock-ephemeral-token'),
     revokeApiKey: jest.fn().mockResolvedValue(undefined),
     convertApiKeys: jest.fn().mockResolvedValue({ results: [] }),

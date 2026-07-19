@@ -15,3 +15,4 @@ export { useLineDifferencesDecorations } from './use_line_differences_decoration
 export { useAlertTriggerDecorations } from './use_alert_trigger_decorations';
 export { useWorkflowEventsOnDecorations } from './use_workflow_events_on_decorations';
 export { useWorkflowIdDecorations } from './use_workflow_id_decorations';
+export { useExecutionIdentityDecorations } from './use_execution_identity_decorations';

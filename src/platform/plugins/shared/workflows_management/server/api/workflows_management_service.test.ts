@@ -22,7 +22,7 @@
  */
 
 import type { CoreSetup, CoreStart, ElasticsearchClient } from '@kbn/core/server';
-import { coreMock } from '@kbn/core/server/mocks';
+import { coreMock, httpServerMock } from '@kbn/core/server/mocks';
 import { loggerMock } from '@kbn/logging-mocks';
 import { workflowsExecutionEngineMock } from '@kbn/workflows-execution-engine/server/mocks';
 
@@ -92,6 +92,17 @@ const makePluginsStart = (): WorkflowsServerPluginStartDeps =>
     workflowsExtensions: {
       getAllTriggerDefinitions: jest.fn().mockReturnValue([]),
     },
+    executionIdentity: {
+      canUse: jest.fn().mockResolvedValue({ allowed: true, reason: 'role_assignments_covered' }),
+      getForBinding: jest.fn(),
+      resolve: jest.fn().mockResolvedValue({
+        id: 'identity-1',
+        name: 'Workflow identity',
+        spaceId: 'default',
+        authorization: 'ApiKey essu_test',
+        apiKeyId: 'api-key-1',
+      }),
+    },
   } as unknown as WorkflowsServerPluginStartDeps);
 
 const makeCoreStart = (esClient: ElasticsearchClient): CoreStart =>
@@ -116,9 +127,11 @@ describe('WorkflowsService (facade)', () => {
   let executionQuerySpies: PrototypeSpies;
   let validationSpies: PrototypeSpies;
 
-  const buildService = async (): Promise<WorkflowsService> => {
+  const buildService = async (
+    pluginsStart: WorkflowsServerPluginStartDeps = makePluginsStart()
+  ): Promise<WorkflowsService> => {
     const coreStart = makeCoreStart(makeEsClient());
-    const startServices = jest.fn().mockResolvedValue([coreStart, makePluginsStart()]);
+    const startServices = jest.fn().mockResolvedValue([coreStart, pluginsStart]);
     const service = new WorkflowsService(
       makeCoreSetup(startServices),
       makePluginsSetup(),
@@ -172,6 +185,28 @@ describe('WorkflowsService (facade)', () => {
       'validateWorkflow',
       'getWorkflowZodSchema',
     ]);
+  });
+
+  it('rejects resolving an execution identity when the current user cannot use it', async () => {
+    const pluginsStart = makePluginsStart();
+    const canUse = pluginsStart.executionIdentity.canUse as jest.Mock;
+    const resolve = pluginsStart.executionIdentity.resolve as jest.Mock;
+    canUse.mockResolvedValue({
+      allowed: false,
+      reason: 'role_assignments_not_covered',
+    });
+    const service = await buildService(pluginsStart);
+
+    await expect(
+      service.getExecutionIdentityRequest(
+        'identity-1',
+        'default',
+        httpServerMock.createKibanaRequest()
+      )
+    ).rejects.toThrow(
+      'You cannot use service account "identity-1" because it has project roles that are not assigned to your current session.'
+    );
+    expect(resolve).not.toHaveBeenCalled();
   });
 
   afterEach(() => {

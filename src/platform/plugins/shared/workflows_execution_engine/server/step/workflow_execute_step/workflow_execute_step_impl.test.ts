@@ -354,6 +354,33 @@ describe('WorkflowExecuteStepImpl', () => {
       expect(engine.executeWorkflow).toHaveBeenCalled();
     });
 
+    it('should authorize and switch to the child workflow execution identity', async () => {
+      const switchedRequest = {} as KibanaRequest;
+      const resolveWorkflowExecutionRequest = jest.fn().mockResolvedValue(switchedRequest);
+      const init = createMockInit({ resolveWorkflowExecutionRequest });
+      const repo = init.workflowRepository as jest.Mocked<WorkflowRepository>;
+      const childWorkflow = createMockWorkflow();
+      if (!childWorkflow.definition) {
+        throw new Error('Mock child workflow definition is required');
+      }
+      childWorkflow.definition.settings = { run_as: 'child-identity' };
+      repo.getWorkflow.mockResolvedValue(childWorkflow);
+
+      const step = new WorkflowExecuteStepImpl(init);
+      await step.run();
+
+      expect(resolveWorkflowExecutionRequest).toHaveBeenCalledWith({
+        runAs: 'child-identity',
+        spaceId: 'default',
+        request: init.request,
+      });
+      expect(init.workflowsExecutionEngine.executeWorkflow).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        switchedRequest
+      );
+    });
+
     it('should use async executor for workflow.executeAsync type', async () => {
       const asyncNode = {
         id: 'async-step-1',

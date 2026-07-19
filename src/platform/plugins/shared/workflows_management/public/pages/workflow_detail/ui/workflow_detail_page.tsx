@@ -7,7 +7,14 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { EuiEmptyPrompt, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
+import {
+  EuiEmptyPrompt,
+  EuiFlexGroup,
+  EuiFlexItem,
+  EuiIcon,
+  EuiPanel,
+  EuiText,
+} from '@elastic/eui';
 import { css } from '@emotion/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,9 +32,14 @@ import { WorkflowDetailTestModal } from './workflow_detail_test_modal';
 import { WorkflowDetailTestStepModal } from './workflow_detail_test_step_modal';
 import { WorkflowNotFoundPage } from './workflow_not_found_page';
 import type { WorkflowDetailTab } from '../../../common/lib/telemetry/events/workflows/ui/types';
+import {
+  useExecutionIdentity,
+  useExecutionIdentityCanUse,
+} from '../../../entities/execution_identities/model/use_execution_identities';
 import { setActiveTab, setExecution, setYamlString } from '../../../entities/workflows/store';
 import {
   selectActiveTab,
+  selectRunAsIdentityId,
   selectWorkflowId,
   selectWorkflowName,
 } from '../../../entities/workflows/store/workflow_detail/selectors';
@@ -70,6 +82,11 @@ export function WorkflowDetailPage({ id }: { id?: string }) {
   const activeTabInStore = useSelector(selectActiveTab);
   const workflowId = useSelector(selectWorkflowId);
   const workflowName = useSelector(selectWorkflowName);
+  const runAsIdentityId = useSelector(selectRunAsIdentityId);
+  const { data: runAsIdentity } = useExecutionIdentity(runAsIdentityId);
+  const runAsAuthorization = useExecutionIdentityCanUse(runAsIdentityId);
+  const canUseRunAs = !runAsIdentityId || runAsAuthorization.data?.allowed === true;
+  const showRunAsDenied = Boolean(runAsIdentityId) && !runAsAuthorization.isLoading && !canUseRunAs;
 
   useWorkflowsBreadcrumbs(workflowName);
 
@@ -181,14 +198,46 @@ export function WorkflowDetailPage({ id }: { id?: string }) {
           isLoading={isLoadingWorkflow}
           highlightDiff={highlightDiff}
           setHighlightDiff={setHighlightDiff}
+          canUseRunAs={canUseRunAs}
         />
       </EuiFlexItem>
+      {showRunAsDenied && (
+        <EuiFlexItem grow={false} css={css({ margin: '8px 16px 0' })}>
+          <EuiPanel color="subdued" paddingSize="s" hasShadow={false} role="status">
+            <EuiFlexGroup alignItems="center" gutterSize="s" responsive={false}>
+              <EuiFlexItem grow={false}>
+                <EuiIcon type="lock" color="subdued" aria-hidden={true} />
+              </EuiFlexItem>
+              <EuiFlexItem>
+                <EuiText size="xs">
+                  <p>
+                    <strong>
+                      <FormattedMessage
+                        id="workflows.workflowDetail.executionIdentityUseDeniedTitle"
+                        defaultMessage="Service account access is restricted"
+                      />
+                    </strong>
+                    {' — '}
+                    <FormattedMessage
+                      id="workflows.workflowDetail.executionIdentityUseDeniedDescription"
+                      defaultMessage="Your current role does not include the permissions assigned to {name}, so this workflow is read-only and cannot be run."
+                      values={{ name: runAsIdentity?.name ?? runAsIdentityId }}
+                    />
+                  </p>
+                </EuiText>
+              </EuiFlexItem>
+            </EuiFlexGroup>
+          </EuiPanel>
+        </EuiFlexItem>
+      )}
       <EuiFlexItem css={css({ overflow: 'hidden', minHeight: 0 })}>
         {!isReady ? (
           <WorkflowDetailLoadingState />
         ) : (
           <WorkflowEditorLayout
-            editor={<WorkflowDetailEditor highlightDiff={highlightDiff} />}
+            editor={
+              <WorkflowDetailEditor highlightDiff={highlightDiff} canUseRunAs={canUseRunAs} />
+            }
             executionList={
               id &&
               activeTab === 'executions' &&

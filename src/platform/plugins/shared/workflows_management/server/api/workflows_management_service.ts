@@ -65,6 +65,7 @@ import type {
 } from '@kbn/workflows-extensions/server';
 import type { z } from '@kbn/zod/v4';
 
+import { ExecutionIdentityUseForbiddenError } from './execution_identity_use_forbidden_error';
 import type { StepExecutionListResult } from './lib/search_step_executions';
 
 import { WorkflowManagementAuditLog } from './routes/utils/workflow_audit_logging';
@@ -231,6 +232,7 @@ export class WorkflowsService {
       validationService: this.validationService,
       getCoreStart: () => this.coreStart,
       validateExecutionIdentityBinding: async (request, identityId, spaceId) => {
+        await this.ensureCanUseExecutionIdentity(request, identityId);
         const binding = await this.pluginsStart.executionIdentity.getForBinding(
           request,
           identityId
@@ -274,14 +276,26 @@ export class WorkflowsService {
 
   public async getExecutionIdentityRequest(
     identityId: string,
-    spaceId: string
+    spaceId: string,
+    request: KibanaRequest
   ): Promise<KibanaRequest> {
     await this.ensureInitialized();
+    await this.ensureCanUseExecutionIdentity(request, identityId);
     const resolved = await this.pluginsStart.executionIdentity.resolve(identityId, spaceId);
     return kibanaRequestFactory({
       headers: { authorization: resolved.authorization },
       spaceId: asSpaceId(spaceId),
     });
+  }
+
+  private async ensureCanUseExecutionIdentity(
+    request: KibanaRequest,
+    identityId: string
+  ): Promise<void> {
+    const authorization = await this.pluginsStart.executionIdentity.canUse(request, identityId);
+    if (!authorization.allowed) {
+      throw new ExecutionIdentityUseForbiddenError(identityId);
+    }
   }
 
   public async getWorkflow(

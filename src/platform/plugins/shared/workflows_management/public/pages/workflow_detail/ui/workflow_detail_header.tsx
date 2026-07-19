@@ -65,6 +65,13 @@ const Translations = {
   runWorkflow: i18n.translate('workflows.workflowDetailHeader.runWorkflow', {
     defaultMessage: 'Run',
   }),
+  executionIdentityUseDenied: i18n.translate(
+    'workflows.workflowDetailHeader.executionIdentityUseDenied',
+    {
+      defaultMessage:
+        'You cannot use this workflow service account because it has project roles that are not assigned to your current session.',
+    }
+  ),
 };
 
 export interface WorkflowDetailHeaderProps {
@@ -72,10 +79,16 @@ export interface WorkflowDetailHeaderProps {
   // TODO: manage it in a workflow state context
   highlightDiff: boolean;
   setHighlightDiff: React.Dispatch<React.SetStateAction<boolean>>;
+  canUseRunAs?: boolean;
 }
 
 export const WorkflowDetailHeader = React.memo(
-  ({ isLoading, highlightDiff, setHighlightDiff }: WorkflowDetailHeaderProps) => {
+  ({
+    isLoading,
+    highlightDiff,
+    setHighlightDiff,
+    canUseRunAs = true,
+  }: WorkflowDetailHeaderProps) => {
     const { id: workflowId } = useParams<{ id?: string }>();
     const { application } = useKibana().services;
     const location = useLocation<WorkflowDetailRouteState | undefined>();
@@ -117,14 +130,20 @@ export const WorkflowDetailHeader = React.memo(
     const saveYaml = useSaveYaml();
     const isSaving = useSelector(selectIsSavingYaml);
     const handleSaveWorkflow = useCallback(() => {
+      if (!canUseRunAs) {
+        return;
+      }
       saveYaml();
-    }, [saveYaml]);
+    }, [canUseRunAs, saveYaml]);
 
     const updateWorkflow = useUpdateWorkflow();
 
     const openTestModal = useCallback(() => {
+      if (!canUseRunAs) {
+        return;
+      }
       dispatch(setIsTestModalOpen(true));
-    }, [dispatch]);
+    }, [canUseRunAs, dispatch]);
 
     const [savedLabel, setSavedLabel] = useState<string>('');
 
@@ -168,15 +187,21 @@ export const WorkflowDetailHeader = React.memo(
       isSyntaxValid && !hasYamlSchemaValidationErrors && workflow?.valid !== false;
 
     const runWorkflowTooltipContent = useMemo(() => {
+      if (!canUseRunAs) {
+        return Translations.executionIdentityUseDenied;
+      }
       return getTestRunTooltipContent({
         isExecutionsTab,
         isValid: isSyntaxValid,
         canRunWorkflow: canExecuteWorkflow,
         isSaving,
       });
-    }, [isSyntaxValid, canExecuteWorkflow, isExecutionsTab, isSaving]);
+    }, [canUseRunAs, isSyntaxValid, canExecuteWorkflow, isExecutionsTab, isSaving]);
 
     const saveWorkflowTooltipContent = useMemo(() => {
+      if (!canUseRunAs) {
+        return Translations.executionIdentityUseDenied;
+      }
       const isCreate = !workflowId;
       return getSaveWorkflowTooltipContent({
         isExecutionsTab,
@@ -192,6 +217,7 @@ export const WorkflowDetailHeader = React.memo(
       canUpdateWorkflow,
       hasUnsavedChanges,
       isManagedWorkflow,
+      canUseRunAs,
     ]);
 
     const canSaveWorkflow = useMemo(() => {
@@ -284,7 +310,8 @@ export const WorkflowDetailHeader = React.memo(
         onChange: (checked: boolean) => {
           updateWorkflow({ workflow: { enabled: checked } });
         },
-        disabled: isLoading || !canUpdateWorkflow || !isSchemaValid || hasUnsavedChanges,
+        disabled:
+          isLoading || !canUpdateWorkflow || !canUseRunAs || !isSchemaValid || hasUnsavedChanges,
         tooltipContent: enabledSwitchTooltipContent,
         'data-test-subj': 'workflowEnabledSwitch',
       };
@@ -294,6 +321,7 @@ export const WorkflowDetailHeader = React.memo(
       updateWorkflow,
       isLoading,
       canUpdateWorkflow,
+      canUseRunAs,
       isSchemaValid,
       hasUnsavedChanges,
       enabledSwitchTooltipContent,
@@ -377,7 +405,12 @@ export const WorkflowDetailHeader = React.memo(
           iconType: 'play',
           run: handleRunClick,
           disableButton:
-            isExecutionsTab || !canExecuteWorkflow || isLoading || isSaving || !isSyntaxValid,
+            isExecutionsTab ||
+            !canExecuteWorkflow ||
+            !canUseRunAs ||
+            isLoading ||
+            isSaving ||
+            !isSyntaxValid,
           tooltipContent: runWorkflowTooltipContent ?? undefined,
           testId: 'runWorkflowHeaderButton',
         });
@@ -397,6 +430,7 @@ export const WorkflowDetailHeader = React.memo(
           disableButton:
             isExecutionsTab ||
             !canSaveWorkflow ||
+            !canUseRunAs ||
             isLoading ||
             isSaving ||
             isManagedWorkflow ||
@@ -419,6 +453,7 @@ export const WorkflowDetailHeader = React.memo(
       isVisualEditorEnabled,
       handleSaveWorkflow,
       canSaveWorkflow,
+      canUseRunAs,
       isLoading,
       isSaving,
       isManagedWorkflow,

@@ -7,19 +7,12 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-export type {
-  UiamAPIKeysType,
-  GrantUiamAPIKeyParams,
-  UiamProjectRoleAssignments,
-  UiamProjectType,
-  CanUseUiamAPIKeyResult,
-  DelegableUiamRole,
-  DelegableUiamRolesParams,
-  DelegableUiamRolesResult,
-  InvalidateUiamAPIKeyParams,
-  ConvertUiamAPIKeyResult,
-  ConvertUiamAPIKeyResultSuccess,
-  ConvertUiamAPIKeyResultFailed,
-  ConvertUiamAPIKeysResponse,
-} from './uiam_api_keys';
-export type { UiamAPIKeysWithContextType } from './uiam_api_keys_context';
+import { WorkflowForbiddenError } from './workflow_forbidden_error';
+
+export class ExecutionIdentityUseForbiddenError extends WorkflowForbiddenError {
+  constructor(identityId: string) {
+    super(
+      `You cannot use service account "${identityId}" because it has project roles that are not assigned to your current session.`
+    );
+  }
+}

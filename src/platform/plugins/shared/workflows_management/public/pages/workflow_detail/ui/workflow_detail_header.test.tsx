@@ -268,6 +268,20 @@ describe('WorkflowDetailHeader', () => {
     expect(await openRunWorkflowButton()).toBeEnabled();
   });
 
+  it('disables workflow mutation and execution when service account use is denied', async () => {
+    const result = renderWithProviders(
+      <WorkflowDetailHeader {...defaultProps} canUseRunAs={false} />,
+      {
+        isValid: true,
+        hasChanges: true,
+      }
+    );
+
+    expect(result.getByTestId('saveWorkflowHeaderButton')).toBeDisabled();
+    expect(result.getByRole('switch')).toBeDisabled();
+    expect(await openRunWorkflowButton()).toBeDisabled();
+  });
+
   it('disables enabled toggle when yaml has validation errors', () => {
     const result = renderWithProviders(<WorkflowDetailHeader {...defaultProps} />, {
       isValid: true,

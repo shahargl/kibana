@@ -17,7 +17,10 @@ import type { WorkflowsExecutionEngineConfig } from '../config';
 import type { WorkflowLogEvent } from '../repositories/logs_repository';
 import type { StepExecutionRepository } from '../repositories/step_execution_repository';
 import type { WorkflowExecutionRepository } from '../repositories/workflow_execution_repository';
-import type { WorkflowsExecutionEnginePluginStart } from '../types';
+import type {
+  WorkflowExecutionRequestResolver,
+  WorkflowsExecutionEnginePluginStart,
+} from '../types';
 
 export interface ContextDependencies {
   cloudSetup: CloudSetup | undefined;
@@ -32,6 +35,7 @@ export interface ContextDependencies {
   workflowsExecutionEngine?: WorkflowsExecutionEnginePluginStart;
   spaceId?: string;
   request?: KibanaRequest;
+  resolveWorkflowExecutionRequest?: WorkflowExecutionRequestResolver;
 }
 
 /**

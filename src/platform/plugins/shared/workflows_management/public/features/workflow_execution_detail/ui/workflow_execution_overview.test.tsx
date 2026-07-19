@@ -13,6 +13,16 @@ import { I18nProvider } from '@kbn/i18n-react';
 import type { WorkflowStepExecutionDto } from '@kbn/workflows';
 import { ExecutionStatus } from '@kbn/workflows';
 import { WorkflowExecutionOverview } from './workflow_execution_overview';
+import type { ExecutionIdentitySummary } from '../../../entities/execution_identities/model/use_execution_identities';
+
+const mockUseExecutionIdentity = jest.fn(
+  (_identityId?: string): { data?: ExecutionIdentitySummary } => ({ data: undefined })
+);
+
+jest.mock('../../../entities/execution_identities/model/use_execution_identities', () => ({
+  getExecutionIdentityProjectIconType: () => 'logoSecurity',
+  useExecutionIdentity: (identityId?: string) => mockUseExecutionIdentity(identityId),
+}));
 
 const renderWithIntl = (component: React.ReactElement) => {
   return render(component, { wrapper: I18nProvider });
@@ -82,6 +92,58 @@ describe('WorkflowExecutionOverview', () => {
       const dataView = screen.getByTestId('mocked-step-execution-data-view');
       expect(dataView.textContent).toContain('Mode: input');
       expect(dataView.textContent).toContain('Step: Overview');
+    });
+
+    it('should display the effective execution identity', () => {
+      const stepExecution = createMockStepExecution({
+        input: {
+          execution: {
+            id: 'exec-123',
+            isTestRun: true,
+            executedBy: 'service_account:identity-1',
+          },
+        },
+      });
+
+      renderWithIntl(<WorkflowExecutionOverview stepExecution={stepExecution} />);
+
+      expect(screen.getByText('Executed by: service_account:identity-1')).toBeInTheDocument();
+    });
+
+    it('should display service account roles and projects', () => {
+      mockUseExecutionIdentity.mockReturnValueOnce({
+        data: {
+          id: 'identity-1',
+          name: 'Workflow reader',
+          description: 'Reads workflow data',
+          projectAssignments: [
+            {
+              projectType: 'security',
+              projectIds: ['project-origin', 'project-linked'],
+              roleNames: ['viewer'],
+            },
+          ],
+        },
+      });
+      const stepExecution = createMockStepExecution({
+        input: {
+          execution: {
+            id: 'exec-123',
+            executedBy: 'service_account:identity-1',
+          },
+        },
+      });
+
+      const { container } = renderWithIntl(
+        <WorkflowExecutionOverview stepExecution={stepExecution} />
+      );
+
+      expect(screen.getByText('Executed by: Workflow reader')).toBeInTheDocument();
+      expect(screen.getByText('Service account permissions')).toBeInTheDocument();
+      expect(screen.getByText('viewer')).toBeInTheDocument();
+      expect(screen.getByText('security')).toBeInTheDocument();
+      expect(screen.getByText(/project-origin, project-linked/)).toBeInTheDocument();
+      expect(container.querySelector('[data-euiicon-type="logoSecurity"]')).toBeInTheDocument();
     });
   });
 

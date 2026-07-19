@@ -13,7 +13,10 @@ import { useWorkflowsCapabilities } from '@kbn/workflows-ui';
 import { WorkflowDetailPage } from './workflow_detail_page';
 import { PLUGIN_ID } from '../../../../common';
 import { createMockStore } from '../../../entities/workflows/store/__mocks__/store.mock';
-import { setWorkflow } from '../../../entities/workflows/store/workflow_detail/slice';
+import {
+  setWorkflow,
+  setYamlString,
+} from '../../../entities/workflows/store/workflow_detail/slice';
 import { mockWorkflowsManagementCapabilities } from '../../../hooks/__mocks__/use_workflows_capabilities';
 import { createStartServicesMock } from '../../../mocks';
 import { getTestProvider } from '../../../shared/mocks/test_providers';
@@ -32,6 +35,8 @@ interface WorkflowDetailPageProps {
 
 const mockUseWorkflowsBreadcrumbs = jest.fn();
 const mockUseWorkflowUrlState = jest.fn();
+const mockUseExecutionIdentity = jest.fn();
+const mockUseExecutionIdentityCanUse = jest.fn();
 
 let mockLoadConnectors = jest.fn();
 let mockLoadWorkflow = jest.fn();
@@ -45,6 +50,10 @@ jest.mock('../../../hooks/use_workflow_breadcrumbs/use_workflow_breadcrumbs', ()
 }));
 jest.mock('../../../hooks/use_workflow_url_state', () => ({
   useWorkflowUrlState: () => mockUseWorkflowUrlState(),
+}));
+jest.mock('../../../entities/execution_identities/model/use_execution_identities', () => ({
+  useExecutionIdentity: (identityId?: string) => mockUseExecutionIdentity(identityId),
+  useExecutionIdentityCanUse: (identityId?: string) => mockUseExecutionIdentityCanUse(identityId),
 }));
 
 jest.mock('@kbn/workflows-ui', () => ({
@@ -174,6 +183,11 @@ describe('WorkflowDetailPage', () => {
       setSelectedExecution: jest.fn(),
       setActiveTab: jest.fn(),
     });
+    mockUseExecutionIdentity.mockReturnValue({ data: undefined });
+    mockUseExecutionIdentityCanUse.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+    });
   });
 
   describe('when loading existing workflow', () => {
@@ -195,6 +209,39 @@ describe('WorkflowDetailPage', () => {
       expect(mockLoadConnectors).toHaveBeenCalled();
       expect(dispatchSpy).toHaveBeenCalled();
     });
+  });
+
+  it('shows a permission warning when service account use is denied', () => {
+    const identityId = 'high-privilege-identity';
+    mockUseExecutionIdentity.mockReturnValue({
+      data: { id: identityId, name: 'Privileged workflow identity' },
+    });
+    mockUseExecutionIdentityCanUse.mockReturnValue({
+      data: { allowed: false, reason: 'role_assignments_not_covered' },
+      isLoading: false,
+    });
+
+    renderWithProviders({ id: 'test-workflow-123' }, (store) => {
+      store.dispatch(setWorkflow(mockWorkflow));
+      store.dispatch(
+        setYamlString(`name: Test workflow
+enabled: true
+settings:
+  run_as: ${identityId}
+triggers:
+  - type: manual
+steps:
+  - name: log
+    type: console
+    with:
+      message: hello`)
+      );
+    });
+
+    expect(screen.getByText('Service account access is restricted')).toBeInTheDocument();
+    expect(
+      screen.getByText(/permissions assigned to Privileged workflow identity/)
+    ).toBeInTheDocument();
   });
 
   describe('when error occurs', () => {

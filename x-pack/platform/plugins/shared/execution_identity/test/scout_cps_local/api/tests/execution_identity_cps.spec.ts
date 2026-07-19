@@ -61,19 +61,26 @@ apiTest.describe(
   () => {
     const runId = randomUUID().slice(0, 8);
     const indexName = `execution-identity-cps-${runId}`;
-    const marker = `linked-project-${runId}`;
+    const originMarker = `origin-project-${runId}`;
+    const linkedMarker = `linked-project-${runId}`;
     let headers: Record<string, string>;
     let identityId: string | undefined;
+    let apiKeyId: string | undefined;
     let workflowId: string | undefined;
 
-    apiTest.beforeAll(async ({ apiClient, linkedProject, samlAuth }) => {
+    apiTest.beforeAll(async ({ apiClient, esClient, linkedProject, samlAuth }) => {
       const credentials = await samlAuth.asInteractiveUser('admin');
       headers = { ...credentials.cookieHeader, ...INTERNAL_HEADERS };
 
+      await esClient.index({
+        index: indexName,
+        refresh: 'wait_for',
+        document: { marker: originMarker },
+      });
       await linkedProject.esClient.index({
         index: indexName,
         refresh: 'wait_for',
-        document: { marker },
+        document: { marker: linkedMarker },
       });
 
       const identityResponse = await apiClient.post('/internal/execution_identity', {
@@ -92,7 +99,10 @@ apiTest.describe(
         },
       });
       expect(identityResponse.statusCode, JSON.stringify(identityResponse.body)).toBe(200);
-      identityId = (identityResponse.body as { id: string }).id;
+      ({ id: identityId, apiKeyId } = identityResponse.body as {
+        id: string;
+        apiKeyId: string;
+      });
 
       const workflowYaml = `
 name: execution identity CPS ${runId}
@@ -102,13 +112,13 @@ settings:
 triggers:
   - type: manual
 steps:
-  - name: search_linked_project
+  - name: search_accessible_projects
     type: elasticsearch.request
     with:
       method: POST
       path: /${indexName}/_search
       body:
-        project_routing: _alias:linked_local_project
+        project_routing: _alias:*
         query:
           match_all: {}
 `;
@@ -121,7 +131,7 @@ steps:
       workflowId = (workflowResponse.body as { id: string }).id;
     });
 
-    apiTest.afterAll(async ({ apiClient, linkedProject }) => {
+    apiTest.afterAll(async ({ apiClient, esClient, linkedProject }) => {
       if (workflowId) {
         await apiClient.delete(
           `/api/workflows/workflow/${encodeURIComponent(workflowId)}?force=true`,
@@ -137,6 +147,7 @@ steps:
           responseType: 'json',
         });
       }
+      await esClient.indices.delete({ index: indexName }, { ignore: [404] });
       await linkedProject.esClient.indices.delete({ index: indexName }, { ignore: [404] });
     });
 
@@ -159,10 +170,59 @@ steps:
         expect(execution.executedBy).toBe(`service_account:${identityId}`);
 
         const searchStep = execution.stepExecutions?.find(
-          (step) => step.stepId === 'search_linked_project'
+          (step) => step.stepId === 'search_accessible_projects'
         );
         expect(searchStep?.error).toBeUndefined();
-        expect(JSON.stringify(searchStep?.output)).toContain(marker);
+        expect(JSON.stringify(searchStep?.output)).toContain(originMarker);
+        expect(JSON.stringify(searchStep?.output)).toContain(linkedMarker);
+      }
+    );
+
+    apiTest(
+      'rotates the API key and applies updated project access to subsequent runs',
+      async ({ apiClient }) => {
+        const updateResponse = await apiClient.put(
+          `/internal/execution_identity/${encodeURIComponent(identityId!)}`,
+          {
+            headers,
+            responseType: 'json',
+            body: {
+              name: `CPS workflow identity ${runId}`,
+              description: 'Updated to origin-project access only',
+              projectAssignments: [
+                {
+                  projectType: 'security',
+                  projectIds: [MOCK_IDP_UIAM_PROJECT_ID],
+                  roleNames: ['admin'],
+                },
+              ],
+            },
+          }
+        );
+        expect(updateResponse.statusCode, JSON.stringify(updateResponse.body)).toBe(200);
+        expect((updateResponse.body as { apiKeyId: string }).apiKeyId).not.toBe(apiKeyId);
+
+        const runResponse = await apiClient.post(
+          `/api/workflows/workflow/${encodeURIComponent(workflowId!)}/run`,
+          {
+            headers,
+            responseType: 'json',
+            body: { inputs: {} },
+          }
+        );
+        expect(runResponse.statusCode, JSON.stringify(runResponse.body)).toBe(200);
+
+        const { workflowExecutionId } = runResponse.body as { workflowExecutionId: string };
+        const execution = await waitForTerminalExecution(apiClient, workflowExecutionId, headers);
+        expect(execution.status, JSON.stringify(execution)).toBe('completed');
+        expect(execution.executedBy).toBe(`service_account:${identityId}`);
+
+        const searchStep = execution.stepExecutions?.find(
+          (step) => step.stepId === 'search_accessible_projects'
+        );
+        expect(searchStep?.error).toBeUndefined();
+        expect(JSON.stringify(searchStep?.output)).toContain(originMarker);
+        expect(JSON.stringify(searchStep?.output)).not.toContain(linkedMarker);
       }
     );
   }

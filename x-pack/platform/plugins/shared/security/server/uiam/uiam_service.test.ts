@@ -618,6 +618,15 @@ describe('UiamService', () => {
 
       await uiamService.grantApiKey(new HTTPAuthorizationHeader('Bearer', 'access-token'), {
         name: 'workflow-service-account',
+        allowedUserIds: [1234, 5678],
+        allowedRoleAssignments: {
+          security: [
+            {
+              projectIds: ['origin-project'],
+              applicationRoles: ['workflow_runner'],
+            },
+          ],
+        },
         projectRoleAssignments: {
           security: [
             {
@@ -634,6 +643,15 @@ describe('UiamService', () => {
           body: JSON.stringify({
             description: 'workflow-service-account',
             internal: true,
+            allowed_user_ids: [1234, 5678],
+            allowed_role_assignments: {
+              security: [
+                {
+                  project_ids: ['origin-project'],
+                  application_roles: ['workflow_runner'],
+                },
+              ],
+            },
             role_assignments: {
               limit: {
                 access: ['application'],
@@ -750,6 +768,84 @@ describe('UiamService', () => {
           name: 'test-key',
         })
       ).rejects.toThrowError('Internal Server Error');
+    });
+  });
+
+  describe('#canUseApiKey', () => {
+    it('checks delegated API key authority with the current user token', async () => {
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          allowed: false,
+          reason: 'role_assignments_not_covered',
+        }),
+      });
+
+      await expect(
+        uiamService.canUseApiKey(
+          new HTTPAuthorizationHeader('Bearer', 'essu_current_user_token'),
+          'managed/key'
+        )
+      ).resolves.toEqual({
+        allowed: false,
+        reason: 'role_assignments_not_covered',
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://uiam.service/uiam/api/v1/api-keys/managed%2Fkey/_can_use',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Kibana/9.0.0',
+            [ES_CLIENT_AUTHENTICATION_HEADER]: 'secret',
+            Authorization: 'Bearer essu_current_user_token',
+          },
+          dispatcher: AGENT_MOCK,
+        }
+      );
+    });
+  });
+
+  describe('#delegableRoles', () => {
+    it('forwards project scope and custom candidates and maps the response', async () => {
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          roles: [
+            { role_id: 'viewer', kind: 'built_in' },
+            { role_id: 'workflow_logs_reader', kind: 'custom' },
+          ],
+        }),
+      });
+
+      await expect(
+        uiamService.delegableRoles(
+          new HTTPAuthorizationHeader('Bearer', 'essu_current_user_token'),
+          {
+            projectType: 'security',
+            projectIds: ['origin-project'],
+            customApplicationRoles: ['workflow_logs_reader'],
+          }
+        )
+      ).resolves.toEqual({
+        roles: [
+          { roleId: 'viewer', kind: 'built_in' },
+          { roleId: 'workflow_logs_reader', kind: 'custom' },
+        ],
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://uiam.service/uiam/api/v1/api-keys/_delegable_roles',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({
+            project_type: 'security',
+            project_ids: ['origin-project'],
+            custom_application_roles: ['workflow_logs_reader'],
+          }),
+        })
+      );
     });
   });
 

@@ -11,6 +11,8 @@
     "browser": true,
     "server": true,
     "requiredPlugins": [
+      "cloud",
+      "cps",
       "management",
       "features",
       "encryptedSavedObjects",

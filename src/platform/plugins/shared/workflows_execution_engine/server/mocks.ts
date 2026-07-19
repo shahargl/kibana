@@ -14,7 +14,9 @@ import type {
 import { createMockWorkflowEventLoggerService } from './workflow_event_logger/mocks';
 
 export const workflowsExecutionEngineMock = {
-  createSetup: jest.fn().mockReturnValue({} as jest.Mocked<WorkflowsExecutionEnginePluginSetup>),
+  createSetup: jest.fn().mockReturnValue({
+    registerWorkflowExecutionRequestResolver: jest.fn(),
+  } as jest.Mocked<WorkflowsExecutionEnginePluginSetup>),
   createStart: jest.fn().mockReturnValue({
     workflowEventLoggerService: createMockWorkflowEventLoggerService(),
     executeWorkflow: jest.fn(),

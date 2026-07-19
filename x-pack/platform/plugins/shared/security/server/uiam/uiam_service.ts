@@ -24,6 +24,8 @@ import type {
 } from '@kbn/core-security-server';
 import type {
   ClientAuthentication,
+  DelegableUiamRolesParams,
+  DelegableUiamRolesResult,
   GrantUiamAPIKeyParams,
 } from '@kbn/security-plugin-types-server';
 
@@ -41,6 +43,18 @@ export interface GrantUiamApiKeyRequestBody {
   internal: boolean;
   /** Optional expiration time for the API key (e.g., '1d', '7d'). */
   expiration?: string;
+  /** Stable UIAM user IDs allowed to use this delegated key through trusted clients. */
+  allowed_user_ids?: number[];
+  /** Project application roles explicitly trusted to use this delegated key. */
+  allowed_role_assignments?: Partial<
+    Record<
+      keyof NonNullable<GrantUiamAPIKeyParams['allowedRoleAssignments']>,
+      Array<{
+        project_ids: string[];
+        application_roles: string[];
+      }>
+    >
+  >;
   /** Role assignments that define access and resource limits for the API key. */
   role_assignments: {
     /** Limits defining the scope of the API key. */
@@ -73,6 +87,18 @@ export interface GrantUiamApiKeyResponse {
   key: string;
   /** A descriptive name/description for the API key. */
   description: string;
+}
+
+export interface CanUseUiamApiKeyResponse {
+  allowed: boolean;
+  reason: string;
+}
+
+interface DelegableUiamRolesResponseBody {
+  roles: Array<{
+    role_id: string;
+    kind: 'built_in' | 'custom';
+  }>;
 }
 
 /**
@@ -192,6 +218,22 @@ export interface UiamServicePublic {
     authorization: HTTPAuthorizationHeader,
     params: GrantUiamAPIKeyParams
   ): Promise<GrantUiamApiKeyResponse>;
+
+  /**
+   * Checks whether the authenticated user can use a delegated UIAM API key.
+   */
+  canUseApiKey(
+    authorization: HTTPAuthorizationHeader,
+    apiKeyId: string
+  ): Promise<CanUseUiamApiKeyResponse>;
+
+  /**
+   * Lists application roles the authenticated user may delegate.
+   */
+  delegableRoles(
+    authorization: HTTPAuthorizationHeader,
+    params: DelegableUiamRolesParams
+  ): Promise<DelegableUiamRolesResult>;
 
   /**
    * Exchanges an OAuth access token for an ephemeral UIAM token. Validates that the audience
@@ -487,6 +529,20 @@ export class UiamService implements UiamServicePublic {
         description: params.name,
         internal: true,
         ...(params.expiration ? { expiration: params.expiration } : {}),
+        ...(params.allowedUserIds ? { allowed_user_ids: params.allowedUserIds } : {}),
+        ...(params.allowedRoleAssignments
+          ? {
+              allowed_role_assignments: Object.fromEntries(
+                Object.entries(params.allowedRoleAssignments).map(([projectType, assignments]) => [
+                  projectType,
+                  assignments.map(({ projectIds, applicationRoles }) => ({
+                    project_ids: projectIds,
+                    application_roles: applicationRoles,
+                  })),
+                ])
+              ),
+            }
+          : {}),
         role_assignments: {
           // currently required  to downscope privileges
           limit: {
@@ -533,6 +589,78 @@ export class UiamService implements UiamServicePublic {
     } catch (err) {
       this.#logger.error(() => `Failed to grant API key: ${getDetailedErrorMessage(err)}`);
 
+      throw err;
+    }
+  }
+
+  /**
+   * See {@link UiamServicePublic.canUseApiKey}.
+   */
+  async canUseApiKey(
+    authorization: HTTPAuthorizationHeader,
+    apiKeyId: string
+  ): Promise<CanUseUiamApiKeyResponse> {
+    try {
+      return await UiamService.#parseUiamResponse(
+        await fetch(
+          `${this.#config.url}/uiam/api/v1/api-keys/${encodeURIComponent(apiKeyId)}/_can_use`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': this.#userAgentHeader,
+              [ES_CLIENT_AUTHENTICATION_HEADER]: this.#config.sharedSecret,
+              Authorization: authorization.toString(),
+            },
+            // @ts-expect-error Undici `fetch` supports `dispatcher` option, see https://github.com/nodejs/undici/pull/1411.
+            dispatcher: this.#dispatcher,
+          }
+        )
+      );
+    } catch (err) {
+      this.#logger.error(
+        () => `Failed to check API key use authority: ${getDetailedErrorMessage(err)}`
+      );
+      throw err;
+    }
+  }
+
+  /**
+   * See {@link UiamServicePublic.delegableRoles}.
+   */
+  async delegableRoles(
+    authorization: HTTPAuthorizationHeader,
+    params: DelegableUiamRolesParams
+  ): Promise<DelegableUiamRolesResult> {
+    try {
+      const response = (await UiamService.#parseUiamResponse(
+        await fetch(`${this.#config.url}/uiam/api/v1/api-keys/_delegable_roles`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': this.#userAgentHeader,
+            [ES_CLIENT_AUTHENTICATION_HEADER]: this.#config.sharedSecret,
+            Authorization: authorization.toString(),
+          },
+          body: JSON.stringify({
+            project_type: params.projectType,
+            project_ids: params.projectIds,
+            ...(params.customApplicationRoles
+              ? { custom_application_roles: params.customApplicationRoles }
+              : {}),
+          }),
+          // @ts-expect-error Undici `fetch` supports `dispatcher` option, see https://github.com/nodejs/undici/pull/1411.
+          dispatcher: this.#dispatcher,
+        })
+      )) as DelegableUiamRolesResponseBody;
+
+      return {
+        roles: response.roles.map(({ role_id: roleId, kind }) => ({ roleId, kind })),
+      };
+    } catch (err) {
+      this.#logger.error(
+        () => `Failed to list delegable application roles: ${getDetailedErrorMessage(err)}`
+      );
       throw err;
     }
   }

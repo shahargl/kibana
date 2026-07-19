@@ -13,6 +13,7 @@
     "target/**/*"
   ],
   "kbn_references": [
+    "@kbn/cloud-plugin",
     "@kbn/config-schema",
     "@kbn/core",
     "@kbn/encrypted-saved-objects-plugin",

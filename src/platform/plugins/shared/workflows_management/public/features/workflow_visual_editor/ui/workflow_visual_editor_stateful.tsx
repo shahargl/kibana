@@ -46,6 +46,7 @@ function toColorMode(euiColorMode: string): ColorMode {
 
 interface WorkflowVisualEditorStatefulProps {
   onStepRun?: (params: { stepId: string; actionType: string }) => void;
+  canUseRunAs?: boolean;
   /** Dagre rank direction for the graph layout. Defaults to `'TB'`. */
   direction?: LayoutDirection;
   /**
@@ -74,6 +75,7 @@ const TRIGGER_LABEL: Record<string, string> = {
  */
 export const WorkflowVisualEditorStateful: React.FC<WorkflowVisualEditorStatefulProps> = ({
   onStepRun,
+  canUseRunAs = true,
   direction = 'TB',
   defaultViewport,
   onViewportChange,
@@ -217,7 +219,7 @@ export const WorkflowVisualEditorStateful: React.FC<WorkflowVisualEditorStateful
         direction={direction}
         renderStepIcon={renderStepIcon}
         onStepRun={handleStepRun}
-        canRunSteps={Boolean(canExecuteWorkflow) && isYamlValid && !isExecutionsTab}
+        canRunSteps={Boolean(canExecuteWorkflow) && canUseRunAs && isYamlValid && !isExecutionsTab}
         defaultViewport={defaultViewport}
         onViewportChange={onViewportChange}
         showZoomControls

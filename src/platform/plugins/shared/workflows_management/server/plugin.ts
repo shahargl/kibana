@@ -76,6 +76,10 @@ export class WorkflowsPlugin
 
     const workflowsService = new WorkflowsService(core, plugins, this.logger, this.kibanaVersion);
     this.workflowsService = workflowsService;
+    plugins.workflowsExecutionEngine.registerWorkflowExecutionRequestResolver(
+      ({ runAs, spaceId, request }) =>
+        workflowsService.getExecutionIdentityRequest(runAs, spaceId, request)
+    );
 
     const api = new WorkflowsManagementApi(workflowsService, this.config.available);
     this.api = api;

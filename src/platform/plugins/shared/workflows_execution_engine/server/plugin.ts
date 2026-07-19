@@ -69,6 +69,7 @@ import type {
   ResumeWorkflowExecution,
   ScheduleWorkflow,
   TriggerEventsContract,
+  WorkflowExecutionRequestResolver,
   WorkflowsExecutionEnginePluginSetup,
   WorkflowsExecutionEnginePluginSetupDeps,
   WorkflowsExecutionEnginePluginStart,
@@ -144,7 +145,10 @@ const getExecutionIdentityAttribution = async (
   };
 };
 
-type SetupDependencies = Pick<ContextDependencies, 'cloudSetup'>;
+type SetupDependencies = Pick<
+  ContextDependencies,
+  'cloudSetup' | 'resolveWorkflowExecutionRequest'
+>;
 
 export class WorkflowsExecutionEnginePlugin
   implements
@@ -167,6 +171,9 @@ export class WorkflowsExecutionEnginePlugin
   private initializePromise?: Promise<void>;
   /** Set in start(); used by task runners to pass parent-resume into run/resume without exposing it on the public plugin contract. */
   private internalResumeWorkflowExecutionHandler?: InternalResumeWorkflowExecution;
+  private workflowExecutionRequestResolver: WorkflowExecutionRequestResolver = async ({
+    request,
+  }) => request;
 
   constructor(initializerContext: PluginInitializerContext) {
     this.logger = initializerContext.logger.get();
@@ -190,7 +197,10 @@ export class WorkflowsExecutionEnginePlugin
     initializeLogsRepositoryDataStream(core.dataStreams);
     initializeTriggerEventsDataStream(core.dataStreams);
 
-    const setupDependencies: SetupDependencies = { cloudSetup: plugins.cloud };
+    const setupDependencies: SetupDependencies = {
+      cloudSetup: plugins.cloud,
+      resolveWorkflowExecutionRequest: (params) => this.workflowExecutionRequestResolver(params),
+    };
     this.setupDependencies = setupDependencies;
 
     // Initialize metering from the centralized Usage API plugin
@@ -692,7 +702,11 @@ export class WorkflowsExecutionEnginePlugin
       },
     });
 
-    return {};
+    return {
+      registerWorkflowExecutionRequestResolver: (resolver: WorkflowExecutionRequestResolver) => {
+        this.workflowExecutionRequestResolver = resolver;
+      },
+    };
   }
 
   public start(coreStart: CoreStart, plugins: WorkflowsExecutionEnginePluginStartDeps) {

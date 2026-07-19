@@ -47,6 +47,8 @@ describe('UiamAPIKeys', () => {
       refreshSessionTokens: jest.fn(),
       invalidateSessionTokens: jest.fn(),
       grantApiKey: jest.fn(),
+      canUseApiKey: jest.fn(),
+      delegableRoles: jest.fn(),
       revokeApiKey: jest.fn(),
       convertApiKeys: jest.fn(),
       exchangeOAuthToken: jest.fn(),
@@ -226,6 +228,68 @@ describe('UiamAPIKeys', () => {
         }
       );
       expect(logger.debug).toHaveBeenCalledWith('Using authorization scheme: Bearer');
+    });
+  });
+
+  describe('canUse()', () => {
+    it('checks use authority with the current UIAM credential', async () => {
+      const request = httpServerMock.createKibanaRequest({
+        headers: { authorization: 'Bearer essu_current_user_token' },
+      });
+      mockUiam.canUseApiKey.mockResolvedValue({
+        allowed: false,
+        reason: 'role_assignments_not_covered',
+      });
+
+      await expect(uiamApiKeys.canUse(request, 'managed-key-id')).resolves.toEqual({
+        allowed: false,
+        reason: 'role_assignments_not_covered',
+      });
+      expect(mockUiam.canUseApiKey).toHaveBeenCalledWith(
+        expect.objectContaining({
+          scheme: 'Bearer',
+          credentials: 'essu_current_user_token',
+        }),
+        'managed-key-id'
+      );
+    });
+
+    it('rejects non-UIAM credentials', async () => {
+      const request = httpServerMock.createKibanaRequest({
+        headers: { authorization: 'Bearer regular-token' },
+      });
+
+      await expect(uiamApiKeys.canUse(request, 'managed-key-id')).rejects.toThrow(
+        'Cannot check API key use: provided credential is not compatible with UIAM'
+      );
+      expect(mockUiam.canUseApiKey).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('delegableRoles()', () => {
+    it('lists roles with the current UIAM credential', async () => {
+      const request = httpServerMock.createKibanaRequest({
+        headers: { authorization: 'Bearer essu_current_user_token' },
+      });
+      const params = {
+        projectType: 'security' as const,
+        projectIds: ['origin-project'],
+        customApplicationRoles: ['workflow_logs_reader'],
+      };
+      mockUiam.delegableRoles.mockResolvedValue({
+        roles: [{ roleId: 'workflow_logs_reader', kind: 'custom' }],
+      });
+
+      await expect(uiamApiKeys.delegableRoles(request, params)).resolves.toEqual({
+        roles: [{ roleId: 'workflow_logs_reader', kind: 'custom' }],
+      });
+      expect(mockUiam.delegableRoles).toHaveBeenCalledWith(
+        expect.objectContaining({
+          scheme: 'Bearer',
+          credentials: 'essu_current_user_token',
+        }),
+        params
+      );
     });
   });
 

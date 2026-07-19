@@ -34,6 +34,8 @@ describe('convertSecurityApi', () => {
             grant: jest.fn(),
             invalidate: jest.fn(),
             invalidateWithApiKey: jest.fn(),
+            canUse: jest.fn(),
+            delegableRoles: jest.fn(),
             convert: jest.fn(),
           },
         },

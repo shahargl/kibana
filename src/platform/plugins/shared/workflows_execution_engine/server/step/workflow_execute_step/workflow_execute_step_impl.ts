@@ -21,7 +21,10 @@ import type { StrategyResult } from './types';
 import type { WorkflowsExecutionEngineConfig } from '../../config';
 import type { StepExecutionRepository } from '../../repositories/step_execution_repository';
 import type { WorkflowExecutionRepository } from '../../repositories/workflow_execution_repository';
-import type { WorkflowsExecutionEnginePluginStart } from '../../types';
+import type {
+  WorkflowExecutionRequestResolver,
+  WorkflowsExecutionEnginePluginStart,
+} from '../../types';
 import type { StepExecutionRuntime } from '../../workflow_context_manager/step_execution_runtime';
 import type { WorkflowExecutionRuntimeManager } from '../../workflow_context_manager/workflow_execution_runtime_manager';
 import type { IWorkflowEventLogger } from '../../workflow_event_logger';
@@ -39,6 +42,7 @@ export interface WorkflowExecuteStepImplInit {
   stepExecutionRepository: StepExecutionRepository;
   workflowLogger: IWorkflowEventLogger;
   config: WorkflowsExecutionEngineConfig;
+  resolveWorkflowExecutionRequest?: WorkflowExecutionRequestResolver;
 }
 
 export class WorkflowExecuteStepImpl implements NodeImplementation, CancellableNode {
@@ -168,11 +172,20 @@ export class WorkflowExecuteStepImpl implements NodeImplementation, CancellableN
         return;
       }
 
+      const runAs = targetWorkflow.definition?.settings?.run_as;
+      const executionRequest =
+        runAs && this.init.resolveWorkflowExecutionRequest
+          ? await this.init.resolveWorkflowExecutionRequest({
+              runAs,
+              spaceId: this.init.spaceId,
+              request: this.init.request,
+            })
+          : this.init.request;
       const result = await executor.execute(
         targetWorkflow,
         inputs,
         this.init.spaceId,
-        this.init.request,
+        executionRequest,
         currentDepth
       );
 

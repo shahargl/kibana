@@ -1,0 +1,32 @@
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License, v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
+import { servers as cpsConfig } from '../../cps_local/serverless/security_complete.serverless.config';
+import type { ScoutServerConfig } from '../../../../../types';
+
+const SECURITY_TEST_ENDPOINTS_PATH = 'security_functional/plugins/test_endpoints';
+
+export const servers: ScoutServerConfig = {
+  ...cpsConfig,
+  kbnTestServer: {
+    ...cpsConfig.kbnTestServer,
+    serverArgs: cpsConfig.kbnTestServer.serverArgs.filter(
+      (argument) => !argument.includes(SECURITY_TEST_ENDPOINTS_PATH)
+    ),
+  },
+};

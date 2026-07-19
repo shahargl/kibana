@@ -39,17 +39,17 @@ export const LoginPage = ({ config }: { config: ConfigType }) => {
       // In UIAM we support only numeric usernames.
       username: config.uiam?.enabled ? '12345' : sanitizeUsername('Test User'),
       full_name: 'Test User',
-      role: undefined,
+      roles: [] as string[],
     },
     async onSubmit(values) {
-      if (!values.role) {
+      if (values.roles.length === 0) {
         return;
       }
       await switchCurrentUser({
         username: values.username,
         full_name: values.full_name,
         email: sanitizeEmail(values.full_name),
-        roles: [values.role],
+        roles: values.roles,
         url: window.location.href,
       });
     },
@@ -65,7 +65,7 @@ export const LoginPage = ({ config }: { config: ConfigType }) => {
     const fetchData = async () => {
       const response = await services.http.get<{ roles: string[] }>('/mock_idp/supported_roles');
       setRoles(response.roles);
-      formikRef.current.setFieldValue('role', response.roles[0]);
+      formikRef.current.setFieldValue('roles', [response.roles[0]]);
     };
 
     fetchData();
@@ -144,33 +144,30 @@ export const LoginPage = ({ config }: { config: ConfigType }) => {
                   />
                   <EuiSpacer size="m" />
 
-                  <EuiFormRow error={formik.errors.role} isInvalid={!!formik.errors.role}>
+                  <EuiFormRow error={formik.errors.roles} isInvalid={!!formik.errors.roles}>
                     <Field
                       as={EuiComboBox}
                       isLoading={!isRolesDefined()}
                       disabled={!isRolesDefined()}
-                      name="role"
-                      placeholder="Select your role"
-                      singleSelection={{ asPlainText: true }}
+                      name="roles"
+                      placeholder="Select your roles"
                       options={roles.map((role) => ({ label: role }))}
-                      selectedOptions={
-                        formik.values.role ? [{ label: formik.values.role }] : undefined
-                      }
+                      selectedOptions={formik.values.roles.map((role) => ({ label: role }))}
                       onCreateOption={(value: string) => {
-                        formik.setFieldValue('role', value);
+                        formik.setFieldValue('roles', [...formik.values.roles, value]);
                       }}
                       onChange={(selectedOptions: EuiComboBoxOptionOption[]) => {
                         formik.setFieldValue(
-                          'role',
-                          selectedOptions.length === 0 ? '' : selectedOptions[0].label
+                          'roles',
+                          selectedOptions.map((option) => option.label)
                         );
                       }}
-                      validate={(value: string) => {
-                        if (value.trim().length === 0) {
-                          return 'Role cannot be empty';
+                      validate={(value: string[]) => {
+                        if (value.length === 0) {
+                          return 'Select at least one role';
                         }
                       }}
-                      isInvalid={!!formik.errors.role}
+                      isInvalid={!!formik.errors.roles}
                       isClearable={false}
                       fullWidth
                     />
