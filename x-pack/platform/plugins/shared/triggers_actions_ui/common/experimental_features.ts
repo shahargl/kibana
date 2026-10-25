@@ -20,6 +20,7 @@ export const allowedExperimentalValues = Object.freeze({
   ruleUseExecutionStatus: false,
   ruleKqlBar: false,
   alertDeletionSettingsEnabled: true,
+  connectorsUxRedesign: false,
 });
 
 const deprecatedExperimentalValues = new Set([

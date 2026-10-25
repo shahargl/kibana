@@ -78,6 +78,7 @@ export const StorybookContextDecorator: FC<PropsWithChildren<StorybookContextDec
       ruleUseExecutionStatus: false,
       ruleKqlBar: true,
       alertDeletionSettingsEnabled: false,
+      connectorsUxRedesign: false,
     },
   });
 

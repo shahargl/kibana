@@ -30,6 +30,7 @@ import { suspendedComponentWithProps } from './lib/suspended_component_with_prop
 import type { ActionTypeRegistryContract, RuleTypeRegistryContract } from '../types';
 
 import { setDataViewsService } from '../common/lib/data_apis';
+import { getIsExperimentalFeatureEnabled } from '../common/get_experimental_features';
 import { KibanaContextProvider, useKibana } from '../common/lib/kibana';
 import { ConnectorProvider } from './context/connector_context';
 import type { Section } from './constants';
@@ -37,6 +38,11 @@ import { queryClient } from './query_client';
 
 const ActionsConnectorsHome = lazy(
   () => import('./sections/actions_connectors_list/components/actions_connectors_home')
+);
+const ConnectorsRedesignApp = lazy(() =>
+  import('./sections/connectors_redesign').then(({ ConnectorsRedesignApp: component }) => ({
+    default: component,
+  }))
 );
 
 export interface TriggersAndActionsUiServices extends CoreStart {
@@ -105,14 +111,18 @@ export const AppWithoutRouter = ({ sectionsRegex }: { sectionsRegex: string }) =
         isServerless,
       }}
     >
-      <Routes>
-        <Route
-          path={`/:section(${sectionsRegex})`}
-          component={suspendedComponentWithProps(ActionsConnectorsHome, 'xl')}
-        />
+      {getIsExperimentalFeatureEnabled('connectorsUxRedesign') ? (
+        suspendedComponentWithProps(ConnectorsRedesignApp, 'xl')({})
+      ) : (
+        <Routes>
+          <Route
+            path={`/:section(${sectionsRegex})`}
+            component={suspendedComponentWithProps(ActionsConnectorsHome, 'xl')}
+          />
 
-        <Redirect from={'/'} to="connectors" />
-      </Routes>
+          <Redirect from={'/'} to="connectors" />
+        </Routes>
+      )}
     </ConnectorProvider>
   );
 };

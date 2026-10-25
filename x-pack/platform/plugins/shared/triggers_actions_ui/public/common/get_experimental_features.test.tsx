@@ -23,6 +23,7 @@ describe('getIsExperimentalFeatureEnabled', () => {
         ruleUseExecutionStatus: false,
         ruleKqlBar: true,
         alertDeletionSettingsEnabled: false,
+        connectorsUxRedesign: false,
       },
     });
 
