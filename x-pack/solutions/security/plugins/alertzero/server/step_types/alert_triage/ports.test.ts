@@ -139,100 +139,38 @@ describe('listLiveExecutionIds', () => {
 });
 
 describe('loadAlertsByIds', () => {
-  const loadWith = (hits: unknown[]) =>
-    loadAlertsByIds(
-      {
-        callKibanaApi: jest
-          .fn()
-          .mockResolvedValue({ status: 200, headers: {}, body: { hits: { hits } } }),
-      },
-      ['a1', 'gone']
+  const esClient = {};
+  const contextManager = {
+    getScopedEsClient: () => esClient,
+    getContext: () => ({ workflow: { spaceId: 'space-a' } }),
+  } as unknown as Parameters<typeof loadAlertsByIds>[1];
+
+  it('loads the loaded alert fields of the space alerts with the user-scoped client', async () => {
+    const loadAlertDocuments = jest.fn().mockResolvedValue({
+      alerts: [{ _id: 'a1', _index: 'i', kibana: { alert: { rule: { uuid: 'rule-1' } } } }],
+      missingIds: ['gone'],
+    });
+
+    const loaded = await loadAlertsByIds({ loadAlertDocuments }, contextManager, ['a1', 'gone']);
+
+    expect(loadAlertDocuments).toHaveBeenCalledWith({
+      alerts: { ids: ['a1', 'gone'], index: '.alerts-security.alerts-space-a' },
+      sourceIncludes: LOADED_ALERT_FIELDS,
+      maxBytes: 10 * 1024 * 1024,
+      esClient,
+    });
+    expect(loaded).toEqual({
+      alerts: [{ _id: 'a1', _index: 'i', kibana: { alert: { rule: { uuid: 'rule-1' } } } }],
+      missingAlertIds: ['gone'],
+    });
+  });
+
+  it('fails the whole load when the loader fails, so a partial list is never returned', async () => {
+    const loadAlertDocuments = jest.fn().mockRejectedValue(new Error('boom'));
+
+    await expect(loadAlertsByIds({ loadAlertDocuments }, contextManager, ['a1'])).rejects.toThrow(
+      'boom'
     );
-
-  // Alert Analysis rejects an alert without a nested `kibana` object, and the alerts index
-  // stores `kibana.*` as flat dotted keys, so every batch failed at classification.
-  it('nests the dotted kibana keys Alert Analysis reads and keeps the nested ECS fields', async () => {
-    const { alerts } = await loadWith([
-      {
-        _id: 'a1',
-        _index: '.internal.alerts-security.alerts-default-000001',
-        _source: {
-          '@timestamp': '2026-10-12T12:00:00.000Z',
-          'kibana.alert.rule.uuid': 'rule-1',
-          'kibana.alert.rule.name': 'Rule one',
-          'kibana.alert.severity': 'high',
-          event: { code: '4688' },
-        },
-      },
-    ]);
-
-    expect(alerts).toEqual([
-      {
-        _id: 'a1',
-        _index: '.internal.alerts-security.alerts-default-000001',
-        '@timestamp': '2026-10-12T12:00:00.000Z',
-        kibana: { alert: { rule: { uuid: 'rule-1', name: 'Rule one' }, severity: 'high' } },
-        event: { code: '4688' },
-      },
-    ]);
-  });
-
-  it('asks only for the loaded alert fields', async () => {
-    const callKibanaApi = jest
-      .fn()
-      .mockResolvedValue({ status: 200, headers: {}, body: { hits: { hits: [] } } });
-    await loadAlertsByIds({ callKibanaApi }, ['a1']);
-    expect(callKibanaApi.mock.calls[0][0].body._source).toEqual(LOADED_ALERT_FIELDS);
-  });
-
-  describe('with more ids than one search takes', () => {
-    const ids = Array.from({ length: 250 }, (_, index) => `a${index}`);
-    const hitsFor = (values: string[]) => values.map((_id) => ({ _id, _index: 'i', _source: {} }));
-
-    it('searches in chunks of 100 ids and returns one list', async () => {
-      const callKibanaApi = jest.fn().mockImplementation(async ({ body }) => ({
-        status: 200,
-        headers: {},
-        body: { hits: { hits: hitsFor(body.query.ids.values) } },
-      }));
-
-      const { alerts, missingAlertIds } = await loadAlertsByIds({ callKibanaApi }, ids);
-
-      expect(callKibanaApi.mock.calls.map(([{ body }]) => body.query.ids.values.length)).toEqual([
-        100, 100, 50,
-      ]);
-      expect(alerts).toHaveLength(250);
-      expect(missingAlertIds).toEqual([]);
-    });
-
-    it('reports an id that is missing from any chunk', async () => {
-      const callKibanaApi = jest.fn().mockImplementation(async ({ body }) => ({
-        status: 200,
-        headers: {},
-        body: {
-          hits: { hits: hitsFor(body.query.ids.values.filter((id: string) => id !== 'a150')) },
-        },
-      }));
-
-      const { missingAlertIds } = await loadAlertsByIds({ callKibanaApi }, ids);
-
-      expect(missingAlertIds).toEqual(['a150']);
-    });
-
-    it('fails the whole load when a chunk fails, so a partial list is never returned', async () => {
-      const callKibanaApi = jest
-        .fn()
-        .mockResolvedValueOnce({ status: 200, headers: {}, body: { hits: { hits: [] } } })
-        .mockRejectedValueOnce(new Error('boom'));
-
-      await expect(loadAlertsByIds({ callKibanaApi }, ids)).rejects.toThrow('boom');
-    });
-  });
-
-  it('reports the ids that could not be loaded', async () => {
-    const { missingAlertIds } = await loadWith([{ _id: 'a1', _index: 'i', _source: {} }]);
-
-    expect(missingAlertIds).toEqual(['gone']);
   });
 });
 

@@ -30,6 +30,7 @@ import {
   getTriageJoinProposalStepDefinition,
   type GroupProposalsStepDependencies,
 } from './alert_triage/group_proposals_step';
+import type { AlertDocumentLoader } from './alert_triage/ports';
 import type { ReportWorkerOutcomeStepDeps } from './report_worker_outcome/report_worker_outcome_step';
 import { getReportWorkerOutcomeStepDefinition } from './report_worker_outcome/report_worker_outcome_step';
 
@@ -44,6 +45,7 @@ export const registerStepDefinitions = ({
   isContextEngineEnabled,
   getInternalEsClient,
   getTaskManager,
+  getAlertLoader,
   grouping,
   logger,
 }: {
@@ -57,7 +59,8 @@ export const registerStepDefinitions = ({
   isContextEngineEnabled: PackageReportStepDependencies['isContextEngineEnabled'];
   getInternalEsClient?: () => ElasticsearchClient;
   getTaskManager: () => Pick<TaskManagerStartContract, 'aggregate'>;
-  grouping: Omit<GroupProposalsStepDependencies, 'getConversations' | 'logger'>;
+  getAlertLoader: () => AlertDocumentLoader;
+  grouping: Omit<GroupProposalsStepDependencies, 'getAlertLoader' | 'getConversations' | 'logger'>;
   logger?: Logger;
 }) => {
   workflowsExtensions.registerStepDefinition(
@@ -89,10 +92,12 @@ export const registerStepDefinitions = ({
   );
   workflowsExtensions.registerStepDefinition(getTriageHeadroomStepDefinition({ getTaskManager }));
   workflowsExtensions.registerStepDefinition(getTriagePlanSweepStepDefinition());
-  workflowsExtensions.registerStepDefinition(getTriageLoadAlertsStepDefinition());
-  workflowsExtensions.registerStepDefinition(getTriageTagPatternKeysStepDefinition());
+  workflowsExtensions.registerStepDefinition(getTriageLoadAlertsStepDefinition({ getAlertLoader }));
+  workflowsExtensions.registerStepDefinition(
+    getTriageTagPatternKeysStepDefinition({ getAlertLoader })
+  );
   workflowsExtensions.registerStepDefinition(getTriageRetagProposalAlertsStepDefinition());
-  const groupingDeps = { ...grouping, getConversations, logger };
+  const groupingDeps = { ...grouping, getAlertLoader, getConversations, logger };
   workflowsExtensions.registerStepDefinition(
     getTriageGroupFpCandidatesStepDefinition(groupingDeps)
   );

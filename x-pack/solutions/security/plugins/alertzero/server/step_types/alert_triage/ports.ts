@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { set } from '@kbn/safer-lodash-set';
+import type { WorkflowsServerPluginSetup } from '@kbn/workflows-management-plugin/server';
 import { KibanaApiCallError } from '@kbn/workflows-extensions/server';
 import type { StepHandlerContext } from '@kbn/workflows-extensions/server';
 import type { TaskManagerStartContract } from '@kbn/task-manager-plugin/server';
@@ -31,6 +31,7 @@ type KibanaApi = Pick<StepHandlerContext['contextManager'], 'callKibanaApi'>;
 // security_solution constants.
 const SIGNALS_SEARCH_PATH = '/api/detection_engine/signals/search';
 const SIGNALS_TAGS_PATH = '/api/detection_engine/signals/tags';
+const SECURITY_ALERTS_INDEX_PREFIX = '.alerts-security.alerts-';
 
 const WORKFLOW_RUN_TASK_TYPE = 'workflow:run';
 
@@ -374,20 +375,6 @@ export interface LoadedAlerts {
   missingAlertIds: string[];
 }
 
-/**
- * The alerts index stores `kibana.*` as flat dotted keys next to nested ECS objects. Alert
- * Analysis requires the nested `kibana.alert.rule.uuid` shape, so dotted keys are expanded.
- */
-const expandDottedKeys = (source: Record<string, unknown>): Record<string, unknown> =>
-  Object.entries(source).reduce<Record<string, unknown>>((expanded, [key, value]) => {
-    if (key.includes('.')) {
-      set(expanded, key, value);
-    } else {
-      expanded[key] = value;
-    }
-    return expanded;
-  }, {});
-
 export interface KeyHistory {
   falsePositive: number;
   truePositive: number;
@@ -449,45 +436,37 @@ export const readKeyHistory = async (
   };
 };
 
-/** Ids per search, so a proposal of up to 1,000 alerts does not exceed the 10 MiB response cap. */
-const LOAD_CHUNK_SIZE = 100;
+export type AlertDocumentLoader = Pick<
+  WorkflowsServerPluginSetup['management'],
+  'loadAlertDocuments'
+>;
+
+type AlertLoadContext = Pick<
+  StepHandlerContext['contextManager'],
+  'getScopedEsClient' | 'getContext'
+>;
+
+/** The engine's default `max-step-size`, so an oversized load fails as a size error. */
+const LOAD_MAX_BYTES = 10 * 1024 * 1024;
 
 /**
- * Loads alerts by id as `{ _id, _index, ...source }` with only the `LOADED_ALERT_FIELDS`, which are
- * what Alert Analysis, the pattern keys and the proposal text read. The load is in chunks of
- * `LOAD_CHUNK_SIZE` ids, and a failing chunk fails the load.
+ * Loads alerts by id from the space's security alerts with only the `LOADED_ALERT_FIELDS`, which
+ * are what Alert Analysis, the pattern keys and the proposal text read. The documents have the
+ * shape alert-triggered workflows receive: `{ _id, _index }` plus the formatted, nested source.
  */
 export const loadAlertsByIds = async (
-  { callKibanaApi }: KibanaApi,
+  loader: AlertDocumentLoader,
+  contextManager: AlertLoadContext,
   alertIds: readonly string[]
 ): Promise<LoadedAlerts> => {
-  const chunks = Array.from({ length: Math.ceil(alertIds.length / LOAD_CHUNK_SIZE) }, (_, index) =>
-    alertIds.slice(index * LOAD_CHUNK_SIZE, (index + 1) * LOAD_CHUNK_SIZE)
-  );
-  const hits: Array<AlertHit & { _index?: string }> = [];
-  for (const ids of chunks) {
-    const { body } = await callKibanaApi<{
-      hits?: { hits?: Array<AlertHit & { _index?: string }> };
-    }>({
-      method: 'POST',
-      path: SIGNALS_SEARCH_PATH,
-      body: {
-        size: ids.length,
-        query: { ids: { values: ids } },
-        _source: LOADED_ALERT_FIELDS,
-      },
-    });
-    hits.push(...(body.hits?.hits ?? []));
-  }
-  const found = new Set(hits.map(({ _id }) => _id));
-  return {
-    alerts: hits.map(({ _id, _index, _source = {} }) => ({
-      ...expandDottedKeys(_source),
-      _id,
-      _index,
-    })),
-    missingAlertIds: alertIds.filter((id) => !found.has(id)),
-  };
+  const { spaceId } = contextManager.getContext().workflow;
+  const { alerts, missingIds } = await loader.loadAlertDocuments({
+    alerts: { ids: alertIds, index: `${SECURITY_ALERTS_INDEX_PREFIX}${spaceId}` },
+    sourceIncludes: LOADED_ALERT_FIELDS,
+    maxBytes: LOAD_MAX_BYTES,
+    esClient: contextManager.getScopedEsClient(),
+  });
+  return { alerts, missingAlertIds: missingIds };
 };
 
 const SEARCH_RESULT_LIMIT = 10_000;

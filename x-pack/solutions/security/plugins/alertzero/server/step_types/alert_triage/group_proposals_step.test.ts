@@ -98,20 +98,12 @@ const setup = ({
         },
       };
     }
-    return {
-      status: 200,
-      headers: {},
-      body: {
-        hits: {
-          hits: (body.query.ids.values as string[]).map((id) => ({
-            _id: id,
-            _index: 'alerts',
-            _source: source,
-          })),
-        },
-      },
-    };
+    throw new Error(`Unexpected Kibana API call: ${JSON.stringify(body)}`);
   });
+  const loadAlertDocuments = jest.fn(async ({ alerts }: { alerts: { ids: string[] } }) => ({
+    alerts: alerts.ids.map((id) => ({ _id: id, _index: 'alerts', ...source })),
+    missingIds: [],
+  }));
   const definition = (factory: typeof getTriageGroupFpCandidatesStepDefinition) =>
     factory({
       getProposals: () =>
@@ -120,6 +112,7 @@ const setup = ({
           getProposalPrivileges: () => privileges,
         } as never),
       getWorkflowsManagement: () => management as never,
+      getAlertLoader: () => ({ loadAlertDocuments } as never),
       getConversations: () =>
         ({
           getScopedClient: async () => ({
@@ -134,6 +127,7 @@ const setup = ({
       input,
       contextManager: {
         callKibanaApi,
+        getScopedEsClient: () => ({}),
         getContext: () => ({ workflow: { spaceId: SPACE } }),
         getFakeRequest: () => ({}),
       },

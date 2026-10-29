@@ -33,7 +33,7 @@ import { buildPatternKeys, getField } from '../../alert_triage/pattern_key';
 import { buildProposalText } from '../../alert_triage/proposal_text';
 import { createInvestigationOpenChecker } from '../../services/proposals/dedup';
 import type { WorkflowExecutionReader } from '../report_worker_outcome/report_worker_outcome_step';
-import { loadAlertsByIds, readKeyHistory } from './ports';
+import { loadAlertsByIds, readKeyHistory, type AlertDocumentLoader } from './ports';
 
 /** How far back the proposal comment looks for earlier verdicts of the same pattern. */
 const HISTORY_DAYS = 30;
@@ -65,6 +65,7 @@ const readHistory = async (
 export interface GroupProposalsStepDependencies {
   getProposals: () => ProposalsPluginStart;
   getWorkflowsManagement: () => WorkflowExecutionReader | undefined;
+  getAlertLoader: () => AlertDocumentLoader;
   getConversations: () => AgentBuilderPluginStart['conversations'];
   /** The kill switch: false makes every batch mint its own proposal, as before grouping. */
   isGroupingEnabled: () => Promise<boolean>;
@@ -174,7 +175,7 @@ const createRuntime = async (
       return isInvestigationOpen(conversationId);
     },
     revise: async (head, alertIds) => {
-      const { alerts } = await loadAlertsByIds(contextManager, alertIds);
+      const { alerts } = await loadAlertsByIds(deps.getAlertLoader(), contextManager, alertIds);
       const history = await readHistory(
         { contextManager, logger: deps.logger },
         spaceId,
@@ -263,6 +264,7 @@ export const getTriageGroupFpCandidatesStepDefinition = (deps: GroupProposalsSte
           if (!input.other_alert_ids?.length || !input.impacted_entities?.length) return [];
           try {
             const { alerts: otherDocs } = await loadAlertsByIds(
+              deps.getAlertLoader(),
               contextManager,
               input.other_alert_ids
             );
@@ -292,6 +294,7 @@ export const getTriageGroupFpCandidatesStepDefinition = (deps: GroupProposalsSte
           };
         }
         const { alerts, missingAlertIds } = await loadAlertsByIds(
+          deps.getAlertLoader(),
           contextManager,
           input.fp_candidate_ids
         );

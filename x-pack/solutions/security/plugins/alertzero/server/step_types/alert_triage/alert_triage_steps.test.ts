@@ -7,6 +7,7 @@
 
 import type { TaskManagerStartContract } from '@kbn/task-manager-plugin/server';
 import type { StepHandlerContext } from '@kbn/workflows-extensions/server';
+import { AlertDocumentsTooLargeError } from '@kbn/workflows-management-plugin/server';
 import { TM_DELAY_LIMIT_MS } from '../../alert_triage/constants';
 import { LOADED_ALERT_FIELDS } from '../../alert_triage/loaded_alert_fields';
 import {
@@ -16,13 +17,24 @@ import {
   getTriagePlanSweepStepDefinition,
   getTriageRetagProposalAlertsStepDefinition,
 } from './alert_triage_steps';
+import type { AlertDocumentLoader } from './ports';
 
 const createContext = (input: Record<string, unknown>, callKibanaApi: jest.Mock) =>
   ({
     input,
-    contextManager: { callKibanaApi },
+    contextManager: {
+      callKibanaApi,
+      getScopedEsClient: () => ({}),
+      getContext: () => ({ workflow: { spaceId: 'default' } }),
+    },
     logger: { warn: jest.fn() },
   } as unknown as StepHandlerContext<unknown, unknown>);
+
+const loaderOf = (
+  loadAlertDocuments: jest.Mock
+): { getAlertLoader: () => AlertDocumentLoader } => ({
+  getAlertLoader: () => ({ loadAlertDocuments }),
+});
 
 const taskManagerWithLag = (lagMs: number | 'fails') =>
   ({
@@ -201,101 +213,92 @@ describe('triage plan sweep step', () => {
 });
 
 describe('triage load alerts step', () => {
-  it('loads the batch documents with _id and _index, as Alert Analysis takes them', async () => {
-    const callKibanaApi = jest.fn().mockResolvedValue({
-      status: 200,
-      headers: {},
-      body: {
-        hits: {
-          hits: [
-            {
-              _id: 'a-1',
-              _index: '.alerts-security.alerts-default',
-              _source: { '@timestamp': 't', 'kibana.alert.rule.uuid': 'rule-a' },
-            },
-          ],
-        },
+  it('returns the loaded documents and the ids that matched nothing', async () => {
+    const alerts = [
+      {
+        _id: 'a-1',
+        _index: '.alerts-security.alerts-default',
+        '@timestamp': 't',
+        kibana: { alert: { rule: { uuid: 'rule-a' } } },
       },
-    });
+    ];
+    const loadAlertDocuments = jest.fn().mockResolvedValue({ alerts, missingIds: ['a-2'] });
 
-    const { output } = await getTriageLoadAlertsStepDefinition().handler(
-      createContext({ alert_ids: ['a-1', 'a-2'] }, callKibanaApi)
+    const { output } = await getTriageLoadAlertsStepDefinition(
+      loaderOf(loadAlertDocuments)
+    ).handler(createContext({ alert_ids: ['a-1', 'a-2'] }, jest.fn()));
+
+    // An alert deleted between planning and the batch is reported, not silently dropped.
+    expect(output).toEqual({ alerts, missing_alert_ids: ['a-2'] });
+    expect(loadAlertDocuments).toHaveBeenCalledWith(
+      expect.objectContaining({
+        alerts: { ids: ['a-1', 'a-2'], index: '.alerts-security.alerts-default' },
+        sourceIncludes: LOADED_ALERT_FIELDS,
+      })
     );
-
-    expect(output).toEqual({
-      alerts: [
-        {
-          '@timestamp': 't',
-          // Alert Analysis requires the nested shape, not the index's flat dotted keys.
-          kibana: { alert: { rule: { uuid: 'rule-a' } } },
-          _id: 'a-1',
-          _index: '.alerts-security.alerts-default',
-        },
-      ],
-      // An alert deleted between planning and the batch is reported, not silently dropped.
-      missing_alert_ids: ['a-2'],
-    });
-    expect(callKibanaApi.mock.calls[0][0].body).toEqual({
-      size: 2,
-      query: { ids: { values: ['a-1', 'a-2'] } },
-      _source: LOADED_ALERT_FIELDS,
-    });
   });
 
   it.each([
-    ['a response over the size cap', 'CallKibanaApiResponseTooLargeError', 'StepSizeLimitExceeded'],
-    ['any other failure', 'Error', 'ApiError'],
-  ])('reports %s as %s', async (_label, name, type) => {
-    const error = Object.assign(new Error('failed'), { name });
-    const callKibanaApi = jest.fn().mockRejectedValue(error);
+    [
+      'a load over the size budget',
+      new AlertDocumentsTooLargeError(10, 20),
+      'StepSizeLimitExceeded',
+    ],
+    [
+      'a response over the size cap',
+      Object.assign(new Error('failed'), { name: 'CallKibanaApiResponseTooLargeError' }),
+      'StepSizeLimitExceeded',
+    ],
+    ['any other failure', new Error('failed'), 'ApiError'],
+  ])('reports %s as %s', async (_label, error, type) => {
+    const loadAlertDocuments = jest.fn().mockRejectedValue(error);
 
     await expect(
-      getTriageLoadAlertsStepDefinition().handler(
-        createContext({ alert_ids: ['a-1'] }, callKibanaApi)
+      getTriageLoadAlertsStepDefinition(loaderOf(loadAlertDocuments)).handler(
+        createContext({ alert_ids: ['a-1'] }, jest.fn())
       )
     ).rejects.toMatchObject({ type });
   });
 });
 
 describe('triage tag pattern keys step', () => {
-  const hit = (id: string, executable: string) => ({
+  const doc = (id: string, executable: string) => ({
     _id: id,
     _index: '.alerts-security.alerts-default',
-    _source: {
-      'kibana.alert.rule.uuid': 'rule-a',
-      'kibana.alert.rule.revision': 1,
-      'host.os.type': 'windows',
-      'process.executable': executable,
-    },
+    kibana: { alert: { rule: { uuid: 'rule-a', revision: 1 } } },
+    host: { os: { type: 'windows' } },
+    process: { executable },
   });
+  const tagsRoute = (body: Record<string, unknown>) =>
+    jest.fn().mockResolvedValue({ status: 200, headers: {}, body });
 
-  const run = async (hits: unknown[], fpCandidateIds: string[] = []) => {
-    const callKibanaApi = jest
+  const run = async (docs: unknown[], fpCandidateIds: string[] = []) => {
+    const callKibanaApi = tagsRoute({ updated: 1, failures: [] });
+    const ids = ['a-1', 'a-2', 'a-3'];
+    const found = new Set(docs.map((loaded) => (loaded as { _id: string })._id));
+    const loadAlertDocuments = jest
       .fn()
-      .mockImplementation(async ({ path }: { path: string }) =>
-        path.endsWith('/signals/tags')
-          ? { status: 200, headers: {}, body: { updated: 1, failures: [] } }
-          : { status: 200, headers: {}, body: { hits: { hits } } }
-      );
-    const { output } = await getTriageTagPatternKeysStepDefinition().handler(
+      .mockResolvedValue({ alerts: docs, missingIds: ids.filter((id) => !found.has(id)) });
+    const { output } = await getTriageTagPatternKeysStepDefinition(
+      loaderOf(loadAlertDocuments)
+    ).handler(
       createContext(
-        { alert_ids: ['a-1', 'a-2', 'a-3'], fp_candidate_ids: fpCandidateIds, space_id: 'default' },
+        { alert_ids: ids, fp_candidate_ids: fpCandidateIds, space_id: 'default' },
         callKibanaApi
       )
     );
-    const tagCalls = callKibanaApi.mock.calls
-      .map(([request]) => request)
-      .filter(({ path }) => path.endsWith('/signals/tags'));
+    const tagCalls = callKibanaApi.mock.calls.map(([request]) => request);
     return { output, tagCalls };
   };
 
   it('tags each pattern once with both key hashes, and counts the keys', async () => {
     const { output, tagCalls } = await run(
-      [hit('a-1', 'C:\\Tools\\x.exe'), hit('a-2', 'C:\\Tools\\x.exe')],
+      [doc('a-1', 'C:\\Tools\\x.exe'), doc('a-2', 'C:\\Tools\\x.exe')],
       ['a-1']
     );
 
     expect(tagCalls).toHaveLength(1);
+    expect(tagCalls[0].path).toBe('/api/detection_engine/signals/tags');
     expect(tagCalls[0].body.ids).toEqual(['a-1', 'a-2']);
     expect(tagCalls[0].body.tags.tags_to_add).toEqual([
       expect.stringMatching(/^az:triage_strict_key:[0-9a-f]{16}$/),
@@ -315,19 +318,15 @@ describe('triage tag pattern keys step', () => {
   });
 
   it('fails when a tag update is not fully applied, so a missing key is never reported as written', async () => {
-    const callKibanaApi = jest
+    const loadAlertDocuments = jest
       .fn()
-      .mockImplementation(async ({ path }: { path: string }) =>
-        path.endsWith('/signals/tags')
-          ? { status: 200, headers: {}, body: { failures: [{}] } }
-          : { status: 200, headers: {}, body: { hits: { hits: [hit('a-1', 'C:\\x.exe')] } } }
-      );
+      .mockResolvedValue({ alerts: [doc('a-1', 'C:\\x.exe')], missingIds: [] });
 
     await expect(
-      getTriageTagPatternKeysStepDefinition().handler(
+      getTriageTagPatternKeysStepDefinition(loaderOf(loadAlertDocuments)).handler(
         createContext(
           { alert_ids: ['a-1'], fp_candidate_ids: [], space_id: 'default' },
-          callKibanaApi
+          tagsRoute({ failures: [{}] })
         )
       )
     ).rejects.toThrow('not fully applied');

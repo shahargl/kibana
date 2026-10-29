@@ -7,6 +7,7 @@
 
 import type { TaskManagerStartContract } from '@kbn/task-manager-plugin/server';
 import { createServerStepDefinition } from '@kbn/workflows-extensions/server';
+import { AlertDocumentsTooLargeError } from '@kbn/workflows-management-plugin/server';
 import { ExecutionError } from '@kbn/workflows/server';
 import {
   triageHeadroomStepCommonDefinition,
@@ -28,10 +29,15 @@ import {
   loadAlertsByIds,
   readWorkflowRunLagMs,
   tagAlerts,
+  type AlertDocumentLoader,
 } from './ports';
 
 export interface AlertTriageStepDependencies {
   getTaskManager: () => Pick<TaskManagerStartContract, 'aggregate'>;
+}
+
+export interface AlertLoadStepDependencies {
+  getAlertLoader: () => AlertDocumentLoader;
 }
 
 const toApiError = (error: unknown, action: string): ExecutionError => {
@@ -39,7 +45,9 @@ const toApiError = (error: unknown, action: string): ExecutionError => {
   const message = error instanceof Error ? error.message : `Failed to ${action}`;
   // The engine's error class is not exported to steps, so it is matched by name. Reporting it with
   // the type the output size check uses lets a workflow stop retrying a size error.
-  const isTooLarge = error instanceof Error && error.name === 'CallKibanaApiResponseTooLargeError';
+  const isTooLarge =
+    error instanceof AlertDocumentsTooLargeError ||
+    (error instanceof Error && error.name === 'CallKibanaApiResponseTooLargeError');
   return new ExecutionError({ type: isTooLarge ? 'StepSizeLimitExceeded' : 'ApiError', message });
 };
 
@@ -151,12 +159,16 @@ export const getTriagePlanSweepStepDefinition = () =>
     },
   });
 
-export const getTriageLoadAlertsStepDefinition = () =>
+export const getTriageLoadAlertsStepDefinition = ({ getAlertLoader }: AlertLoadStepDependencies) =>
   createServerStepDefinition({
     ...triageLoadAlertsStepCommonDefinition,
     handler: async ({ input, contextManager }) => {
       try {
-        const { alerts, missingAlertIds } = await loadAlertsByIds(contextManager, input.alert_ids);
+        const { alerts, missingAlertIds } = await loadAlertsByIds(
+          getAlertLoader(),
+          contextManager,
+          input.alert_ids
+        );
         return { output: { alerts, missing_alert_ids: missingAlertIds } };
       } catch (error) {
         throw toApiError(error, 'load triage batch alerts');
@@ -164,12 +176,18 @@ export const getTriageLoadAlertsStepDefinition = () =>
     },
   });
 
-export const getTriageTagPatternKeysStepDefinition = () =>
+export const getTriageTagPatternKeysStepDefinition = ({
+  getAlertLoader,
+}: AlertLoadStepDependencies) =>
   createServerStepDefinition({
     ...triageTagPatternKeysStepCommonDefinition,
     handler: async ({ input, contextManager }) => {
       try {
-        const { alerts, missingAlertIds } = await loadAlertsByIds(contextManager, input.alert_ids);
+        const { alerts, missingAlertIds } = await loadAlertsByIds(
+          getAlertLoader(),
+          contextManager,
+          input.alert_ids
+        );
         const { groups, counts } = planKeyTags({
           alerts: alerts.map((doc) => ({ id: String(doc._id), doc })),
           fpCandidateIds: input.fp_candidate_ids,
