@@ -5,7 +5,8 @@
  * 2.0.
  */
 
-import { loggingSystemMock, savedObjectsClientMock } from '@kbn/core/server/mocks';
+import { coreMock, loggingSystemMock, savedObjectsClientMock } from '@kbn/core/server/mocks';
+import { kibanaRequestFactory } from '@kbn/core-http-server-utils';
 import { ApiKeyType } from '../config';
 import type { ConcreteTaskInstance } from '../task';
 import { TaskStatus } from '../task';
@@ -157,6 +158,98 @@ describe('EsApiKeyStrategy', () => {
       });
 
       expect(strategy.getApiKeyIdsForInvalidation(task)).toEqual([]);
+    });
+  });
+
+  describe('UIAM service accounts', () => {
+    const uiamTask = mockTaskInstance({
+      uiamApiKey: 'essu_uiam-key',
+      userScope: {
+        apiKeyId: 'uiam-key-id',
+        uiamApiKeyId: 'uiam-key-id',
+        spaceId: asSpaceId('default'),
+        apiKeyCreatedByUser: false,
+      },
+    });
+
+    test('grants a UIAM key for a UIAM service account request', async () => {
+      const coreStart = coreMock.createStart();
+      const grant = jest.fn().mockResolvedValueOnce({
+        id: 'uiam-key-id',
+        name: 'TaskManager-UIAM: report',
+        api_key: 'essu_uiam-key',
+      });
+      coreStart.security.authc.apiKeys.uiam = {
+        grant,
+        invalidate: jest.fn(),
+        convert: jest.fn(),
+      } as never;
+      coreStart.security.authc.getPrincipal = jest.fn().mockReturnValue({
+        type: 'service_account',
+        serviceAccountId: 'kibana/agent',
+        variant: 'uiam',
+      });
+      const request = kibanaRequestFactory({ headers: { authorization: 'Bearer essu_token' } });
+      const uiamStrategy = new EsApiKeyStrategy(
+        coreStart.security,
+        loggingSystemMock.createLogger()
+      );
+
+      const result = await uiamStrategy.grantApiKeys(
+        [mockTaskInstance()],
+        request,
+        coreStart.security,
+        { cloneApiKey: true }
+      );
+
+      expect(result.get('task-1')).toEqual(
+        expect.objectContaining({
+          uiamApiKey: 'essu_uiam-key',
+          userScope: expect.objectContaining({ apiKeyCreatedByUser: false }),
+        })
+      );
+      expect(result.get('task-1')?.apiKey).toBeUndefined();
+      expect(grant).toHaveBeenCalledWith(request, { name: 'TaskManager-UIAM: report' });
+      expect(coreStart.security.authc.apiKeys.cloneAsInternalUser).not.toHaveBeenCalled();
+    });
+
+    test('grants a UIAM key for a follow-up task scheduled with a task UIAM key', async () => {
+      const coreStart = coreMock.createStart();
+      const grant = jest.fn().mockResolvedValueOnce({
+        id: 'next-uiam-key-id',
+        name: 'TaskManager-UIAM: report',
+        api_key: 'essu_next-uiam-key',
+      });
+      coreStart.security.authc.apiKeys.uiam = {
+        grant,
+        invalidate: jest.fn(),
+        convert: jest.fn(),
+      } as never;
+      const request = kibanaRequestFactory({ headers: { authorization: 'ApiKey essu_uiam-key' } });
+      const uiamStrategy = new EsApiKeyStrategy(
+        coreStart.security,
+        loggingSystemMock.createLogger()
+      );
+
+      const result = await uiamStrategy.grantApiKeys(
+        [mockTaskInstance()],
+        request,
+        coreStart.security,
+        { cloneApiKey: true }
+      );
+
+      expect(result.get('task-1')?.uiamApiKey).toBe('essu_next-uiam-key');
+      expect(coreStart.security.authc.apiKeys.cloneAsInternalUser).not.toHaveBeenCalled();
+    });
+
+    test('runs a task that has only a UIAM key with that key', () => {
+      expect(strategy.getApiKeyForFakeRequest(uiamTask)).toBe('essu_uiam-key');
+    });
+
+    test('invalidates only the UIAM key of a task that has no ES key', () => {
+      expect(strategy.getApiKeyIdsForInvalidation(uiamTask)).toEqual([
+        { apiKeyId: 'uiam-key-id', uiamApiKey: 'essu_uiam-key' },
+      ]);
     });
   });
 

@@ -242,6 +242,45 @@ describe('api_key_utils', () => {
       expect(coreStart.security.authc.apiKeys.grantAsInternalUser).not.toHaveBeenCalled();
     });
 
+    test('grants a key instead of cloning for a service account request', async () => {
+      const fakeRequest = kibanaRequestFactory({
+        headers: { authorization: 'Bearer service-account-access-token' },
+      });
+      const coreStart = coreMock.createStart();
+      coreStart.security.authc.apiKeys.areAPIKeysEnabled = jest.fn().mockReturnValueOnce(true);
+      coreStart.security.authc.getCurrentUser = jest
+        .fn()
+        .mockReturnValue({ authentication_type: 'token', username: 'kibana/agent' });
+      coreStart.security.authc.getPrincipal = jest.fn().mockReturnValue({
+        type: 'service_account',
+        serviceAccountId: 'kibana/agent',
+        variant: 'es',
+      });
+      coreStart.security.authc.apiKeys.grantAsInternalUser = jest.fn().mockResolvedValueOnce({
+        id: 'grantedApiKeyId',
+        name: 'TaskManager: report - kibana/agent',
+        api_key: 'grantedApiKey',
+      });
+
+      const result = await createApiKey([mockTask], fakeRequest, coreStart.security, {
+        cloneApiKey: true,
+      });
+
+      expect(Buffer.from(result.get('task')!.apiKey, 'base64').toString()).toEqual(
+        'grantedApiKeyId:grantedApiKey'
+      );
+      expect(coreStart.security.authc.apiKeys.grantAsInternalUser).toHaveBeenCalledWith(
+        fakeRequest,
+        {
+          name: 'TaskManager: report - kibana/agent',
+          role_descriptors: {},
+          metadata: { managed: true },
+        },
+        {}
+      );
+      expect(coreStart.security.authc.apiKeys.cloneAsInternalUser).not.toHaveBeenCalled();
+    });
+
     test('should clone the API key when cloneApiKey is true on a user API key request', async () => {
       const mockApiKey = Buffer.from('apiKeyId:apiKey').toString('base64');
       const request = httpServerMock.createKibanaRequest({

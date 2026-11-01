@@ -140,6 +140,11 @@ export const shouldCloneApiKeyFromRequest = (
   return requestCarriesApiKey && (options?.cloneApiKey === true || request.isFakeRequest);
 };
 
+export const isServiceAccountRequest = (
+  security: SecurityServiceStart,
+  request: KibanaRequest
+): boolean => security.authc.getPrincipal(request)?.type === 'service_account';
+
 const grantApiKeysForTaskTypes = async ({
   taskInstances,
   user,
@@ -206,6 +211,22 @@ export const createApiKey = async (
   const apiKeyByTaskIdMap = new Map<string, EncodedApiKeyResult>();
   const cloneApiKey = shouldCloneApiKeyFromRequest(security, request, options, user);
   const refreshOptions = options?.refreshApiKey === false ? { refresh: false } : {};
+
+  // A service account request carries a short-lived token instead of an API key, so there is no
+  // key to clone. Grant one for the account instead.
+  if (cloneApiKey && isServiceAccountRequest(security, request)) {
+    return grantApiKeysForTaskTypes({
+      taskInstances,
+      user,
+      onApiKeyCreated: options?.onApiKeyCreated,
+      createKey: ({ name }) =>
+        security.authc.apiKeys.grantAsInternalUser(
+          request,
+          { name, role_descriptors: {}, metadata: { managed: true } },
+          refreshOptions
+        ),
+    });
+  }
 
   if (cloneApiKey) {
     return grantApiKeysForTaskTypes({
